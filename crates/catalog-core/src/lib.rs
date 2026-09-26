@@ -6,6 +6,10 @@
 //! exactly one place (spec §3.1). The formulas are restated in words on the
 //! `/how` page, and `site-gen` tests that the two agree.
 
+/// Version of the formulas and tie-breaks below. Written into every
+/// computed output, so a number can be traced to the rules that made it.
+pub const RULES_VERSION: &str = "phase-1.0 (spec-phase-1 §5)";
+
 pub mod category;
 pub mod chem;
 pub mod control;
@@ -20,7 +24,7 @@ pub mod schema;
 pub mod scoring;
 pub mod units;
 
-pub use category::{CategoryView, Evaluation, Exclusion, PriceObs, ProductInput, Why, evaluate, why};
+pub use category::{CategoryView, Evaluation, Exclusion, Lead, LeadOver, PriceObs, ProductInput, Why, evaluate, why};
 pub use date::{Date, UtcTimestamp};
 pub use ids::{CategoryId, FormId, IherbId, Slug, SubstanceId};
 pub use label::{Confidence, Declared, DoseBreakdown, DoseError, Label, LabelLine, LineDose, elemental_per_serving};
@@ -28,5 +32,5 @@ pub use pricing::UnitPrice;
 pub use product::{Product, ProductStatus};
 pub use rating::RatingObs;
 pub use reference::{Category, Form, Reference, Substance};
-pub use scoring::{BalanceScore, Candidate, Preset, RatingBranch};
+pub use scoring::{BalanceNorm, BalanceScore, Candidate, Preset, RatingBranch, Side};
 pub use units::{ExactMass, Iu, IuConversion, Mass, Money, Ratio};

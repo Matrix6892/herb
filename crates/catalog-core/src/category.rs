@@ -9,7 +9,7 @@ use crate::label::{DoseBreakdown, DoseError, Label, elemental_per_serving};
 use crate::pricing::{UnitPrice, UnitPriceError};
 use crate::rating::{RatingObs, RatingPrior, adjusted, prior};
 use crate::reference::{Category, Reference};
-use crate::scoring::{BalanceScore, Candidate, Preset, RatingBranch, balance_scores, rank};
+use crate::scoring::{BalanceNorm, BalanceScore, Candidate, Preset, RatingBranch, balance_scores, rank};
 use crate::units::{Money, Ratio};
 
 /// The latest price snapshot of a product.
@@ -91,15 +91,73 @@ pub struct CategoryView {
     /// Only the presets of `branch`.
     pub rankings: BTreeMap<Preset, Vec<IherbId>>,
     pub balance: BTreeMap<IherbId, BalanceScore>,
+    /// The ranges `balance` was measured on; `None` in branch B or without
+    /// rated candidates.
+    pub balance_norm: Option<BalanceNorm>,
     pub prior: Option<RatingPrior>,
     /// Median unit price over ranked products, cents per unit.
     pub median_unit_price_cents: Option<f64>,
+}
+
+/// How far #1 is ahead of #2, on the preset's own scale.
+#[derive(Debug, Clone, Copy, PartialEq)]
+pub enum Lead {
+    /// Difference of balance scores, in points of 0–100.
+    BalancePoints(f64),
+    /// #2 pays this many times as much per unit.
+    PriceRatio(f64),
+    /// Difference of adjusted ratings.
+    RatingDiff(f64),
+}
+
+#[derive(Debug, Clone, PartialEq)]
+pub struct LeadOver {
+    pub runner_up: IherbId,
+    pub lead: Lead,
 }
 
 impl CategoryView {
     /// 1-based position of `id` in `preset`, if it is ranked there.
     pub fn position(&self, preset: Preset, id: &IherbId) -> Option<usize> {
         self.rankings.get(&preset)?.iter().position(|x| x == id).map(|p| p + 1)
+    }
+
+    fn unit_price(&self, id: &IherbId) -> Option<UnitPrice> {
+        self.evaluations.get(id)?.unit_price.as_ref().ok().copied()
+    }
+
+    /// The lead of #1 over #2 under `preset`. `None` with fewer than two
+    /// ranked products: there is no #2 to be ahead of (AC17).
+    pub fn lead(&self, preset: Preset) -> Option<LeadOver> {
+        let order = self.rankings.get(&preset)?;
+        let (first, second) = (order.first()?, order.get(1)?);
+        let lead = match preset {
+            Preset::Balance => Lead::BalancePoints(self.balance.get(first)?.s - self.balance.get(second)?.s),
+            Preset::CheapestPerUnit | Preset::CheapestVerified => {
+                Lead::PriceRatio(self.unit_price(second)?.cents_f64() / self.unit_price(first)?.cents_f64())
+            }
+            Preset::FairRating => {
+                let r = |id: &IherbId| self.evaluations.get(id).and_then(|e| e.adjusted_rating);
+                Lead::RatingDiff(r(first)? - r(second)?)
+            }
+        };
+        Some(LeadOver {
+            runner_up: second.clone(),
+            lead,
+        })
+    }
+
+    /// Unit price of `id` as a multiple of the median over ranked products.
+    pub fn price_vs_median(&self, id: &IherbId) -> Option<f64> {
+        let median = self.median_unit_price_cents?;
+        (median > 0.0).then(|| self.unit_price(id).map(|up| up.cents_f64() / median))?
+    }
+
+    /// Priciest over cheapest unit price among ranked products; `None`
+    /// without ranked products.
+    pub fn price_spread(&self) -> Option<f64> {
+        let prices = || self.evaluations.values().filter_map(|e| e.unit_price.as_ref().ok());
+        Some(prices().max()?.cents_f64() / prices().min()?.cents_f64())
     }
 }
 
@@ -189,10 +247,10 @@ pub fn evaluate(category: &Category, reference: &Reference, branch: RatingBranch
         .collect();
 
     let rankings = branch.presets().iter().map(|p| (*p, rank(*p, &candidates))).collect();
-    let balance = if branch.uses_ratings() {
-        balance_scores(&candidates)
+    let (balance, balance_norm) = if branch.uses_ratings() {
+        (balance_scores(&candidates), BalanceNorm::of(&candidates))
     } else {
-        BTreeMap::new()
+        (BTreeMap::new(), None)
     };
     let mut prices: Vec<f64> = candidates.iter().map(|c| c.unit_price.cents_f64()).collect();
     prices.sort_by(f64::total_cmp);
@@ -203,6 +261,7 @@ pub fn evaluate(category: &Category, reference: &Reference, branch: RatingBranch
         evaluations,
         rankings,
         balance,
+        balance_norm,
         prior,
         median_unit_price_cents: median(&prices),
     }

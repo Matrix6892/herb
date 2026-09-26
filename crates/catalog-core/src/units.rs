@@ -103,6 +103,10 @@ impl Mass {
         self.0.checked_add(other.0).map(Mass)
     }
 
+    pub fn checked_mul(self, n: u32) -> Option<Mass> {
+        self.0.checked_mul(u64::from(n)).map(Mass)
+    }
+
     /// Parses `"500 mg"`, `"1.5 g"`, `"25 mcg"`. Values finer than 1 µg are
     /// rejected rather than rounded.
     pub fn parse(s: &str) -> Result<Mass, UnitError> {

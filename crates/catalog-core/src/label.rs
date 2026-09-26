@@ -149,6 +149,14 @@ pub struct DoseBreakdown {
     pub per_serving: Mass,
 }
 
+impl DoseBreakdown {
+    /// Substance in the whole container: `servings × per_serving`, exact
+    /// in micrograms. `None` on overflow.
+    pub fn per_container(&self, servings_per_container: u32) -> Option<Mass> {
+        self.per_serving.checked_mul(servings_per_container)
+    }
+}
+
 #[derive(Debug, Clone, PartialEq, Eq, thiserror::Error)]
 pub enum DoseError {
     #[error("the label has no line for {0}")]

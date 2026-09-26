@@ -93,6 +93,106 @@ pub struct BalanceScore {
     pub s: f64,
 }
 
+/// Which side of a balance score is the weaker one, and so sets `s`.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum Side {
+    Price,
+    Rating,
+    /// Both sides score the same.
+    Both,
+}
+
+impl Side {
+    pub fn key(self) -> &'static str {
+        match self {
+            Side::Price => "price",
+            Side::Rating => "rating",
+            Side::Both => "both",
+        }
+    }
+}
+
+impl BalanceScore {
+    pub fn weaker(&self) -> Side {
+        match grid(self.q_price).cmp(&grid(self.q_rating)) {
+            Ordering::Less => Side::Price,
+            Ordering::Greater => Side::Rating,
+            Ordering::Equal => Side::Both,
+        }
+    }
+}
+
+/// The ranges balance scores are measured on (spec §5.5): price per unit on
+/// a log scale between the cheapest and the priciest rated candidate, rating
+/// linearly between the lowest and the highest. A side that does not spread
+/// gives every candidate full marks on it, so nothing divides by zero.
+#[derive(Debug, Clone, Copy, PartialEq)]
+pub struct BalanceNorm {
+    pub price_min: UnitPrice,
+    pub price_max: UnitPrice,
+    pub rating_min: f64,
+    pub rating_max: f64,
+}
+
+impl BalanceNorm {
+    /// `None` when no candidate has an adjusted rating.
+    pub fn of(candidates: &[Candidate]) -> Option<BalanceNorm> {
+        let rated = || candidates.iter().filter_map(|c| c.adjusted_rating.map(|r| (c.unit_price, r)));
+        Some(BalanceNorm {
+            price_min: rated().map(|(p, _)| p).min()?,
+            price_max: rated().map(|(p, _)| p).max()?,
+            rating_min: rated().map(|(_, r)| r).fold(f64::INFINITY, f64::min),
+            rating_max: rated().map(|(_, r)| r).fold(f64::NEG_INFINITY, f64::max),
+        })
+    }
+
+    pub fn price_spreads(&self) -> bool {
+        self.price_max != self.price_min
+    }
+
+    /// One rated product, or all ratings equal: nothing to spread.
+    pub fn rating_spreads(&self) -> bool {
+        self.rating_max > self.rating_min
+    }
+
+    fn ln_range(&self) -> (f64, f64) {
+        (self.price_min.cents_f64().ln(), self.price_max.cents_f64().ln())
+    }
+
+    pub fn q_price(&self, unit_price: UnitPrice) -> f64 {
+        if !self.price_spreads() {
+            return 100.0;
+        }
+        let (ln_min, ln_max) = self.ln_range();
+        100.0 * (ln_max - unit_price.cents_f64().ln()) / (ln_max - ln_min)
+    }
+
+    pub fn q_rating(&self, adjusted_rating: f64) -> f64 {
+        if !self.rating_spreads() {
+            return 100.0;
+        }
+        100.0 * (adjusted_rating - self.rating_min) / (self.rating_max - self.rating_min)
+    }
+
+    /// Price per unit, in cents, at which `q_price` equals `s`: a cheaper
+    /// candidate scores above `s` on price. `None` when prices do not spread,
+    /// so every candidate scores 100 on price.
+    pub fn price_at(&self, s: f64) -> Option<f64> {
+        if !self.price_spreads() {
+            return None;
+        }
+        let (ln_min, ln_max) = self.ln_range();
+        Some((ln_max - s / 100.0 * (ln_max - ln_min)).exp())
+    }
+
+    /// Adjusted rating at which `q_rating` equals `s`; `None` when ratings do
+    /// not spread.
+    pub fn rating_at(&self, s: f64) -> Option<f64> {
+        self.rating_spreads()
+            .then(|| self.rating_min + s / 100.0 * (self.rating_max - self.rating_min))
+    }
+}
+
 /// Floats that differ by less than about 1e-9 compare equal (spec §5.5).
 /// Rounding to a fixed grid keeps the comparison a total order, which an
 /// epsilon comparison would not be.
@@ -103,30 +203,13 @@ fn grid(x: f64) -> i64 {
 
 /// Scores for candidates that have both a unit price and an adjusted rating.
 pub fn balance_scores(candidates: &[Candidate]) -> BTreeMap<IherbId, BalanceScore> {
-    let rated: Vec<(&Candidate, f64)> = candidates.iter().filter_map(|c| c.adjusted_rating.map(|r| (c, r))).collect();
     let mut out = BTreeMap::new();
-    let (Some(p_min), Some(p_max)) = (
-        rated.iter().map(|(c, _)| c.unit_price).min(),
-        rated.iter().map(|(c, _)| c.unit_price).max(),
-    ) else {
+    let Some(norm) = BalanceNorm::of(candidates) else {
         return out;
     };
-    let r_min = rated.iter().map(|(_, r)| *r).fold(f64::INFINITY, f64::min);
-    let r_max = rated.iter().map(|(_, r)| *r).fold(f64::NEG_INFINITY, f64::max);
-    let ln_min = p_min.cents_f64().ln();
-    let ln_max = p_max.cents_f64().ln();
-    for (c, r) in rated {
-        let q_price = if p_max == p_min {
-            100.0
-        } else {
-            100.0 * (ln_max - c.unit_price.cents_f64().ln()) / (ln_max - ln_min)
-        };
-        // One rated product, or all ratings equal: nothing to spread.
-        let q_rating = if r_max <= r_min {
-            100.0
-        } else {
-            100.0 * (r - r_min) / (r_max - r_min)
-        };
+    for c in candidates {
+        let Some(r) = c.adjusted_rating else { continue };
+        let (q_price, q_rating) = (norm.q_price(c.unit_price), norm.q_rating(r));
         out.insert(
             c.id.clone(),
             BalanceScore {
@@ -212,6 +295,73 @@ mod tests {
         let c = [cand("20", "0.10", None, false), cand("3", "0.10", None, false)];
         let ids: Vec<String> = rank(Preset::CheapestPerUnit, &c).iter().map(ToString::to_string).collect();
         assert_eq!(ids, ["3", "20"]);
+    }
+
+    fn scores(c: &[Candidate]) -> Vec<BalanceScore> {
+        balance_scores(c).into_values().collect()
+    }
+
+    #[test]
+    fn degenerate_ranges_give_finite_scores() {
+        // AC21: equal prices, then equal ratings, never divide by zero.
+        let equal_prices = [cand("1", "0.10", Some(4.4), false), cand("2", "0.10", Some(4.6), false)];
+        let equal_ratings = [cand("1", "0.10", Some(4.5), false), cand("2", "0.20", Some(4.5), false)];
+        for set in [&equal_prices[..], &equal_ratings[..]] {
+            let s = scores(set);
+            assert_eq!(s.len(), 2);
+            assert!(s.iter().all(|x| x.q_price.is_finite() && x.q_rating.is_finite() && x.s.is_finite()));
+        }
+        let norm = BalanceNorm::of(&equal_prices).unwrap();
+        assert!(!norm.price_spreads() && norm.rating_spreads());
+        assert_eq!(norm.price_at(50.0), None);
+        assert!((norm.rating_at(50.0).unwrap() - 4.5).abs() < 1e-12);
+        let norm = BalanceNorm::of(&equal_ratings).unwrap();
+        assert!(norm.price_spreads() && !norm.rating_spreads());
+        assert_eq!(norm.rating_at(50.0), None);
+        assert_eq!(rank(Preset::Balance, &equal_prices).len(), 2);
+    }
+
+    #[test]
+    fn no_candidates_and_no_rated_candidates() {
+        // AC20 and AC22 at the core: empty inputs give empty rankings, not errors.
+        for p in Preset::ALL {
+            assert!(rank(p, &[]).is_empty());
+        }
+        assert!(BalanceNorm::of(&[]).is_none());
+        let unrated = [cand("1", "0.10", None, false)];
+        assert!(balance_scores(&unrated).is_empty());
+        assert!(rank(Preset::Balance, &unrated).is_empty());
+        assert!(rank(Preset::FairRating, &unrated).is_empty());
+        assert!(rank(Preset::CheapestVerified, &unrated).is_empty());
+    }
+
+    #[test]
+    fn thresholds_invert_the_scores() {
+        // The map's "ranks above" area is drawn from price_at and rating_at;
+        // they must land exactly on each candidate's own score.
+        let c = [
+            cand("1", "0.010", Some(4.32), false),
+            cand("2", "0.060", Some(4.49), false),
+            cand("3", "0.646", Some(4.67), false),
+        ];
+        let norm = BalanceNorm::of(&c).unwrap();
+        for x in &c {
+            let q_p = norm.q_price(x.unit_price);
+            let q_r = norm.q_rating(x.adjusted_rating.unwrap());
+            assert!((norm.price_at(q_p).unwrap() - x.unit_price.cents_f64()).abs() < 1e-9);
+            assert!((norm.rating_at(q_r).unwrap() - x.adjusted_rating.unwrap()).abs() < 1e-9);
+        }
+        let mid = balance_scores(&c)[&IherbId::new("2").unwrap()];
+        assert_eq!(mid.weaker(), Side::Rating);
+    }
+
+    #[test]
+    fn display_rounding_does_not_change_order() {
+        // AC24: both show as $0.060, but the exact values decide the order.
+        let c = [cand("1", "0.0604", None, false), cand("2", "0.0596", None, false)];
+        assert_eq!(c[0].unit_price.to_string(), c[1].unit_price.to_string());
+        let ids: Vec<String> = rank(Preset::CheapestPerUnit, &c).iter().map(ToString::to_string).collect();
+        assert_eq!(ids, ["2", "1"]);
     }
 
     #[test]

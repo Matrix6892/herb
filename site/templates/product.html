@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+{% block main %}
+<p class="crumbs"><a href="{{ crumb_href }}">{{ crumb_name }}</a></p>
+<h1>{{ name }}</h1>
+<p class="meta">{{ brand }}</p>
+<div class="panel">
+{%- if let Some(p) = price %}
+<p class="price"><b>{{ p.unit_price }}</b> {{ p.per_unit }}</p>
+<p class="sub">{{ p.container }}</p>
+{%- endif %}
+{%- if let Some(reason) = not_compared %}
+<p class="warn">{{ reason }}</p>
+{%- endif %}
+{%- if out_of_stock %}<p class="oos">{{ t.get("card.out_of_stock") }}</p>{% endif %}
+{{ buy|safe }}
+</div>
+{% if !positions.is_empty() %}
+<section class="panel">
+<h2>{{ t.get("product.positions") }}</h2>
+<ul>{% for p in positions %}<li>{{ p }}</li>{% endfor %}</ul>
+</section>
+{% endif %}
+{% if let Some(p) = price %}
+<section class="panel">
+<h2>{{ t.get("product.price_heading") }}</h2>
+<p class="mono">{{ p.formula }}</p>
+<p class="src">{{ p.date }}</p>
+</section>
+{% endif %}
+{% if let Some(lv) = label %}
+<section class="panel">
+<h2>{{ t.get("product.label_heading") }}</h2>
+<div class="scroll"><table>
+<thead><tr><th>{{ t.get("product.label_col_line") }}</th><th>{{ t.get("product.label_col_printed") }}</th><th>{{ t.get("product.label_col_counted") }}</th><th>{{ t.get("product.label_col_factor") }}</th><th class="num">{{ lv.result_heading }}</th></tr></thead>
+<tbody>
+{%- for line in lv.lines %}
+<tr><td>{{ line.n }}</td><td>{{ line.printed }}</td><td>{{ line.counted_as }}</td><td>{{ line.factor }}</td><td class="num">{{ line.result }}</td></tr>
+{%- endfor %}
+</tbody>
+</table></div>
+{% if let Some(s) = lv.per_serving %}<p>{{ s }}</p>{% endif %}
+<p class="src">{{ lv.verified }}</p>
+{% if let Some(f) = lv.formula_changed %}<p class="src">{{ f }}</p>{% endif %}
+<p class="src">{{ lv.third_party }}</p>
+{% if !lv.sources.is_empty() %}
+<p class="src">{{ t.get("product.sources") }}: {% for (name, url) in lv.sources %}{% if !loop.first %}; {% endif %}<a href="{{ url }}" rel="nofollow">{{ name }}</a>{% endfor %}.</p>
+{% endif %}
+</section>
+{% endif %}
+{% if !neighbours.is_empty() %}
+<section class="panel">
+<h2>{{ neighbours_title }}</h2>
+<ol>
+{%- for n in neighbours %}
+<li value="{{ n.rank }}">{% if n.is_self %}<b>{{ n.name }}</b>{% else %}<a href="{{ n.href }}">{{ n.name }}</a>{% endif %} <span class="mono">{{ n.unit_price }}</span></li>
+{%- endfor %}
+</ol>
+</section>
+{% endif %}
+<section class="panel">
+<h2>{{ t.get("product.report_heading") }}</h2>
+<p class="pnote">{{ t.get("product.report_lede") }}</p>
+<form class="report" method="post" action="{{ l.api }}/report">
+<input type="hidden" name="product" value="{{ id }}">
+<input type="hidden" name="page_url" value="{{ path }}">
+<label for="rf">{{ t.get("product.report_field") }}</label>
+<select id="rf" name="field">
+<option value="price">{{ t.get("product.report_field_price") }}</option>
+<option value="label">{{ t.get("product.report_field_label") }}</option>
+{%- if show_rating_field %}<option value="rating">{{ t.get("product.report_field_rating") }}</option>{% endif %}
+<option value="other">{{ t.get("product.report_field_other") }}</option>
+</select>
+<label for="rt">{{ t.get("product.report_text") }}</label>
+<textarea id="rt" name="text" maxlength="2000" required></textarea>
+<button type="submit">{{ t.get("product.report_send") }}</button>
+<p class="thanks ok" hidden>{{ t.get("product.report_ok") }}</p>
+<p class="thanks fail" hidden>{{ t.get("product.report_fail") }}</p>
+</form>
+</section>
+{% endblock %}

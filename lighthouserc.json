@@ -1,0 +1,29 @@
+{
+  "ci": {
+    "collect": {
+      "startServerCommand": "python3 tools/serve-site.py out/current/site 8765",
+      "startServerReadyPattern": "listening",
+      "startServerReadyTimeout": 5000,
+      "url": [
+        "http://127.0.0.1:8765/c/magnesium",
+        "http://127.0.0.1:8765/pr/example-naturals-magnesium-citrate-240-tablets/900002"
+      ],
+      "numberOfRuns": 3,
+      "settings": {
+        "formFactor": "mobile",
+        "throttlingMethod": "simulate",
+        "chromeFlags": "--headless=new --no-sandbox"
+      }
+    },
+    "assert": {
+      "aggregationMethod": "median",
+      "assertions": {
+        "first-contentful-paint": ["error", { "maxNumericValue": 1000 }],
+        "render-blocking-resources": ["error", { "maxLength": 0 }],
+        "categories:performance": ["error", { "minScore": 0.95 }],
+        "categories:accessibility": ["error", { "minScore": 0.95 }]
+      }
+    },
+    "upload": { "target": "filesystem", "outputDir": ".lighthouseci" }
+  }
+}

@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block main %}
+<h1>{{ title }}</h1>
+<p class="lede">{{ lede }}</p>
+<p class="meta">{{ counts }}</p>
+{% if cards.is_empty() %}
+<p class="note">{{ t.get("category.empty") }}</p>
+{% else %}
+<nav class="tabs" aria-label="{{ t.get("category.presets") }}" hidden>
+{%- for tab in tabs %}<a href="{{ tab.href }}" data-preset="{{ tab.key }}"{% if tab.current %} aria-current="page"{% endif %}>{{ tab.label }}</a>{% endfor -%}
+</nav>
+{% for tab in tabs %}<p class="pnote" data-for="{{ tab.key }}"{% if !tab.current %} hidden{% endif %}>{{ tab.note }}</p>{% endfor %}
+<ol class="list" id="list" data-default="{{ default_key }}"{% for (key, ids) in orders %} data-o-{{ key }}="{{ ids }}"{% endfor %}>
+{%- for c in cards %}
+<li class="card" data-id="{{ c.id }}"{% if c.hidden %} hidden{% endif %}>
+<span class="rank">{% if c.rank > 0 %}{{ c.rank }}{% endif %}</span>
+<h2><a href="{{ c.href }}">{{ c.title }}</a></h2>
+<span class="brandline">{{ c.brand }}</span>
+<p class="price"><b>{{ c.unit_price }}</b> {{ c.per_unit }}</p>
+<p class="sub">{{ c.container }}</p>
+{%- if let Some(r) = c.rating %}<p class="sub">{{ r }}</p>{% endif %}
+{%- if !c.why.is_empty() %}<ul class="why">{% for w in c.why %}<li>{{ w }}</li>{% endfor %}</ul>{% endif %}
+{%- if c.out_of_stock %}<p class="oos">{{ t.get("card.out_of_stock") }}</p>{% endif %}
+{{ c.buy|safe }}
+</li>
+{%- endfor %}
+</ol>
+{% endif %}
+{% if !unranked.is_empty() %}
+<section class="unranked">
+<h2>{{ t.get("category.unranked") }}</h2>
+<p class="pnote">{{ t.get("category.unranked_lede") }}</p>
+<ul>
+{%- for u in unranked %}
+<li><a href="{{ u.href }}">{{ u.name }}</a> <span class="reason">{{ u.reason }}</span></li>
+{%- endfor %}
+</ul>
+</section>
+{% endif %}
+{% endblock %}

@@ -4,6 +4,7 @@ members = [
     "crates/catalog-core",
     "crates/catalog-store",
     "crates/feed-ingest",
+    "crates/site-gen",
 ]
 
 [workspace.package]

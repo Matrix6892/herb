@@ -1,0 +1,1 @@
+{percent}% cheaper per {unit} than the category median

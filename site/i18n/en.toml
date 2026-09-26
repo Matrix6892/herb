@@ -1,0 +1,182 @@
+# Interface strings for en-US (spec §7.4). Templates refer to keys only;
+# `{name}` marks a value filled in by the generator. Product names and label
+# text are never translated: they come from the label.
+#
+# A key used by a template but missing here fails the build.
+
+[locale]
+code = "en-US"
+lang = "en"
+dir = "ltr"
+decimal = "."
+group = ","
+currency_symbol = "$"
+currency_position = "prefix"
+
+[site]
+name = "Vitrina"
+tagline = "Supplements compared by the price of what is actually in them."
+
+[nav]
+how = "How we rank"
+main = "Skip to content"
+
+[footer]
+disclosure = "We earn a commission when you buy through our links. Commission never changes the order."
+no_advice = "Information, not medical advice. We show doses and prices; the dose you take is yours to choose with your clinician."
+link_disclosure = "Affiliate disclosure"
+link_privacy = "Privacy"
+link_how = "Methodology"
+updated = "Prices from the network feed of {time}."
+
+[buy]
+button = "Buy on iHerb"
+disclosure = "Affiliate link: we may earn a commission. It never changes the ranking."
+no_link = "No purchase link in today's feed."
+
+[home]
+title = "Supplement prices by what is in the capsule"
+lede = "A container price says little: capsules differ in dose, and labels mix compound mass with elemental mass. We read the labels, convert everything to the same unit and rank by price per unit."
+categories = "Categories"
+products = "{count} products, {ranked} compared"
+
+[category]
+title = "{name}: price per {unit}"
+lede = "Prices per {unit} of elemental {substance}, from verified labels and today's network feed. We compare prices; we do not recommend doses."
+counts = "{count} products, {ranked} compared."
+presets = "Order by"
+unranked = "Not compared"
+unranked_lede = "These products are in the category but lack something the comparison needs. Each says what."
+empty = "No product in this category has a verified label and a price today."
+
+[card]
+container = "{price} for {servings} servings of {dose}"
+rating = "Rating adjusted for review count: {value}"
+no_rating = "No rating in today's feed"
+out_of_stock = "Out of stock in today's feed"
+
+[preset.cheapest_per_unit]
+label = "Lowest price per {unit}"
+note = "Lowest price per {unit} of {substance}. Every product with a verified label and a price takes part."
+
+[preset.fair_rating]
+label = "Best rated"
+note = "Rating adjusted for the number of reviews, so that a 5.0 from 8 reviews does not outrank a 4.8 from 40,000."
+
+[preset.balance]
+label = "Balance"
+note = "Good on both price and rating: each product is scored by its weaker side."
+
+[preset.cheapest_verified]
+label = "Third-party tested"
+note = "Lowest price per {unit} among products whose label shows a third-party testing mark."
+
+[exclusion]
+no_label = "Label not entered yet. The product is in the queue."
+no_line = "The label lists no {substance}."
+unknown_line = "A line of the label could not be read with certainty."
+not_verified = "The label has been read but not yet verified."
+unknown_form = "The label names a form that is not in our reference yet."
+no_iu_conversion = "The label states international units and we have no conversion for this form."
+zero_dose = "The label gives a zero dose."
+overflow = "The label's numbers are out of range."
+no_price_snapshot = "Not in today's network feed."
+no_price = "No price in today's network feed."
+hidden_until_cart = "The store shows this price only in the cart, so we cannot compare it."
+unit_price_error = "The price could not be turned into a price per unit."
+
+[product]
+not_compared = "Not compared: {reason}"
+positions = "Place in the rankings"
+position = "{preset}: {pos} of {total}"
+position_none = "{preset}: not included"
+price_heading = "Price per unit"
+price_line = "{price} ÷ ({servings} servings × {dose}) × {unit} = {unit_price}"
+price_date = "Price from the network feed of {date}."
+label_heading = "Label, line by line"
+label_col_line = "#"
+label_col_printed = "On the label"
+label_col_counted = "Counted as"
+label_col_factor = "Factor"
+label_col_result = "{substance}"
+declared_salt = "compound mass"
+declared_elemental = "{substance}"
+declared_iu = "international units"
+factor_ratio = "× {percent} ({formula})"
+factor_one = "× 1"
+factor_iu = "× {ug} mcg per IU"
+per_serving = "Per serving: {dose} of {substance}. Serving size {size}, {servings} servings per container."
+source_atomic_weights = "Standard atomic weights, IUPAC CIAAW"
+other_substance = "not {substance}"
+confidence_recognized = "recognised, not verified"
+confidence_unknown = "unreadable"
+verified = "Label checked by {who} on {date}."
+formula_changed = "The formula changed on {date}; figures use the current label."
+third_party = "Testing mark on the label: {name}."
+third_party_none = "No third-party testing mark on the label."
+sources = "Sources of the factors"
+neighbours = "Nearby in “{preset}”"
+report_heading = "Something wrong in this data?"
+report_lede = "Tell us which number is wrong. Please do not include personal details."
+report_field = "What is wrong"
+report_field_price = "Price"
+report_field_label = "Label or dose"
+report_field_rating = "Rating"
+report_field_other = "Something else"
+report_text = "Details"
+report_send = "Send"
+report_ok = "Thank you. We check every report."
+report_fail = "Could not send the report. Please try again later."
+
+[pending]
+title = "{title}: added to the queue"
+lede = "This product is in the network feed, but its label has not been entered and checked yet. Until then we do not compare it."
+queued = "Queued on {date}."
+
+[how]
+title = "How we rank"
+lede = "Every number on this site comes from two places: the affiliate network's daily product feed (prices, availability) and labels we read by hand from product photos. We never copy data from store pages."
+dose_heading = "1. The dose on the label"
+dose_text = "Labels state either the mass of the compound (“magnesium citrate 500 mg”) or the mass of the element (“magnesium (as citrate) 200 mg”). For a compound we multiply by the element's share of its mass, derived from the chemical formula and standard atomic weights. Lines of the same substance are added exactly and rounded down to a microgram once."
+dose_example = "Example: {printed} of {form} × {ratio} ({percent}) = {result} of {substance}, rounded down to a microgram."
+unit_heading = "2. Price per unit"
+unit_formula = "P_unit = price ÷ (servings per container × dose per serving × k_form)"
+unit_text = "We express it per {unit} of {substance}. k_form is 1 for every form: we do not adjust for absorption. A product without a price, without a verified label, or with a price shown only in the cart gets no price per unit and takes part in no ranking; its page says why."
+unit_example = "Example: {price} ÷ ({servings} × {dose}) × {unit} = {unit_price}."
+rating_heading = "3. Rating adjusted for the number of reviews"
+rating_formula = "R_b = (n × R + C × m) ÷ (n + C)"
+rating_text = "R is a product's average rating and n its number of reviews; m is the plain average rating in the category and C the median number of reviews there. A few perfect reviews count for less than many good ones."
+balance_heading = "4. Balance"
+balance_formula = "q_price = 100 × (ln P_max − ln P_unit) ÷ (ln P_max − ln P_min); q_rating = 100 × (R_b − R_min) ÷ (R_max − R_min); S = min(q_price, q_rating)"
+balance_text = "Both scores run from 0 to 100 within the category. The logarithm makes equal price ratios count equally: $0.06 against $0.08 matters as much as $0.15 against $0.20. A product is only as good as its weaker score. Ties are broken by the sum of both scores, then by the lower price per unit."
+balance_control = "Control set. The same numbers are checked by the code before every publication:"
+balance_rank_note = "An earlier draft of this method compared positions in each list rather than values, and C came first. Comparing values puts B first: its weaker score, rating at 66.7, is slightly higher than C's weaker score, price at 66.3."
+col_product = "Product"
+col_p_unit = "P_unit, $ per 100 mg"
+col_r_b = "R_b"
+col_q_price = "q_price"
+col_q_rating = "q_rating"
+col_s = "S"
+order = "Order: {order}."
+presets_heading = "Rankings on this site"
+no_rating_text = "Ratings are not shown: until the store confirms that we may display them, we rank by price only. The third-party tested ranking uses the testing marks printed on labels."
+sources_heading = "Data and updates"
+sources_text = "Prices and availability come from the affiliate network's product feed and are refreshed every day at 06:00 UTC. If the feed fails, the site keeps the previous day and says so by its date. Labels are entered by hand from photos and checked; each product page names who checked it and when. Conversion factors come from our reference with a source for each."
+money_heading = "How we make money"
+money_text = "When you buy through a “Buy on iHerb” button, the store pays us a commission. The commission rate is not part of any formula here, so it cannot change the order."
+no_advice = "We show doses and prices. We do not recommend a dose or a product for your health."
+
+[disclosure]
+title = "Affiliate disclosure"
+body = "This site is a participant in the iHerb affiliate program through its affiliate network. When you follow a “Buy on iHerb” link and buy something, we may earn a commission at no extra cost to you. Every such link is marked and sends you directly to the store through the network's tracking link. The commission never enters the ranking formulas, which are published on the methodology page."
+
+[privacy]
+title = "Privacy"
+body_1 = "No accounts, no advertising trackers and no cookies."
+body_2 = "When you press a “Buy on iHerb” button, your browser sends us the product, the ranking you were looking at, the page and the time. To tell repeated clicks apart within a day we store a one-way hash of your browser's user agent and the date. We do not store your IP address."
+body_3 = "When you report an error, we store what you write, the page and the time. Please do not include personal details."
+body_4 = "The companies that host the site and the store you buy from process requests under their own policies."
+
+[notfound]
+title = "Page not found"
+body = "This page does not exist, or the product has left the catalog."

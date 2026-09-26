@@ -1,0 +1,10 @@
+{#- The only way to the store (И3, И4): the network's tracking link, marked
+    sponsored, with the commission disclosure in the same block. -#}
+<div class="buy">
+{%- if let Some(href) = href %}
+<a class="btn" href="{{ href }}" rel="sponsored nofollow" data-buy="{{ id }}">{{ t.get("buy.button") }}</a>
+<p class="disc">{{ t.get("buy.disclosure") }}</p>
+{%- else %}
+<p class="nolink">{{ t.get("buy.no_link") }}</p>
+{%- endif %}
+</div>

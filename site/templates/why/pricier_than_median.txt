@@ -1,0 +1,1 @@
+{percent}% pricier per {unit} than the category median

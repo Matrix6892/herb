@@ -1,0 +1,461 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<style>body{margin:0}[hidden]{display:none!important}</style>
+</head>
+<body>
+<title>Magnesium Ranking</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,300..900&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<style>
+  :root {
+    --bg: #e9ecf0;
+    --surface: #ffffff;
+    --raise: #f5f6f8;
+    --ink: #0e1116;
+    --muted: #5a6370;
+    --faint: #8a93a0;
+    --line: #d5dae1;
+    --hair: #e6e9ee;
+    --accent: #2f49ff;
+    --accent-soft: #e9edff;
+    --accent-ink: #ffffff;
+    --warn: #7a5200;
+    --warn-soft: #fbf1dc;
+    --dot: #0e1116;
+    --display: "Archivo", "Arial Narrow", system-ui, sans-serif;
+    --body: "Archivo", system-ui, -apple-system, "Segoe UI", sans-serif;
+    --mono: "IBM Plex Mono", ui-monospace, Menlo, Consolas, monospace;
+    color-scheme: light;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #0b0e15; --surface: #131722; --raise: #1a1f2c; --ink: #e8ecf5; --muted: #9aa4b8; --faint: #6d768a;
+      --line: #2a3142; --hair: #1f2533; --accent: #8fa2ff; --accent-soft: #1d2447; --accent-ink: #0b0e15;
+      --warn: #f0c46b; --warn-soft: #2b2312; --dot: #e8ecf5; color-scheme: dark;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #0b0e15; --surface: #131722; --raise: #1a1f2c; --ink: #e8ecf5; --muted: #9aa4b8; --faint: #6d768a;
+    --line: #2a3142; --hair: #1f2533; --accent: #8fa2ff; --accent-soft: #1d2447; --accent-ink: #0b0e15;
+    --warn: #f0c46b; --warn-soft: #2b2312; --dot: #e8ecf5; color-scheme: dark;
+  }
+  body { background: var(--bg); color: var(--ink); font: 15px/1.5 var(--body); overflow-x: clip; }
+  .num, .mono { font-family: var(--mono); font-variant-numeric: tabular-nums; }
+  a { color: var(--accent); }
+  button { font: inherit; color: inherit; }
+  :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 4px; }
+  .wrap { max-width: 72rem; margin-inline: auto; padding-inline: 16px; padding-block: 18px 64px; display: grid; grid-template-columns: minmax(0, 1fr); gap: 14px; }
+  .wrap > *, .row, .row-main > *, .detail > div, .detail-in > *, .box > * { min-width: 0; }
+
+  /* Header: what this is, how fresh it is. */
+  .head { display: grid; gap: 6px; }
+  .head-top { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; gap: 6px 16px; }
+  h1 { margin: 0; font: 850 clamp(28px, 4vw, 44px)/1.02 var(--display); font-stretch: 112%; letter-spacing: -.015em; }
+  h1 small { display: block; margin-top: 6px; font: 500 15px/1.35 var(--body); font-stretch: 100%; letter-spacing: 0; color: var(--muted); }
+  .fresh { display: flex; flex-wrap: wrap; gap: 4px 14px; font: 500 12px/1.4 var(--mono); color: var(--muted); }
+  .fresh b { color: var(--ink); font-weight: 500; }
+  .fresh .live::before { content: ""; display: inline-block; width: 7px; height: 7px; border-radius: 50%; background: var(--accent); margin-inline-end: 6px; vertical-align: 1px; }
+  .linkbtn { background: none; border: 0; padding: 0; color: var(--accent); cursor: pointer; text-decoration: underline; text-underline-offset: 3px; font-size: 14px; }
+
+  .method { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 14px 16px; display: grid; gap: 8px; font-size: 14px; }
+  .method[hidden] { display: none; }
+  .method p { margin: 0; max-width: 62ch; color: var(--muted); }
+  .method code { font-family: var(--mono); font-size: 13px; color: var(--ink); }
+
+  /* Toolbar: preset switch with counts, sticky while scrolling. */
+  .toolbar { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5; background: var(--bg); padding-block: 8px; display: grid; gap: 6px; border-bottom: 1px solid var(--line); }
+  .seg { display: flex; flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; gap: 4px; background: var(--raise); border: 1px solid var(--line); border-radius: 10px; padding: 3px; width: max-content; max-width: 100%; }
+  .seg button { flex: none; white-space: nowrap; border: 0; background: transparent; border-radius: 7px; padding: 7px 12px; cursor: pointer; font-weight: 600; font-size: 14px; color: var(--muted); display: flex; gap: 7px; align-items: baseline; }
+  .seg button .c { font: 500 12px var(--mono); color: var(--faint); }
+  .seg button[aria-pressed="true"] { background: var(--surface); color: var(--ink); box-shadow: 0 1px 2px rgba(0,0,0,.08), 0 0 0 1px var(--line); }
+  .seg button kbd { font: 500 10px var(--mono); color: var(--faint); border: 1px solid var(--line); border-radius: 3px; padding: 0 3px; }
+  .note { margin: 0; font-size: 13.5px; color: var(--muted); max-width: 72ch; }
+
+  /* The whole shelf on one axis. */
+  .strip { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 10px 14px 6px; }
+  .strip-h { display: flex; justify-content: space-between; gap: 10px; font: 500 11px/1.3 var(--mono); letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+  .strip svg { display: block; width: 100%; height: 64px; overflow: visible; }
+  .strip .axis { stroke: var(--line); }
+  .strip .tick text { fill: var(--faint); font: 500 10px var(--mono); }
+  .strip .tick line { stroke: var(--line); }
+  .strip .med line { stroke: var(--muted); stroke-dasharray: 2 3; }
+  .strip .med text { fill: var(--muted); font: 500 10px var(--mono); }
+  .strip .pt { cursor: pointer; }
+  .strip .pt circle { fill: var(--dot); stroke: var(--surface); stroke-width: 1.5; transition: r .15s; }
+  .strip .pt.out circle { fill: none; stroke: var(--faint); stroke-dasharray: 2 2; }
+  .strip .pt.hot circle { fill: var(--accent); r: 7; }
+  .strip .pt text { fill: var(--ink); font: 600 10px var(--body); opacity: 0; transition: opacity .15s; }
+  .strip .pt.hot text { opacity: 1; }
+
+  /* Ranking rows. */
+  .list { display: grid; gap: 0; margin: 0; padding: 0; list-style: none; background: var(--surface); border: 1px solid var(--line); border-radius: 12px; overflow: hidden; }
+  .row { border-top: 1px solid var(--hair); position: relative; background: var(--surface); }
+  .row:first-child { border-top: 0; }
+  .row.hot { background: var(--raise); }
+  .row-main { display: grid; grid-template-columns: 2.2rem minmax(0, 1fr) 7.2rem 9.5rem 5.2rem 10.5rem; gap: 12px; align-items: start; padding: 12px 14px; }
+  .rank { font: 600 15px/1.6 var(--mono); color: var(--faint); }
+  .prod { display: grid; gap: 3px; min-width: 0; }
+  .prod .name { display: flex; gap: 8px; align-items: baseline; flex-wrap: wrap; }
+  .prod .name button { background: none; border: 0; padding: 0; text-align: start; cursor: pointer; font-weight: 700; font-size: 15px; line-height: 1.3; }
+  .prod .name button:hover { text-decoration: underline; text-underline-offset: 3px; }
+  .prod .brand { font-size: 13px; color: var(--muted); }
+  .chips { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 3px; }
+  .chip { font-size: 12px; padding: 1px 7px; border-radius: 5px; background: var(--raise); color: var(--muted); border: 1px solid var(--hair); }
+  .chip.good { background: var(--accent-soft); color: var(--accent); border-color: transparent; }
+  .chip.warn { background: var(--warn-soft); color: var(--warn); border-color: transparent; }
+  .cell { display: grid; gap: 1px; justify-items: end; text-align: end; }
+  .cell .lbl { font: 500 10.5px/1.2 var(--mono); letter-spacing: .05em; text-transform: uppercase; color: var(--faint); }
+  .big { font: 500 19px/1.3 var(--mono); }
+  .src-btn { background: none; border: 0; padding: 0; cursor: help; text-decoration: underline dotted var(--faint); text-underline-offset: 4px; text-decoration-thickness: 1px; }
+  .src-btn:hover, .src-btn[aria-expanded="true"] { text-decoration-color: var(--accent); color: var(--accent); }
+  .buy { display: grid; gap: 4px; justify-items: stretch; }
+  .btn { display: inline-flex; justify-content: center; align-items: center; gap: 6px; background: var(--ink); color: var(--bg); border: 0; text-decoration: none; font-weight: 700; font-size: 14px; border-radius: 9px; padding: 9px 12px; cursor: pointer; }
+  .btn:hover { background: var(--accent); color: var(--accent-ink); }
+  .disc { font-size: 11px; line-height: 1.3; color: var(--muted); }
+  .oos { font-size: 12px; color: var(--warn); }
+  .more { background: none; border: 0; cursor: pointer; color: var(--muted); font-size: 13px; padding: 2px 0; justify-self: start; display: flex; gap: 6px; align-items: center; }
+  .more::after { content: ""; width: 7px; height: 7px; border-right: 1.5px solid currentColor; border-bottom: 1.5px solid currentColor; transform: rotate(45deg) translateY(-2px); transition: transform .2s; }
+  .row.open .more::after { transform: rotate(225deg) translateY(-1px); }
+
+  /* Expanded detail: the label, the arithmetic, the rankings. */
+  .detail { display: grid; grid-template-rows: 0fr; transition: grid-template-rows .28s cubic-bezier(.2,.7,.2,1); }
+  .row.open .detail { grid-template-rows: 1fr; }
+  .detail > div { overflow: hidden; }
+  .detail-in { display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr); gap: 14px 22px; padding: 2px 14px 16px calc(14px + 2.2rem + 12px); }
+  .box { display: grid; gap: 8px; align-content: start; }
+  .box h3 { margin: 0; font: 600 11px/1.3 var(--mono); letter-spacing: .07em; text-transform: uppercase; color: var(--muted); }
+  .scroll { overflow-x: auto; }
+  table { border-collapse: collapse; width: 100%; font-size: 13.5px; }
+  th, td { text-align: start; padding: 6px 8px; border-bottom: 1px solid var(--hair); vertical-align: top; }
+  th { font: 500 10.5px/1.3 var(--mono); letter-spacing: .05em; text-transform: uppercase; color: var(--faint); }
+  td.n { text-align: end; font-family: var(--mono); font-variant-numeric: tabular-nums; white-space: nowrap; }
+  .calc { font: 500 14px/1.7 var(--mono); background: var(--raise); border-radius: 8px; padding: 8px 10px; }
+  .calc b { font-weight: 600; color: var(--accent); }
+  .meta { margin: 0; font-size: 12.5px; color: var(--muted); }
+  .pos { display: grid; gap: 4px; margin: 0; padding: 0; list-style: none; font-size: 13.5px; }
+  .pos li { display: flex; justify-content: space-between; gap: 10px; border-bottom: 1px dashed var(--hair); padding-block: 3px; }
+  .pos .num { color: var(--muted); }
+
+  /* Provenance popover and inline report. */
+  .pop { position: absolute; z-index: 20; width: min(330px, calc(100vw - 32px)); background: var(--surface); border: 1px solid var(--line); border-radius: 12px; box-shadow: 0 18px 50px -20px rgba(0,0,0,.35); padding: 12px 14px; display: grid; gap: 8px; font-size: 13.5px; }
+  .pop[hidden] { display: none; }
+  .pop .k { font: 600 10.5px/1.3 var(--mono); letter-spacing: .07em; text-transform: uppercase; color: var(--accent); }
+  .pop .v { font: 500 20px/1.2 var(--mono); }
+  .pop p { margin: 0; color: var(--muted); }
+  .pop form { display: grid; gap: 6px; }
+  .pop textarea { font: inherit; min-height: 64px; border-radius: 8px; border: 1px solid var(--line); background: var(--raise); color: var(--ink); padding: 6px 8px; resize: vertical; }
+  .pop .acts { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+  .pop .ghost { background: none; border: 1px solid var(--line); border-radius: 8px; padding: 6px 10px; cursor: pointer; }
+  .ok { color: var(--accent); font-weight: 600; }
+
+  /* Groups below the ranking. */
+  .group { display: grid; gap: 8px; }
+  .group h2 { margin: 6px 0 0; font: 800 18px/1.2 var(--display); font-stretch: 108%; }
+  .group > p { margin: 0; color: var(--muted); font-size: 13.5px; max-width: 70ch; }
+  .unk { display: grid; grid-template-columns: minmax(0, 1fr) 7.2rem minmax(0, 1.2fr); gap: 12px; align-items: center; padding: 10px 14px; border-top: 1px solid var(--hair); }
+  .unk:first-child { border-top: 0; }
+  .unk .ghostval { justify-self: end; font: 500 13px var(--mono); color: var(--faint); border: 1.5px dashed var(--line); border-radius: 6px; padding: 3px 8px; }
+  .unk .why { font-size: 13px; color: var(--muted); }
+  .unk .why b { color: var(--ink); font-weight: 600; }
+
+  .toast { position: fixed; left: 50%; bottom: calc(18px + env(safe-area-inset-bottom, 0px)); transform: translate(-50%, 20px); opacity: 0; background: var(--ink); color: var(--bg); padding: 10px 14px; border-radius: 10px; font-size: 13.5px; max-width: calc(100vw - 32px); transition: opacity .2s, transform .2s; z-index: 30; pointer-events: none; }
+  .toast.show { opacity: 1; transform: translate(-50%, 0); }
+  .foot { font-size: 12.5px; color: var(--muted); max-width: 80ch; display: grid; gap: 6px; }
+  .foot p { margin: 0; }
+
+  @media (max-width: 860px) {
+    .row-main { grid-template-columns: 1.8rem minmax(0, 1fr) auto; grid-template-areas: "r p u" "r j j" "r b b"; }
+    .rank { grid-area: r; }
+    .prod { grid-area: p; }
+    .c-unit { grid-area: u; }
+    .c-jar { grid-area: j; justify-items: start; text-align: start; grid-auto-flow: column; justify-content: start; gap: 10px; align-items: baseline; }
+    .c-rate { display: none; }
+    .buy { grid-area: b; grid-template-columns: auto minmax(0, 1fr); align-items: center; gap: 10px; }
+    .detail-in { grid-template-columns: minmax(0, 1fr); padding-inline-start: calc(14px + 1.8rem + 12px); }
+    .unk { grid-template-columns: minmax(0, 1fr) auto; }
+    .unk .why { grid-column: 1 / -1; }
+    .seg button kbd { display: none; }
+  }
+  @media (prefers-reduced-motion: reduce) { *, *::before, *::after { transition: none !important; animation: none !important; } }
+</style>
+
+<div class="wrap">
+  <header class="head">
+    <div class="head-top">
+      <h1>Magnesium<small>Ranked by the price of the magnesium inside, per 100&nbsp;mg</small></h1>
+      <button class="linkbtn" id="howBtn" aria-expanded="false" aria-controls="method">How we calculate</button>
+    </div>
+    <div class="fresh">
+      <span class="live">Prices from the network feed of <b>26&nbsp;Sep&nbsp;2026, 06:02&nbsp;UTC</b></span>
+      <span><b id="nCompared">8</b> of <b>12</b> products compared</span>
+      <span>Example data</span>
+    </div>
+    <section class="method" id="method" hidden>
+      <p><code>P_unit = price ÷ (servings × magnesium per serving) × 100&nbsp;mg</code></p>
+      <p>Magnesium per serving comes from the label. When the label gives the weight of a compound, we multiply by the share of magnesium in its chemical formula, add the lines exactly and round down once, to the microgram. Commission is not an input of any formula.</p>
+      <p>Rating adjusted for review count: <code>(n × R + C × m) ÷ (n + C)</code>. Balance scores price and rating from 0 to 100 and ranks by the weaker of the two.</p>
+    </section>
+  </header>
+
+  <div class="toolbar">
+    <div class="seg" role="group" aria-label="Order by" id="seg"></div>
+    <p class="note" id="note"></p>
+  </div>
+
+  <section class="strip" aria-label="All compared products on one price axis">
+    <div class="strip-h"><span>Price per 100 mg of magnesium, log scale</span><span id="spread"></span></div>
+    <svg id="plot" role="img" aria-label=""></svg>
+  </section>
+
+  <ol class="list" id="list"></ol>
+
+  <section class="group" id="outRank" hidden>
+    <h2 id="outH">Not in this ranking</h2>
+    <p id="outP"></p>
+    <div class="list" id="outList"></div>
+  </section>
+
+  <section class="group">
+    <h2>Not compared</h2>
+    <p>These are in the category, but something the comparison needs is missing. We show what, instead of guessing a number.</p>
+    <div class="list" id="unkList"></div>
+  </section>
+
+  <footer class="foot">
+    <p>When you buy through a “Buy on iHerb” button we may earn a commission. It never changes the order. We show prices and doses; which form and dose suit you is a question for your clinician.</p>
+    <p>Prototype on example data from our test build: the products are invented, the numbers are computed by our code. Buy buttons and reports do not leave this page.</p>
+  </footer>
+</div>
+
+<div class="pop" id="pop" role="dialog" aria-modal="false" hidden></div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+const DATA = {"orders":{"balance":["900002","900001","900004","900012","900006","900003","900005"],"cheapest_per_unit":["900003","900012","900007","900002","900001","900004","900006","900005"],"fair_rating":["900001","900004","900005","900002","900006","900012","900003"]},"products":[{"id":"900010","slug":"example-naturals-magnesium-aspartate-100-capsules","brand":"Example Naturals","title":"Example Naturals Magnesium Aspartate, 100 Capsules: added to the queue","unit":null,"unitText":null,"rb":null,"why":[],"lines":[],"perServing":null,"verified":null,"third":null,"changed":null,"oos":false,"reason":"Label not entered yet. The product is in the queue.","pending":true},{"id":"900002","slug":"example-naturals-magnesium-citrate-240-tablets","brand":"Example Naturals","title":"Magnesium Citrate, 240 Tablets","jar":14.5,"servings":120,"dose":202.041,"unit":0.059806,"unitText":"$0.060","rating":[4.5,3400],"rb":4.49,"why":["28% cheaper per 100 mg than the category median","Label shows NSF Certified for Sport"],"lines":[["1,250 mg Magnesium citrate (trimagnesium dicitrate, anhydrous)","compound mass","× 16.16% (Mg3(C6H5O7)2)","≈ 202.041 mg"]],"perServing":"Per serving: 202.041 mg of magnesium. Serving size 2, 120 servings per container.","verified":"Label checked by fixture (synthetic) on 2026-09-20.","third":"Testing mark on the label: NSF Certified for Sport.","changed":null,"oos":false,"reason":null,"pending":false},{"id":"900006","slug":"example-naturals-magnesium-taurate-120-capsules","brand":"Example Naturals","title":"Magnesium Taurate, 120 Capsules","jar":24.5,"servings":60,"dose":125.0,"unit":0.326667,"unitText":"$0.327","rating":[4.9,40],"rb":4.47,"why":["295% pricier per 100 mg than the category median","Formula changed in 2026"],"lines":[["125 mg Magnesium taurate (anhydrous)","magnesium","× 1","125 mg"]],"perServing":"Per serving: 125 mg of magnesium. Serving size 2, 60 servings per container.","verified":"Label checked by fixture (synthetic) on 2026-09-20.","third":"No third-party testing mark on the label.","changed":"The formula changed on 2026-02-01; figures use the current label.","oos":false,"reason":null,"pending":false},{"id":"900001","slug":"fixture-labs-magnesium-bisglycinate-200-mg-180-capsules","brand":"Fixture Labs","title":"Magnesium Bisglycinate, 200 mg, 180 Capsules","jar":18.99,"servings":90,"dose":200.0,"unit":0.1055,"unitText":"$0.106","rating":[4.7,12000],"rb":4.67,"why":["28% pricier per 100 mg than the category median"],"lines":[["200 mg Magnesium bisglycinate (anhydrous)","magnesium","× 1","200 mg"]],"perServing":"Per serving: 200 mg of magnesium. Serving size 2, 90 servings per container.","verified":"Label checked by fixture (synthetic) on 2026-09-20.","third":"No third-party testing mark on the label.","changed":null,"oos":false,"reason":null,"pending":false},{"id":"900009","slug":"fixture-labs-magnesium-chloride-120-tablets","brand":"Fixture Labs","title":"Magnesium Chloride, 120 Tablets","unit":null,"unitText":null,"rb":null,"why":[],"lines":[["520 mg Magnesium chloride hexahydrate","magnesium","× 1","520 mg"]],"perServing":"Per serving: 520 mg of magnesium. Serving size 1, 120 servings per container.","verified":"Label checked by fixture (synthetic) on 2026-09-20.","third":"No third-party testing mark on the label.","changed":null,"oos":false,"reason":"No price in today's network feed.","pending":false},{"id":"900005","slug":"fixture-labs-magnesium-l-threonate-90-capsules","brand":"Fixture Labs","title":"Magnesium L-Threonate, 90 Capsules","jar":32.0,"servings":30,"dose":165.062,"unit":0.646222,"unitText":"$0.646","rating":[4.6,5200],"rb":4.57,"why":["682% pricier per 100 mg than the category median"],"lines":[["2,000 mg Magnesium L-threonate (anhydrous)","compound mass","× 8.25% (Mg(C4H7O5)2)","≈ 165.062 mg"]],"perServing":"Per serving: 165.062 mg of magnesium. Serving size 3, 30 servings per container.","verified":"Label checked by fixture (synthetic) on 2026-09-20.","third":"No third-party testing mark on the label.","changed":null,"oos":false,"reason":null,"pending":false},{"id":"900007","slug":"placeholder-nutrition-magnesium-complex-120-capsules","brand":"Placeholder Nutrition","title":"Magnesium Complex, 120 Capsules","jar":12.99,"servings":120,"dose":200.0,"unit":0.054125,"unitText":"$0.054","rb":null,"why":["35% cheaper per 100 mg than the category median"],"lines":[["100 mg Magnesium bisglycinate (anhydrous)","magnesium","× 1","100 mg"],["100 mg Magnesium oxide","magnesium","× 1","100 mg"]],"perServing":"Per serving: 200 mg of magnesium. Serving size 1, 120 servings per container.","verified":"Label checked by fixture (synthetic) on 2026-09-20.","third":"No third-party testing mark on the label.","changed":null,"oos":false,"reason":null,"pending":false},{"id":"900011","slug":"placeholder-nutrition-magnesium-glycinate-90-capsules","brand":"Placeholder Nutrition","title":"Magnesium Glycinate, 90 Capsules","unit":null,"unitText":null,"rb":null,"why":[],"lines":[["200 mg Magnesium bisglycinate (anhydrous)","magnesium (unreadable)","× 1","—"]],"perServing":null,"verified":"Label checked by fixture (synthetic) on 2026-09-20.","third":"No third-party testing mark on the label.","changed":null,"oos":false,"reason":"A line of the label could not be read with certainty.","pending":false},{"id":"900003","slug":"placeholder-nutrition-magnesium-oxide-400-mg-250-tablets","brand":"Placeholder Nutrition","title":"Magnesium Oxide, 400 mg, 250 Tablets","jar":9.99,"servings":250,"dose":400.0,"unit":0.00999,"unitText":"$0.010","rating":[4.3,8100],"rb":4.32,"why":["88% cheaper per 100 mg than the category median"],"lines":[["400 mg Magnesium oxide","magnesium","× 1","400 mg"]],"perServing":"Per serving: 400 mg of magnesium. Serving size 1, 250 servings per container.","verified":"Label checked by fixture (synthetic) on 2026-09-20.","third":"No third-party testing mark on the label.","changed":null,"oos":false,"reason":null,"pending":false},{"id":"900012","slug":"sample-works-magnesium-carbonate-120-capsules","brand":"Sample Works","title":"Magnesium Carbonate, 120 Capsules","jar":7.49,"servings":60,"dose":250.0,"unit":0.049933,"unitText":"$0.050","rating":[4.1,300],"rb":4.4,"why":["40% cheaper per 100 mg than the category median"],"lines":[["250 mg Magnesium carbonate","magnesium","× 1","250 mg"]],"perServing":"Per serving: 250 mg of magnesium. Serving size 2, 60 servings per container.","verified":"Label checked by fixture (synthetic) on 2026-09-20.","third":"No third-party testing mark on the label.","changed":null,"oos":true,"reason":null,"pending":false},{"id":"900008","slug":"sample-works-magnesium-citrate-powder-8-oz","brand":"Sample Works","title":"Magnesium Citrate Powder, 8 oz","unit":null,"unitText":null,"rb":null,"why":[],"lines":[["300 mg Magnesium citrate (trimagnesium dicitrate, anhydrous)","magnesium","× 1","300 mg"]],"perServing":"Per serving: 300 mg of magnesium. Serving size 1, 75 servings per container.","verified":"Label checked by fixture (synthetic) on 2026-09-20.","third":"No third-party testing mark on the label.","changed":null,"oos":false,"reason":"The store shows this price only in the cart, so we cannot compare it.","pending":false},{"id":"900004","slug":"sample-works-magnesium-malate-120-capsules","brand":"Sample Works","title":"Magnesium Malate, 120 Capsules","jar":21.0,"servings":40,"dose":425.0,"unit":0.123529,"unitText":"$0.124","rating":[4.8,950],"rb":4.59,"why":["49% pricier per 100 mg than the category median","Label shows USP Verified"],"lines":[["425 mg Magnesium malate (anhydrous)","magnesium","× 1","425 mg"]],"perServing":"Per serving: 425 mg of magnesium. Serving size 3, 40 servings per container.","verified":"Label checked by fixture (synthetic) on 2026-09-20.","third":"Testing mark on the label: USP Verified.","changed":null,"oos":false,"reason":null,"pending":false}]};
+(() => {
+  "use strict";
+  const $ = s => document.querySelector(s);
+  const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const PRESETS = [
+    { key: "balance", label: "Balance", note: "Good on both price and rating. Each product is scored 0–100 on each and ranked by its weaker side." },
+    { key: "cheapest_per_unit", label: "Lowest price per 100 mg", note: "Every product with a verified label and today's price, cheapest magnesium first." },
+    { key: "fair_rating", label: "Best rated", note: "Rating adjusted for the number of reviews, so a 5.0 from 8 reviews does not outrank a 4.8 from 40,000." },
+  ];
+  const byId = Object.fromEntries(DATA.products.map(p => [p.id, p]));
+  const ranked = DATA.products.filter(p => p.unit != null);
+  const unknown = DATA.products.filter(p => p.unit == null);
+  const units = ranked.map(p => p.unit).sort((a, b) => a - b);
+  const median = (units[3] + units[4]) / 2;
+  const nb = s => s.replace(/ (mg|servings|UTC|reviews)/g, " $1");
+  const money = v => "$" + v.toFixed(2);
+  const form = p => (p.title.match(/Magnesium ([A-Za-z-]+(?: Powder)?)/) || [, ""])[1];
+  let preset = (location.hash || "").slice(1);
+  if (!PRESETS.some(p => p.key === preset)) preset = "balance";
+
+  // Toolbar.
+  const seg = $("#seg");
+  PRESETS.forEach((p, i) => {
+    const b = document.createElement("button");
+    b.type = "button"; b.dataset.key = p.key;
+    b.innerHTML = `<span>${p.label}</span><span class="c">${DATA.orders[p.key].length}</span><kbd>${i + 1}</kbd>`;
+    b.addEventListener("click", () => setPreset(p.key));
+    seg.appendChild(b);
+  });
+
+  // Rows.
+  const list = $("#list");
+  const rows = {};
+  ranked.forEach(p => {
+    const li = document.createElement("li");
+    li.className = "row"; li.dataset.id = p.id;
+    const good = w => /cheaper|Label shows/.test(w);
+    const chips = [...(p.why || []).map(w => `<span class="chip ${good(w) ? "good" : /Formula/.test(w) ? "warn" : ""}">${w.replace(/per 100 mg /, "")}</span>`)];
+    const dose = p.dose % 1 ? p.dose.toFixed(3) : String(p.dose);
+    li.innerHTML = `
+      <div class="row-main">
+        <span class="rank" aria-label="Position"></span>
+        <div class="prod">
+          <div class="name"><button type="button" class="open-btn" aria-expanded="false">${p.title}</button></div>
+          <span class="brand">${p.brand}</span>
+          <div class="chips">${chips.join("")}</div>
+          ${p.oos ? `<span class="oos">Out of stock in today's feed</span>` : ""}
+          <button type="button" class="more open-btn" aria-expanded="false">Label and arithmetic</button>
+        </div>
+        <div class="cell c-unit"><span class="lbl">per 100&nbsp;mg</span><button type="button" class="src-btn big" data-src="unit">${p.unitText}</button></div>
+        <div class="cell c-jar"><span class="lbl">jar</span><button type="button" class="src-btn num" data-src="jar">${money(p.jar)}</button><span class="num" style="font-size:12.5px;color:var(--muted)"><button type="button" class="src-btn" data-src="servings">${p.servings}</button> × <button type="button" class="src-btn" data-src="dose">${dose}&nbsp;mg</button></span></div>
+        <div class="cell c-rate"><span class="lbl">rating</span>${p.rb != null ? `<button type="button" class="src-btn num" data-src="rating">${p.rb.toFixed(2)}</button><span class="num" style="font-size:12px;color:var(--muted)">${p.rating[0]} · ${p.rating[1].toLocaleString("en-US")}</span>` : `<span class="num" style="color:var(--faint)">none</span>`}</div>
+        <div class="buy"><a class="btn" href="#" data-buy="${p.id}">Buy on iHerb</a><span class="disc">Affiliate link. It never changes the order.</span></div>
+      </div>
+      <div class="detail"><div><div class="detail-in">${detail(p)}</div></div></div>`;
+    rows[p.id] = li;
+  });
+
+  function detail(p) {
+    const lines = p.lines.map((l, i) => `<tr><td class="n">${i + 1}</td><td>${l[0]}</td><td>${l[1]}</td><td>${l[2]}</td><td class="n">${l[3]}</td></tr>`).join("");
+    const pos = PRESETS.map(pr => { const o = DATA.orders[pr.key], i = o.indexOf(p.id); return `<li><span>${pr.label}</span><span class="num">${i < 0 ? "not included" : `${i + 1} of ${o.length}`}</span></li>`; }).join("");
+    const dose = p.dose % 1 ? p.dose.toFixed(3) : String(p.dose);
+    return `
+      <div class="box">
+        <h3>Label, line by line</h3>
+        <div class="scroll"><table><thead><tr><th>#</th><th>On the label</th><th>Counted as</th><th>Factor</th><th style="text-align:end">Magnesium</th></tr></thead><tbody>${lines}</tbody></table></div>
+        <p class="meta">${nb(p.perServing)} ${p.verified}${p.changed ? " " + p.changed : ""} ${p.third}</p>
+      </div>
+      <div class="box">
+        <h3>Price per 100 mg</h3>
+        <div class="calc">${money(p.jar)} ÷ (${p.servings} × ${dose}&nbsp;mg) × 100&nbsp;mg<br>= <b>${p.unitText}</b></div>
+        <h3>Position in each ranking</h3>
+        <ul class="pos">${pos}</ul>
+      </div>`;
+  }
+
+  // Unknowns: shown with the reason and what would change it.
+  const next = {
+    "Label not entered yet. The product is in the queue.": "Appears once its label is entered and checked.",
+    "No price in today's network feed.": "Appears on a day the feed carries a price.",
+    "A line of the label could not be read with certainty.": "Appears once the label is re-read from a new photo.",
+    "The store shows this price only in the cart, so we cannot compare it.": "We do not guess prices that the store hides.",
+  };
+  $("#unkList").innerHTML = unknown.map(p => `
+    <div class="unk">
+      <div class="prod"><span style="font-weight:700">${p.title.replace(/^Example Naturals |: added to the queue$/g, "")}</span><span class="brand">${p.brand || "Example Naturals"}</span></div>
+      <span class="ghostval">unknown</span>
+      <span class="why"><b>${p.reason}</b> ${next[p.reason] || ""}</span>
+    </div>`).join("");
+
+  // Price axis.
+  const svg = $("#plot"), NS = "http://www.w3.org/2000/svg";
+  const el = (tag, attrs, parent = svg) => { const n = document.createElementNS(NS, tag); for (const k in attrs) n.setAttribute(k, attrs[k]); parent.appendChild(n); return n; };
+  const lo = Math.log10(0.008), hi = Math.log10(1);
+  function drawPlot() {
+    svg.innerHTML = "";
+    const w = svg.clientWidth || 600, pad = 14, y = 34;
+    const x = v => pad + ((Math.log10(v) - lo) / (hi - lo)) * (w - pad * 2);
+    el("line", { class: "axis", x1: pad, x2: w - pad, y1: y, y2: y });
+    [0.01, 0.03, 0.1, 0.3, 1].forEach(v => {
+      const g = el("g", { class: "tick" });
+      el("line", { x1: x(v), x2: x(v), y1: y - 4, y2: y + 4 }, g);
+      const t = el("text", { x: x(v), y: y + 18, "text-anchor": "middle" }, g); t.textContent = "$" + v;
+    });
+    const mg = el("g", { class: "med" });
+    el("line", { x1: x(median), x2: x(median), y1: y - 22, y2: y + 6 }, mg);
+    const mt = el("text", { x: x(median) + 4, y: y - 16 }, mg); mt.textContent = "median";
+    const order = DATA.orders[preset];
+    ranked.slice().sort((a, b) => a.unit - b.unit).forEach((p, i) => {
+      const g = el("g", { class: "pt" + (order.includes(p.id) ? "" : " out"), "data-id": p.id, tabindex: "-1" });
+      el("circle", { cx: x(p.unit), cy: y, r: 5 }, g);
+      const t = el("text", { x: x(p.unit), y: y - 11 - (i % 2) * 0, "text-anchor": i === 0 ? "start" : "middle" }, g);
+      t.textContent = `${form(p)} ${p.unitText}`;
+      g.addEventListener("mouseenter", () => hot(p.id, true));
+      g.addEventListener("mouseleave", () => hot(p.id, false));
+      g.addEventListener("click", () => { toggle(p.id, true); rows[p.id].scrollIntoView({ block: "center", behavior: reduce ? "auto" : "smooth" }); });
+    });
+    const max = units[units.length - 1], min = units[0];
+    $("#spread").textContent = `spread ${Math.round(max / min)}×`;
+    svg.setAttribute("aria-label", `Prices per 100 mg from ${money(min).replace(/\.(\d)(\d)$/, ".$1$2")} to $${max.toFixed(3)}; median $${median.toFixed(3)}`);
+  }
+  function hot(id, on) {
+    rows[id] && rows[id].classList.toggle("hot", on);
+    const g = svg.querySelector(`.pt[data-id="${id}"]`); if (g) g.classList.toggle("hot", on);
+  }
+  ranked.forEach(p => {
+    rows[p.id].addEventListener("mouseenter", () => hot(p.id, true));
+    rows[p.id].addEventListener("mouseleave", () => hot(p.id, false));
+  });
+
+  // Preset switch: rows glide to their new places (FLIP) so the change is visible.
+  function setPreset(key, first) {
+    preset = key;
+    const before = {};
+    if (!first && !reduce) Object.values(rows).forEach(r => { if (r.isConnected) before[r.dataset.id] = r.getBoundingClientRect().top; });
+    const order = DATA.orders[key];
+    order.forEach((id, i) => { rows[id].querySelector(".rank").textContent = i + 1; list.appendChild(rows[id]); });
+    const outside = ranked.filter(p => !order.includes(p.id));
+    const out = $("#outList");
+    outside.forEach(p => { rows[p.id].querySelector(".rank").textContent = "–"; out.appendChild(rows[p.id]); });
+    $("#outRank").hidden = !outside.length;
+    $("#outP").textContent = key === "cheapest_per_unit" ? "" : `No rating in today's feed, so ${outside.length === 1 ? "this product has" : "these products have"} no place in “${PRESETS.find(p => p.key === key).label}”. ${outside.length === 1 ? "It is" : "They are"} still compared on price.`;
+    seg.querySelectorAll("button").forEach(b => b.setAttribute("aria-pressed", String(b.dataset.key === key)));
+    $("#note").textContent = PRESETS.find(p => p.key === key).note;
+    if (!first && !reduce) {
+      Object.values(rows).forEach(r => {
+        const b = before[r.dataset.id]; if (b == null) return;
+        const dy = b - r.getBoundingClientRect().top; if (!dy) return;
+        r.animate([{ transform: `translateY(${dy}px)` }, { transform: "none" }], { duration: 320, easing: "cubic-bezier(.2,.7,.2,1)" });
+      });
+    }
+    drawPlot();
+    try { history.replaceState(null, "", "#" + key); } catch (e) { /* the frame may refuse; the choice still works */ }
+  }
+
+  // Expand in place: the detail opens under the row, the list keeps its place.
+  function toggle(id, force) {
+    const r = rows[id], open = force ?? !r.classList.contains("open");
+    r.classList.toggle("open", open);
+    r.querySelectorAll(".open-btn").forEach(b => b.setAttribute("aria-expanded", String(open)));
+  }
+  list.parentElement.addEventListener("click", e => {
+    const ob = e.target.closest(".open-btn"); if (ob) { toggle(ob.closest(".row").dataset.id); return; }
+    const buy = e.target.closest("[data-buy]");
+    if (buy) { e.preventDefault(); toast("In the live site this opens the affiliate network's link to the product. Nothing leaves this prototype."); return; }
+    const sb = e.target.closest(".src-btn"); if (sb) { e.stopPropagation(); openPop(sb); }
+  });
+  $("#outList").addEventListener("click", e => { const ob = e.target.closest(".open-btn"); if (ob) toggle(ob.closest(".row").dataset.id); const sb = e.target.closest(".src-btn"); if (sb) { e.stopPropagation(); openPop(sb); } const buy = e.target.closest("[data-buy]"); if (buy) { e.preventDefault(); toast("In the live site this opens the affiliate network's link. Nothing leaves this prototype."); } });
+
+  // Every number answers "where is this from?", and can be reported where it stands.
+  const pop = $("#pop");
+  let popFor = null;
+  function source(p, kind) {
+    const dose = p.dose % 1 ? p.dose.toFixed(3) : String(p.dose);
+    switch (kind) {
+      case "unit": return ["Computed", p.unitText + " per 100 mg", `${money(p.jar)} ÷ (${p.servings} × ${dose} mg) × 100 mg. ${Math.round(Math.abs(p.unit / median - 1) * 100)}% ${p.unit < median ? "below" : "above"} the category median of $${median.toFixed(3)}.`];
+      case "jar": return ["Network feed", money(p.jar), "Today's price from the affiliate network's product feed, 26 Sep 2026, 06:02 UTC. We never read prices from the store's pages."];
+      case "servings": return ["Label", `${p.servings} servings`, `Printed on the label. ${p.verified}`];
+      case "dose": return ["Label × formula", `${dose} mg of magnesium`, `${p.lines.map(l => `${l[0]} (${l[1]}) ${l[2]} = ${l[3].replace("≈ ", "")}`).join("; ")}. Summed exactly, rounded down once.`];
+      case "rating": return ["Network feed, adjusted", p.rb.toFixed(2), `Average ${p.rating[0]} from ${p.rating[1].toLocaleString("en-US")} reviews, pulled toward the category average by the median review count.`];
+    }
+  }
+  function openPop(btn) {
+    if (popFor === btn) { closePop(); return; }
+    const p = byId[btn.closest(".row").dataset.id], [k, v, text] = source(p, btn.dataset.src);
+    pop.innerHTML = `<span class="k">${k}</span><span class="v">${nb(v)}</span><p>${nb(text)}</p>
+      <div class="acts"><button type="button" class="ghost" id="rep">This number is wrong</button></div>
+      <form id="repForm" hidden><label for="repText" style="font-size:12.5px;color:var(--muted)">What should it be, and where did you see it?</label><textarea id="repText" maxlength="2000" required></textarea><div class="acts"><button type="submit" class="btn">Send report</button><button type="button" class="ghost" id="repCancel">Cancel</button></div></form>`;
+    pop.hidden = false;
+    popFor?.setAttribute("aria-expanded", "false");
+    popFor = btn; btn.setAttribute("aria-expanded", "true");
+    const r = btn.getBoundingClientRect(), pw = pop.offsetWidth;
+    pop.style.left = Math.max(16, Math.min(window.scrollX + r.right - pw, window.scrollX + document.documentElement.clientWidth - pw - 16)) + "px";
+    pop.style.top = window.scrollY + r.bottom + 8 + "px";
+    $("#rep").addEventListener("click", () => { $("#repForm").hidden = false; $("#rep").hidden = true; $("#repText").focus(); });
+    $("#repCancel").addEventListener("click", closePop);
+    $("#repForm").addEventListener("submit", e => {
+      e.preventDefault();
+      pop.innerHTML = `<span class="ok">Report recorded with the product, the field and this page.</span><p>We check every report against the label or the feed. In this prototype nothing is sent.</p>`;
+      setTimeout(closePop, 2600);
+    });
+  }
+  function closePop() { pop.hidden = true; popFor?.setAttribute("aria-expanded", "false"); popFor?.focus({ preventScroll: true }); popFor = null; }
+  document.addEventListener("click", e => { if (!pop.hidden && !pop.contains(e.target) && !e.target.closest(".src-btn")) closePop(); });
+
+  // Keyboard: 1–3 switch the order, Esc closes what is open.
+  document.addEventListener("keydown", e => {
+    if (e.target.closest("textarea, input")) { if (e.key === "Escape") closePop(); return; }
+    if (e.key === "Escape") { closePop(); return; }
+    const i = ["1", "2", "3"].indexOf(e.key); if (i >= 0) setPreset(PRESETS[i].key);
+  });
+  $("#howBtn").addEventListener("click", e => { const m = $("#method"); m.hidden = !m.hidden; e.currentTarget.setAttribute("aria-expanded", String(!m.hidden)); });
+
+  let tt;
+  function toast(msg) { const t = $("#toast"); t.textContent = msg; t.classList.add("show"); clearTimeout(tt); tt = setTimeout(() => t.classList.remove("show"), 3200); }
+
+  let rz; addEventListener("resize", () => { clearTimeout(rz); rz = setTimeout(drawPlot, 100); });
+  setPreset(preset, true);
+})();
+</script>
+
+</body>
+</html>

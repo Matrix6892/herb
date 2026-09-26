@@ -15,6 +15,8 @@
   `data/labels/`: `verified_by` и `verified_at` обязательны.
 - Строки интерфейса — только в `site/i18n/en.toml`; шаблоны обращаются по
   ключам. Названия товаров и состав не переводятся.
+- Интерфейс: `docs/guidelines/interface.md` (принципы и чек-лист PR);
+  прототипы в `design/prototypes/`.
 - Перед PR: `cargo fmt --all --check`, `cargo clippy --workspace --all-targets
   -- -D warnings`, `cargo test --workspace`, `cargo build -p catalog-core
   --target wasm32-unknown-unknown`.

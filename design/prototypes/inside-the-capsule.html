@@ -1,0 +1,692 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<style>body{margin:0}[hidden]{display:none!important}</style>
+</head>
+<body>
+<title>Inside the Capsule</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,300..900&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<style>
+  /* A zoom from the shelf into the molecule and back out to a decision.
+     Each scene owns its palette (mineral light, label white, molecular
+     night, blueprint, light again), so colours are explicit rather than
+     theme-driven. Headlines narrow as the zoom goes deeper: loud and wide
+     on the shelf, condensed and exact inside. */
+  :root {
+    --mineral: #e6e9ee;
+    --paper: #f7f8fa;
+    --ink: #0e1116;
+    --muted: #56606e;
+    --line: #c9cfd8;
+    --cobalt: #2f49ff;
+    --night-ink: #e9eeff;
+    --night-muted: #9aa8cc;
+    --halo: #9fb4ff;
+    --print: #b9c8f5;
+    --display: "Archivo", "Arial Narrow", system-ui, sans-serif;
+    --body: "Archivo", system-ui, -apple-system, "Segoe UI", sans-serif;
+    --mono: "IBM Plex Mono", ui-monospace, Menlo, Consolas, monospace;
+    color-scheme: light;
+  }
+  html, body { background: var(--mineral); color: var(--ink); }
+  body { font: 16px/1.55 var(--body); overflow-x: clip; }
+  a { color: var(--cobalt); }
+  .mono { font-family: var(--mono); font-variant-numeric: tabular-nums; }
+  :focus-visible { outline: 2px solid var(--cobalt); outline-offset: 3px; }
+
+  .bar { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 6px 20px; padding-inline: 16px; padding-block: 14px; max-width: 80rem; margin-inline: auto; }
+  .brand { font: 800 18px/1 var(--display); font-stretch: 122%; letter-spacing: .03em; color: var(--ink); text-decoration: none; }
+  .brand small { font: 500 11px/1 var(--mono); letter-spacing: .06em; color: var(--muted); margin-inline-start: 8px; text-transform: uppercase; }
+  .bar nav { display: flex; gap: 18px; font-size: 14px; }
+  .bar nav a { color: var(--ink); text-decoration: none; border-bottom: 1px solid var(--line); }
+
+  /* ---- Static story: no script, or reduced motion ---- */
+  .story { position: relative; }
+  .stage { position: relative; }
+  #art, .gauge { display: none; }
+  .scene { max-width: 46rem; margin-inline: auto; padding-inline: 16px; padding-block: 36px; display: grid; gap: 18px; border-top: 1px solid var(--line); }
+  .scene:first-of-type { border-top: 0; }
+  .cap { display: grid; gap: 10px; }
+  .eyebrow { margin: 0; font: 600 12px/1.2 var(--mono); letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
+  .eyebrow b { color: var(--cobalt); font-weight: 600; }
+  .cap h1, .cap h2 { margin: 0; font-family: var(--display); font-weight: 850; letter-spacing: -.015em; line-height: 1.02; text-wrap: balance; }
+  .cap h1 { font-size: clamp(34px, 6vw, 70px); font-stretch: 125%; }
+  .cap h2 { font-size: clamp(30px, 4.8vw, 58px); }
+  [data-world="servings"] h2 { font-stretch: 116%; }
+  [data-world="label"] h2 { font-stretch: 104%; }
+  [data-world="molecule"] h2 { font-stretch: 78%; font-weight: 700; }
+  [data-world="blueprint"] h2 { font-stretch: 66%; font-weight: 650; letter-spacing: 0; }
+  [data-world="bars"] h2 { font-stretch: 108%; font-size: clamp(26px, 3.3vw, 44px); }
+  .cap p { margin: 0; max-width: 34rem; color: var(--muted); font-size: clamp(15px, 1.5vw, 18px); }
+  .cap .num { color: var(--ink); font-family: var(--mono); font-weight: 500; white-space: nowrap; }
+  .fb { margin: 0; padding: 0; list-style: none; display: grid; gap: 4px; font-size: 14px; }
+  .fb li { display: flex; justify-content: space-between; gap: 12px; border-bottom: 1px dashed var(--line); padding-block: 4px; }
+  .hint { display: none; }
+
+  /* Supplement Facts: the label's own typography, hairlines and bars. */
+  .label-wrap { position: relative; width: min(260px, 100%); }
+  .facts { background: #fff; color: #000; border: 1.5px solid #000; padding: 8px 10px 10px; font-family: var(--body); box-shadow: 0 1px 0 #000, 0 24px 50px -28px rgba(14, 17, 22, .5); }
+  .facts h3 { margin: 0 0 4px; font: 900 26px/1 var(--display); font-stretch: 108%; letter-spacing: -.01em; }
+  .facts .r { display: flex; justify-content: space-between; gap: 10px; border-top: .5px solid #000; padding-block: 2px; font-size: 12.5px; }
+  .facts .r:first-of-type { border-top: 0; }
+  .facts .thick { border-top: 8px solid #000; font-weight: 800; font-size: 11px; }
+  .facts .med { border-top: 3px solid #000; }
+  .facts .hl { font-weight: 800; font-size: 14px; padding-block: 4px; }
+  .facts .hl b { font-family: var(--mono); font-weight: 600; position: relative; }
+  .facts small { display: block; margin-top: 6px; font-size: 9.5px; color: #444; letter-spacing: .02em; }
+  .mark { position: absolute; left: -12px; top: -9px; width: calc(100% + 24px); height: calc(100% + 18px); overflow: visible; pointer-events: none; }
+  .mark ellipse { fill: none; stroke: var(--cobalt); stroke-width: 2; stroke-linecap: round; vector-effect: non-scaling-stroke; }
+  .mark-note { position: absolute; right: -4px; top: calc(100% + 12px); font: 500 12px/1.2 var(--mono); color: var(--cobalt); transform: rotate(-3deg); white-space: nowrap; }
+
+  /* Composition of the compound by mass. */
+  .mass { width: 100%; display: grid; gap: 8px; }
+  .mass-row { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; font-size: 14px; }
+  .mass-row b { font-size: clamp(16px, 2vw, 22px); font-weight: 500; }
+  .comp { display: flex; height: 20px; border-radius: 3px; overflow: hidden; gap: 2px; }
+  .comp i { display: block; position: relative; }
+  .comp .mg { background: #fff; box-shadow: 0 0 20px 3px var(--halo); }
+  .comp .c { background: #6070a0; }
+  .comp .o { background: #8496ce; }
+  .comp .h { background: #48547a; }
+  .legend { display: flex; flex-wrap: wrap; gap: 4px 14px; margin: 0; padding: 0; list-style: none; font: 500 12px/1.3 var(--mono); color: var(--night-muted); }
+  .legend li::before { content: ""; display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-inline-end: 6px; background: var(--sw); vertical-align: 0; }
+  .legend .on { color: #fff; }
+
+  /* Blueprint: the calculation as a drawing, each term with its source. */
+  .eq { display: grid; gap: 18px; width: 100%; max-width: 560px; }
+  .terms { display: flex; flex-wrap: wrap; align-items: flex-start; gap: 10px 12px; font-size: clamp(17px, 1.9vw, 24px); }
+  .term { display: grid; gap: 6px; }
+  .term > span:first-child { white-space: nowrap; }
+  .src { font: 500 10.5px/1.3 var(--mono); letter-spacing: .04em; text-transform: uppercase; color: var(--print); border-top: 1px solid currentColor; padding-top: 4px; max-width: 11em; }
+  .op { opacity: .7; }
+  .res { font-size: clamp(24px, 3.6vw, 44px); display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 12px; }
+  .res b { font-weight: 600; }
+  .res small { font: 500 13px/1.3 var(--mono); color: var(--print); }
+  .title-block { display: grid; grid-template-columns: repeat(3, auto); width: max-content; max-width: 100%; border: 1px solid var(--print); font: 500 10px/1.2 var(--mono); letter-spacing: .06em; text-transform: uppercase; color: var(--print); }
+  .title-block span { padding: 5px 8px; border-inline-end: 1px solid var(--print); border-bottom: 1px solid var(--print); }
+  .title-block span:nth-child(3n) { border-inline-end: 0; }
+  .title-block span:nth-last-child(-n + 3) { border-bottom: 0; }
+  .title-block em { font-style: normal; color: #fff; }
+
+  /* ---- Cinema mode, set by the script ---- */
+  .cinema .story { height: 720vh; height: 720svh; }
+  .cinema .stage { position: sticky; top: 0; height: 100vh; height: 100svh; overflow: hidden; }
+  .cinema #art { display: block; position: absolute; inset: 0; width: 100%; height: 100%; }
+  .cinema .scene { position: absolute; inset: 0; max-width: none; padding: 0; margin: 0; border: 0; display: block; opacity: var(--v, 0); pointer-events: none; }
+  .cinema .fb { display: none; }
+  .cinema .cap { position: absolute; left: 16px; right: 16px; top: max(18px, 4svh); transform: translateY(calc((1 - var(--v, 0)) * 18px)); }
+  .cinema .vis { position: absolute; left: 5%; right: 5%; top: 42%; bottom: 9%; display: flex; }
+  .cinema .scene.dark { color: var(--night-ink); }
+  .cinema .scene.dark .cap p, .cinema .scene.dark .eyebrow { color: var(--night-muted); }
+  .cinema .scene.dark .eyebrow b { color: #fff; }
+  .cinema .scene.dark .cap .num { color: #fff; }
+  .cinema .hint { display: flex; position: absolute; left: 50%; bottom: 58px; transform: translateX(-50%); gap: 8px; align-items: center; font: 500 11px/1 var(--mono); letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
+  .cinema .hint::after { content: ""; width: 7px; height: 7px; border-right: 1.5px solid currentColor; border-bottom: 1.5px solid currentColor; transform: rotate(45deg); animation: nudge 1.6s ease-in-out infinite; }
+  @keyframes nudge { 50% { transform: translateY(4px) rotate(45deg); } }
+
+  .cinema .vis-label { align-items: center; justify-content: flex-end; }
+  .cinema .label-wrap { width: min(260px, 58%); transform: translateY(calc((1 - var(--t, 0)) * 44px)) rotate(calc((1 - var(--t, 0)) * 5deg)); }
+  .cinema .mark ellipse { stroke-dasharray: 300; stroke-dashoffset: calc(300 - clamp(0, calc(var(--t, 0) * 3 - 1.2), 1) * 300); }
+  .cinema .mark-note { opacity: clamp(0, calc(var(--t, 0) * 4 - 2.2), 1); }
+  .cinema .vis-mass { align-items: flex-end; }
+  .cinema .comp .fade { opacity: calc(1 - clamp(0, calc(var(--t, 0) * 3 - 1.2), 1) * .82); }
+  .cinema .vis-eq { align-items: center; justify-content: center; }
+  .cinema .eq .e { opacity: clamp(0, calc(var(--t, 0) * 8.5 - var(--j)), 1); transform: translateY(calc((1 - clamp(0, calc(var(--t, 0) * 8.5 - var(--j)), 1)) * 10px)); }
+
+  /* Depth gauge: where in the zoom we are, and how much is on screen. */
+  .cinema .gauge { display: grid; gap: 6px; position: absolute; left: 16px; right: 16px; bottom: 14px; z-index: 2; color: var(--ink); font: 500 10px/1.2 var(--mono); letter-spacing: .08em; text-transform: uppercase; pointer-events: none; }
+  .stage[data-dark] .gauge { color: #dfe6ff; }
+  .gauge .row { display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; }
+  .gauge .scale { font-size: 18px; letter-spacing: 0; text-transform: none; font-weight: 500; min-width: 5.5em; }
+  .gauge ol { display: flex; gap: 0; margin: 0; padding: 0; list-style: none; flex: 1; min-width: 0; }
+  .gauge li { flex: 1; position: relative; padding-top: 10px; opacity: .45; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; transition: opacity .3s; }
+  .gauge li::before { content: ""; position: absolute; left: 0; right: 4px; top: 0; height: 2px; background: currentColor; opacity: .5; }
+  .gauge li.on { opacity: 1; }
+  .gauge li.on::before { opacity: 1; height: 4px; top: -1px; }
+  .gauge .count { opacity: .7; }
+  @media (max-width: 640px) { .gauge li:not(.on) { color: transparent; } .gauge .scale { font-size: 15px; } .cinema .vis { bottom: 88px; } .cinema .hint { display: none; } }
+
+  @media (min-width: 900px) {
+    .cinema .cap { left: 6vw; right: auto; width: min(33vw, 470px); top: 46%; transform: translateY(calc(-50% + (1 - var(--v, 0)) * 18px)); }
+    .cinema .vis { left: 42vw; right: 5vw; top: 11%; bottom: 14%; }
+    .cinema .gauge { left: 6vw; right: 5vw; bottom: 22px; }
+    .cinema .hint { bottom: 76px; }
+  }
+
+  /* ---- After the story ---- */
+  .after { background: var(--paper); border-top: 1px solid var(--line); }
+  .after-in { max-width: 60rem; margin-inline: auto; padding-inline: 16px; padding-block: 56px 72px; display: grid; gap: 26px; }
+  .after h2 { margin: 0; font: 850 clamp(28px, 4vw, 46px)/1.05 var(--display); font-stretch: 118%; letter-spacing: -.015em; text-wrap: balance; }
+  .after p { margin: 0; max-width: 40rem; color: var(--muted); }
+  .rank { display: grid; gap: 10px; margin: 0; padding: 0; list-style: none; }
+  .rank li { display: grid; grid-template-columns: 7.5rem minmax(0, 1fr) 4.6rem; align-items: center; gap: 12px; font-size: 14px; }
+  .rank .bar-t { height: 12px; background: var(--line); border-radius: 2px; position: relative; overflow: hidden; }
+  .rank .bar-t i { position: absolute; inset-block: 0; inset-inline-start: 0; min-width: 3px; background: var(--ink); border-radius: 2px; }
+  .rank li.focus .bar-t i { background: var(--cobalt); }
+  .rank li.unknown { color: var(--muted); }
+  .rank li.unknown .bar-t { background: none; border: 1.5px dashed var(--line); }
+  .rank .v { text-align: end; }
+  .cta { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; }
+  .btn { display: inline-flex; align-items: center; gap: 10px; background: var(--ink); color: #fff; text-decoration: none; font: 700 15px/1 var(--body); padding: 14px 20px; border-radius: 999px; }
+  .btn::after { content: "→"; font-family: var(--mono); }
+  .btn.ghost { background: transparent; color: var(--ink); border: 1px solid var(--ink); }
+  .btn.ghost::after { content: none; }
+  .small { font-size: 13px; color: var(--muted); max-width: 46rem; }
+  @media (max-width: 520px) { .rank li { grid-template-columns: 6.2rem minmax(0, 1fr) 4.2rem; } }
+</style>
+
+<header class="bar">
+  <a class="brand" href="#top" id="top">Vitrina<small>a shop window you can see through</small></a>
+  <nav><a href="#ranking">Magnesium ranking</a><a href="#how">How we rank</a></nav>
+</header>
+
+<main>
+  <section class="story" id="story" aria-label="What the price on a jar of magnesium actually buys">
+    <div class="stage">
+      <canvas id="art" aria-hidden="true"></canvas>
+
+      <article class="scene" data-world="shelf">
+        <div class="cap">
+          <p class="eyebrow"><b>Outside</b> · the shelf</p>
+          <h1>Five jars of magnesium. Which one costs least?</h1>
+          <p>On the shelf every jar looks like a fair deal. The stickers say <span class="num">$7.49</span> to <span class="num">$32.00</span>, and nothing about what is inside.</p>
+        </div>
+        <ul class="fb">
+          <li><span>Carbonate</span><span class="mono">$7.49</span></li>
+          <li><span>Oxide</span><span class="mono">$9.99</span></li>
+          <li><span>Citrate</span><span class="mono">$14.50</span></li>
+          <li><span>Bisglycinate</span><span class="mono">$18.99</span></li>
+          <li><span>L-threonate</span><span class="mono">$32.00</span></li>
+        </ul>
+        <div class="hint">Look inside</div>
+      </article>
+
+      <article class="scene" data-world="servings">
+        <div class="cap">
+          <p class="eyebrow"><b>Closer</b> · the servings</p>
+          <h2>Each dot is one serving.</h2>
+          <p>Tip the jars out and they stop looking alike: <span class="num">30</span> servings in one, <span class="num">250</span> in another. From here on every dot is one of these <span class="num">550</span> servings. None are added and none are thrown away.</p>
+        </div>
+        <ul class="fb">
+          <li><span>Carbonate</span><span class="mono">60 servings</span></li>
+          <li><span>Oxide</span><span class="mono">250 servings</span></li>
+          <li><span>Citrate</span><span class="mono">120 servings</span></li>
+          <li><span>Bisglycinate</span><span class="mono">90 servings</span></li>
+          <li><span>L-threonate</span><span class="mono">30 servings</span></li>
+        </ul>
+      </article>
+
+      <article class="scene" data-world="label">
+        <div class="cap">
+          <p class="eyebrow"><b>Closer still</b> · the label</p>
+          <h2>The label says 1,250 mg.</h2>
+          <p>In bold, and true. We follow the blue jar, the citrate. <span class="num">1,250 mg</span> is the weight of magnesium citrate, the whole compound. How much of it is magnesium?</p>
+        </div>
+        <div class="vis vis-label">
+          <div class="label-wrap">
+            <div class="facts" role="img" aria-label="Example Supplement Facts panel: serving size 2 tablets, 120 servings per container, magnesium citrate 1,250 mg per serving">
+              <h3>Supplement Facts</h3>
+              <div class="r"><span>Serving Size</span><span>2 Tablets</span></div>
+              <div class="r"><span>Servings Per Container</span><span>120</span></div>
+              <div class="r thick"><span>Amount Per Serving</span><span></span></div>
+              <div class="r hl"><span>Magnesium citrate</span><b>1,250 mg<svg class="mark" viewBox="0 0 100 40" preserveAspectRatio="none" aria-hidden="true"><ellipse cx="50" cy="20" rx="47" ry="16" transform="rotate(-3 50 20)"/></svg><span class="mark-note" aria-hidden="true">of what?</span></b></div>
+              <div class="r med"></div>
+              <small>Example label from our test data</small>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <article class="scene dark" data-world="molecule">
+        <div class="cap">
+          <p class="eyebrow"><b>Inside</b> · Mg₃(C₆H₅O₇)₂</p>
+          <h2>Magnesium is 16.16% of it.</h2>
+          <p>Three magnesium atoms held by <span class="num">36</span> others. We keep the three and weigh them: <span class="num">1,250 mg</span> of anhydrous citrate holds <span class="num">202.041 mg</span> of magnesium, rounded down once, to the microgram.</p>
+        </div>
+        <div class="vis vis-mass">
+          <div class="mass">
+            <div class="mass-row"><span>Magnesium citrate, one serving</span><b class="mono">1,250 mg</b></div>
+            <div class="comp" aria-hidden="true">
+              <i class="mg" style="flex:16.16"></i><i class="c fade" style="flex:31.95"></i><i class="o fade" style="flex:49.65"></i><i class="h fade" style="flex:2.23"></i>
+            </div>
+            <ul class="legend">
+              <li class="on" style="--sw:#fff">Mg 16.16%</li><li style="--sw:#6070a0">C 31.95%</li><li style="--sw:#8496ce">O 49.65%</li><li style="--sw:#48547a">H 2.23%</li>
+            </ul>
+            <div class="mass-row"><span>of which magnesium</span><b class="mono" id="mgval">202.041 mg</b></div>
+          </div>
+        </div>
+      </article>
+
+      <article class="scene dark" data-world="blueprint">
+        <div class="cap">
+          <p class="eyebrow"><b>One number</b> · the drawing</p>
+          <h2>Then we price only the magnesium.</h2>
+          <p>Every term comes from somewhere you can check: the price from today's feed, the servings from the label, the magnesium from the formula. Commission is not an input.</p>
+        </div>
+        <div class="vis vis-eq">
+          <div class="eq mono">
+            <div class="terms">
+              <span class="term e" style="--j:0"><span>$14.50</span><span class="src">price · network feed · 26 Sep 06:02 UTC</span></span>
+              <span class="op e" style="--j:1">÷</span>
+              <span class="term e" style="--j:1"><span>(120</span><span class="src">servings · label</span></span>
+              <span class="op e" style="--j:2">×</span>
+              <span class="term e" style="--j:2"><span>202.041 mg)</span><span class="src">Mg per serving · label × formula</span></span>
+              <span class="op e" style="--j:3">×</span>
+              <span class="term e" style="--j:3"><span>100 mg</span><span class="src">unit · same for every jar</span></span>
+            </div>
+            <div class="res e" style="--j:4">= <b>$0.060</b><small>per 100 mg of magnesium</small></div>
+            <div class="title-block e" style="--j:5" aria-label="Drawing title block">
+              <span>Vitrina</span><span>Sheet <em>5 / 6</em></span><span>Rev <em>1</em></span>
+              <span>Inputs <em>4</em></span><span>Commission <em>not an input</em></span><span>Scale <em>1 : 1</em></span>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <article class="scene" data-world="bars">
+        <div class="cap">
+          <p class="eyebrow"><b>Back outside</b> · the decision</p>
+          <h2>By the sticker, carbonate is cheapest. By the magnesium, oxide is.</h2>
+          <p>Jar prices differ <span class="num">4×</span>. The magnesium in them differs <span class="num">65×</span>. A jar we cannot read stays unknown, never zero. We compare prices; which form and dose suit you is a question for your clinician.</p>
+        </div>
+      </article>
+
+      <div class="gauge" aria-hidden="true">
+        <div class="row"><span class="scale" id="scale">1 m</span><span class="count">550 servings on screen · none added, none removed</span></div>
+        <ol><li>Shelf</li><li>Servings</li><li>Label</li><li>Molecule</li><li>Number</li><li>Decision</li></ol>
+      </div>
+    </div>
+  </section>
+
+  <section class="after" id="ranking" aria-labelledby="ranking-h">
+    <div class="after-in">
+      <h2 id="ranking-h">The shelf, ranked by what is inside</h2>
+      <ol class="rank" aria-label="Price per 100 mg of magnesium">
+        <li><span>Oxide</span><span class="bar-t"><i style="width:1.5%"></i></span><span class="v mono">$0.010</span></li>
+        <li><span>Carbonate</span><span class="bar-t"><i style="width:7.7%"></i></span><span class="v mono">$0.050</span></li>
+        <li class="focus"><span>Citrate</span><span class="bar-t"><i style="width:9.3%"></i></span><span class="v mono">$0.060</span></li>
+        <li><span>Bisglycinate</span><span class="bar-t"><i style="width:16.3%"></i></span><span class="v mono">$0.106</span></li>
+        <li><span>L-threonate</span><span class="bar-t"><i style="width:100%"></i></span><span class="v mono">$0.646</span></li>
+        <li class="unknown"><span>Glycinate</span><span class="bar-t"></span><span class="v mono">unknown</span></li>
+      </ol>
+      <p class="small">Glycinate is not ranked: one line of its label could not be read with certainty. We show it as unknown rather than guess.</p>
+      <div class="cta">
+        <a class="btn" href="#ranking">Open the magnesium ranking</a>
+        <a class="btn ghost" href="#how">How we calculate</a>
+      </div>
+      <p class="small" id="how">We read each label, convert compound mass to the element with its chemical formula and standard atomic weights, add the lines exactly and round down once, then divide the price by the magnesium in the whole container. Commission never enters the formula. When you buy through our links we may earn a commission. We show prices and doses; we do not recommend a dose.</p>
+      <p class="small">Prototype. The products are examples from our test data; the numbers are computed by the same code that builds the site.</p>
+    </div>
+  </section>
+</main>
+
+<script>
+(() => {
+  "use strict";
+  const story = document.getElementById("story");
+  const stage = story.querySelector(".stage");
+  const cv = document.getElementById("art");
+  const ctx = cv.getContext && cv.getContext("2d");
+  const scenes = [...story.querySelectorAll(".scene")];
+  const ticks = [...story.querySelectorAll(".gauge li")];
+  const scaleEl = document.getElementById("scale");
+  const mgval = document.getElementById("mgval");
+  const N = scenes.length;
+  if (!ctx || matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  document.documentElement.classList.add("cinema");
+
+  // Example products from the fixture build. unit = dollars per 100 mg of Mg,
+  // as computed by catalog-core (P_unit).
+  const P = [
+    { name: "Carbonate", jar: "$7.49", n: 60, unit: 0.049933, u: "$0.050" },
+    { name: "Oxide", jar: "$9.99", n: 250, unit: 0.00999, u: "$0.010" },
+    { name: "Citrate", jar: "$14.50", n: 120, unit: 0.059807, u: "$0.060", focus: true },
+    { name: "Bisglycinate", jar: "$18.99", n: 90, unit: 0.1055, u: "$0.106" },
+    { name: "L-threonate", jar: "$32.00", n: 30, unit: 0.64622, u: "$0.646" },
+  ];
+  const SCALE = ["1 m", "10 cm", "1 mm", "1 nm", "1 number", "1 m"];
+  const BG = [[230, 233, 238], [224, 228, 235], [238, 240, 243], [6, 10, 22], [13, 36, 96], [243, 244, 246]];
+  const DARK = [0, 0, 0, 1, 1, 0];
+  const INK = [14, 17, 22], COBALT = [47, 73, 255], DUST_L = [150, 160, 176], WHITE = [255, 255, 255], PRINT = [185, 200, 245];
+  const DUST_D = [104, 120, 170], ATOM = { Mg: [255, 255, 255], C: [96, 112, 160], O: [132, 150, 206], H: [72, 84, 122] };
+
+  let seed = 20260926;
+  const rnd = () => { seed = (seed + 0x6d2b79f5) | 0; let t = Math.imul(seed ^ (seed >>> 15), 1 | seed); t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t; return ((t ^ (t >>> 14)) >>> 0) / 4294967296; };
+  const parts = [];
+  P.forEach((p, pi) => { for (let k = 0; k < p.n; k++) parts.push({ pi, k, d: rnd(), jx: rnd(), jy: rnd(), ph: rnd() * 6.283 }); });
+  const M = parts.length;
+  const FOCUS = parts.findIndex(q => P[q.pi].focus);
+
+  // Schematic trimagnesium dicitrate with the formula's own atom counts:
+  // 3 Mg, 12 C, 14 O, 10 H. Each citrate is HOC(COO)(CH2COO)2, carboxylates
+  // facing the Mg trio; z gives the drawing a little depth for the turn.
+  const MOL = (() => {
+    const a = [], b = [];
+    const add = (x, y, z, el) => (a.push({ x, y, z, el }), a.length - 1);
+    const mg = [add(0, -24, 0, "Mg"), add(-21, 12, 6, "Mg"), add(21, 12, -6, "Mg")];
+    [-1, 1].forEach(s => {
+      const ox = s * -84, fx = s * -1, fz = s;
+      const at = (x, y, z, el) => add(ox + fx * x, y, fz * z, el);
+      const c0 = at(0, 0, 0, "C"), c1 = at(26, 0, 4, "C"), c2 = at(-12, -24, 12, "C"), c3 = at(-12, 24, -12, "C"), c4 = at(14, -44, 20, "C"), c5 = at(14, 44, -20, "C");
+      const oh = at(-28, 0, -6, "O"), o1 = at(38, -12, 10, "O"), o2 = at(38, 12, -2, "O"), o3 = at(32, -54, 28, "O"), o4 = at(10, -64, 14, "O"), o5 = at(32, 54, -28, "O"), o6 = at(10, 64, -14, "O");
+      const h0 = at(-42, -8, -14, "H"), h1 = at(-28, -30, 20, "H"), h2 = at(-14, -40, 2, "H"), h3 = at(-28, 30, -20, "H"), h4 = at(-14, 40, -2, "H");
+      [[c0, c1], [c0, c2], [c0, c3], [c2, c4], [c3, c5], [c0, oh], [c1, o1], [c1, o2], [c4, o3], [c4, o4], [c5, o5], [c5, o6], [oh, h0], [c2, h1], [c2, h2], [c3, h3], [c3, h4]].forEach(e => b.push([...e, 0]));
+    });
+    mg.forEach(m => {
+      a.map((o, i) => ({ i, d: o.el === "O" ? Math.hypot(o.x - a[m].x, o.y - a[m].y) : 1e9 })).sort((p, q) => p.d - q.d).slice(0, 2).forEach(o => b.push([m, o.i, 1]));
+    });
+    return { atoms: a, bonds: b };
+  })();
+  const NA = MOL.atoms.length;
+
+  let W = 0, H = 0, R, F = [], geo = {};
+  const mk = () => ({ x: new Float32Array(M), y: new Float32Array(M), r: new Float32Array(M), a: new Float32Array(M), c: new Float32Array(M * 3), dust: new Uint8Array(M) });
+  const set = (f, i, x, y, r, al, col, dust) => { f.x[i] = x; f.y[i] = y; f.r[i] = r; f.a[i] = al; f.c[i * 3] = col[0]; f.c[i * 3 + 1] = col[1]; f.c[i * 3 + 2] = col[2]; f.dust[i] = dust ? 1 : 0; };
+  const dust = (f, i, q, al, col) => set(f, i, q.jx * W, q.jy * H, 0.8 + q.d * 0.7, al, col, 1);
+
+  function fill(inside, x0, y0, w, h, n) {
+    let s = Math.sqrt((w * h) / n), pts = [];
+    for (let tries = 0; tries < 40; tries++, s *= 0.94) {
+      pts = [];
+      for (let y = y0 + s / 2; y < y0 + h; y += s) for (let x = x0 + s / 2; x < x0 + w; x += s) if (inside(x, y)) pts.push([x, y]);
+      if (pts.length >= n) break;
+    }
+    const out = [];
+    for (let j = 0; j < n; j++) out.push(pts[Math.floor((j * pts.length) / n)] || [x0 + w / 2, y0 + h / 2]);
+    return { pts: out, s };
+  }
+
+  function layout() {
+    W = stage.clientWidth; H = stage.clientHeight;
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    cv.width = Math.round(W * dpr); cv.height = Math.round(H * dpr);
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    const wide = W >= 900;
+    R = wide ? { x: W * 0.42, y: H * 0.11, w: W * 0.53, h: H * 0.75 } : { x: W * 0.05, y: H * 0.43, w: W * 0.9, h: H * 0.44 };
+    F = [];
+    const n = P.length, sw = R.w / n;
+
+    // 0. The shelf: glass jars filled from the bottom, one dot per serving.
+    const jw = Math.min(sw * 0.72, 104), jh = Math.min(R.h * 0.6, jw * 1.75), yb = R.y + R.h * 0.8;
+    const inner = jw - 14;
+    let s0 = Math.sqrt((inner * (jh - 18)) / 250), cols0 = Math.max(1, Math.floor(inner / s0));
+    while (Math.ceil(250 / cols0) * s0 > jh - 18) { s0 *= 0.95; cols0 = Math.max(1, Math.floor(inner / s0)); }
+    geo.jars = P.map((p, i) => ({ cx: R.x + sw * (i + 0.5), w: jw, h: jh, yb }));
+    geo.shelf = { y: yb, x0: R.x - 8, x1: R.x + R.w + 8 };
+    const f0 = mk();
+    parts.forEach((q, i) => {
+      const j = geo.jars[q.pi], row = Math.floor(q.k / cols0), col = q.k % cols0;
+      set(f0, i, j.cx - ((cols0 - 1) * s0) / 2 + col * s0, j.yb - 9 - s0 / 2 - row * s0, s0 * 0.34, 0.9, P[q.pi].focus ? COBALT : INK, 0);
+    });
+    F.push(f0);
+
+    // 1. Servings: the same dots poured into blocks of ten.
+    const c1 = 10, s1 = Math.min((sw * 0.84) / c1, (R.h * 0.68) / 25), yb1 = R.y + R.h * 0.8;
+    geo.blocks = { s1, yb1, sw };
+    const f1 = mk();
+    parts.forEach((q, i) => {
+      const cx = R.x + sw * (q.pi + 0.5), row = Math.floor(q.k / c1), col = q.k % c1;
+      set(f1, i, cx - ((c1 - 1) * s1) / 2 + col * s1, yb1 - s1 / 2 - row * s1, s1 * 0.34, 0.92, P[q.pi].focus ? COBALT : INK, 0);
+    });
+    F.push(f1);
+
+    // 2. The label: the citrate's 120 servings become two scored tablets.
+    const tw = Math.min(R.w * 0.34, 170), th = tw * 0.44, tcx = R.x + R.w * 0.19, tcy = R.y + R.h * 0.46;
+    geo.tabs = [{ cx: tcx, cy: tcy - th * 0.72, w: tw, h: th }, { cx: tcx, cy: tcy + th * 0.72, w: tw, h: th }];
+    const stadium = t => (x, y) => { const rr = t.h / 2, dx = Math.max(Math.abs(x - t.cx) - (t.w / 2 - rr), 0), dy = y - t.cy; return dx * dx + dy * dy <= (rr - 4) * (rr - 4) && Math.abs(x - t.cx) > 3; };
+    const tabFill = geo.tabs.map(t => fill(stadium(t), t.cx - t.w / 2, t.cy - t.h / 2, t.w, t.h, 60));
+    const f2 = mk();
+    parts.forEach((q, i) => {
+      if (P[q.pi].focus) { const tf = tabFill[q.k < 60 ? 0 : 1], pt = tf.pts[q.k % 60]; set(f2, i, pt[0], pt[1], tf.s * 0.33, 0.95, COBALT, 0); }
+      else dust(f2, i, q, 0.26, DUST_L);
+    });
+    F.push(f2);
+
+    // 3. The molecule: 39 of the citrate's dots become its atoms.
+    const sc = Math.min(R.w / 300, (R.h * 0.56) / 150, 2.4);
+    geo.mol = { sc, cx: R.x + R.w * 0.5, cy: R.y + R.h * (wide ? 0.34 : 0.3) };
+    geo.rad = { Mg: 8.5, C: 4.4, O: 4.8, H: 2.7 };
+    const f3 = mk();
+    parts.forEach((q, i) => {
+      if (P[q.pi].focus && q.k < NA) { const at = MOL.atoms[q.k]; set(f3, i, geo.mol.cx + at.x * sc, geo.mol.cy + at.y * sc, geo.rad[at.el] * Math.sqrt(sc), 1, ATOM[at.el], 0); }
+      else dust(f3, i, q, 0.22, DUST_D);
+    });
+    F.push(f3);
+
+    // 4. The blueprint: every serving becomes a point of the grid paper.
+    const cols4 = Math.round(Math.sqrt((M * W) / H)), rows4 = Math.ceil(M / cols4), sx = W / cols4, sy = H / rows4;
+    geo.grid = { sx, sy };
+    const f4 = mk();
+    parts.forEach((q, i) => { const r = Math.floor(i / cols4), c = i % cols4; set(f4, i, (c + 0.5) * sx, (r + 0.5) * sy, 1.3, 0.34, PRINT, 0); });
+    F.push(f4);
+
+    // 5. The decision: price per 100 mg of magnesium. Each product's servings
+    //    spread along its bar: packed where magnesium is cheap, sparse where dear.
+    const order = P.map((p, i) => i).sort((a, b) => P[a].unit - P[b].unit);
+    const nameCol = wide ? 112 : 88, x0 = R.x + nameCol;
+    const maxU = P[order[order.length - 1]].unit, Lmax = R.w - nameCol - (wide ? 110 : 84), gap = R.h / 6.4;
+    geo.bars = order.map((pi, r) => ({ pi, y: R.y + gap * (r + 0.6), x0, nx: R.x, L: Math.max(8, (Lmax * P[pi].unit) / maxU), Lmax }));
+    geo.ghost = { y: R.y + gap * (order.length + 0.6), x0, nx: R.x, Lmax };
+    const byPi = {}; geo.bars.forEach(b => (byPi[b.pi] = b));
+    const f5 = mk();
+    parts.forEach((q, i) => {
+      const b = byPi[q.pi], rows = 3, per = Math.ceil(P[q.pi].n / rows), row = Math.floor(q.k / per), j = q.k % per;
+      set(f5, i, b.x0 + (per > 1 ? j / (per - 1) : 0) * b.L, b.y + (row - 1) * 4.2, 1.8, 0.95, P[q.pi].focus ? COBALT : INK, 0);
+    });
+    F.push(f5);
+  }
+
+  const clamp = (v, a, b) => Math.min(b, Math.max(a, v));
+  const smooth = (a, b, v) => { const t = clamp((v - a) / (b - a), 0, 1); return t * t * (3 - 2 * t); };
+  const ease = t => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
+  const rgba = (c, a) => `rgba(${c[0] | 0},${c[1] | 0},${c[2] | 0},${a})`;
+  const X = new Float32Array(M), Y = new Float32Array(M), RR = new Float32Array(M), AL = new Float32Array(M), CC = new Float32Array(M * 3);
+
+  function text(str, x, y, { size = 13, weight = 600, font = "Archivo", color = INK, alpha = 1, align = "center", stretch = "normal" } = {}) {
+    if (alpha <= 0.01) return;
+    if ("fontStretch" in ctx) ctx.fontStretch = stretch;
+    ctx.font = `${weight} ${size}px ${font}, system-ui, sans-serif`;
+    ctx.textAlign = align; ctx.fillStyle = rgba(color, alpha); ctx.fillText(str, x, y);
+  }
+  function rr(x, y, w, h, r) { ctx.beginPath(); ctx.moveTo(x + r, y); ctx.arcTo(x + w, y, x + w, y + h, r); ctx.arcTo(x + w, y + h, x, y + h, r); ctx.arcTo(x, y + h, x, y, r); ctx.arcTo(x, y, x + w, y, r); ctx.closePath(); }
+  // A shelf-edge price tag: white card, heavy top rule, big figure, small print.
+  function tag(x, y, big, small, alpha, color = INK, align = "center") {
+    if (alpha <= 0.01) return;
+    ctx.font = `500 15px "IBM Plex Mono", monospace`;
+    const w = Math.max(ctx.measureText(big).width + 14, 52), h = 34, left = align === "center" ? x - w / 2 : x;
+    ctx.fillStyle = rgba(WHITE, 0.96 * alpha); ctx.fillRect(left, y, w, h);
+    ctx.fillStyle = rgba(color, alpha); ctx.fillRect(left, y, w, 3);
+    ctx.strokeStyle = rgba(INK, 0.12 * alpha); ctx.lineWidth = 1; ctx.strokeRect(left + 0.5, y + 0.5, w - 1, h - 1);
+    text(big, left + w / 2, y + 20, { size: 15, weight: 500, font: '"IBM Plex Mono"', color, alpha });
+    text(small, left + w / 2, y + 30, { size: 8, weight: 500, font: '"IBM Plex Mono"', color: INK, alpha: 0.6 * alpha });
+  }
+
+  // Rotation of the molecule's targets: a slow turn so it reads as an object.
+  function molTarget(i, now) {
+    const q = parts[i];
+    if (!(P[q.pi].focus && q.k < NA)) return null;
+    const at = MOL.atoms[q.k], th = Math.sin(now * 0.00022) * 0.55, c = Math.cos(th), s = Math.sin(th);
+    const x = at.x * c + at.z * s, z = -at.x * s + at.z * c, persp = 1 / (1 - z / 520);
+    return [geo.mol.cx + x * geo.mol.sc * persp, geo.mol.cy + at.y * geo.mol.sc * persp, persp, z];
+  }
+
+  let t0 = -1;
+  function draw(now) {
+    if (t0 < 0) t0 = now;
+    const rect = story.getBoundingClientRect();
+    const p = clamp(-rect.top / Math.max(1, rect.height - H), 0, 1);
+    const f = p * (N - 1), k = Math.min(Math.floor(f), N - 2), fr = f - k;
+    const A = F[k], B = F[k + 1];
+    const g = smooth(0.2, 0.8, fr);
+    const bg = BG[k].map((v, i) => v + (BG[k + 1][i] - v) * g);
+    ctx.fillStyle = rgba(bg, 1); ctx.fillRect(0, 0, W, H);
+
+    const vis = scenes.map((s, i) => clamp((0.45 - Math.abs(f - i)) / 0.2, 0, 1));
+    scenes.forEach((s, i) => { s.style.setProperty("--v", vis[i].toFixed(3)); s.style.setProperty("--t", clamp((f - i + 0.45) / 0.6, 0, 1).toFixed(3)); });
+    const cur = Math.round(f);
+    ticks.forEach((li, i) => li.classList.toggle("on", i === cur));
+    if (scaleEl.textContent !== SCALE[cur]) scaleEl.textContent = SCALE[cur];
+    if (DARK[cur]) stage.setAttribute("data-dark", ""); else stage.removeAttribute("data-dark");
+    const mt = ease(clamp((f - 2.62) / 0.3, 0, 1));
+    const mgText = mt >= 1 ? "202.041 mg" : `${Math.round(1250 - (1250 - 202.041) * mt).toLocaleString("en-US")} mg`;
+    if (mgval.textContent !== mgText) mgval.textContent = mgText;
+
+    // Intro: on first load the servings pour into the jars.
+    const intro = clamp((now - t0) / 1500, 0, 1);
+
+    // Positions for this frame.
+    for (let i = 0; i < M; i++) {
+      const q = parts[i];
+      const t = ease(clamp((fr - 0.15 - q.d * 0.3) / 0.4, 0, 1));
+      let ax = A.x[i], ay = A.y[i], bx = B.x[i], by = B.y[i];
+      if (k === 3 || k + 1 === 3) { const m = molTarget(i, now); if (m) { if (k === 3) { ax = m[0]; ay = m[1]; } else { bx = m[0]; by = m[1]; } } }
+      let x = ax + (bx - ax) * t, y = ay + (by - ay) * t;
+      const dw = A.dust[i] + (B.dust[i] - A.dust[i]) * t;
+      if (dw > 0) { x += Math.sin(now * 0.00035 + q.ph) * 6 * dw; y += Math.cos(now * 0.0003 + q.ph * 1.3) * 5 * dw; }
+      if (intro < 1 && k === 0) { const e = ease(clamp(intro * 1.6 - q.d * 0.6 - (q.k / P[q.pi].n) * 0.2, 0, 1)); y -= (1 - e) * (y + 40); }
+      X[i] = x; Y[i] = y;
+      RR[i] = A.r[i] + (B.r[i] - A.r[i]) * t;
+      AL[i] = A.a[i] + (B.a[i] - A.a[i]) * t;
+      for (let j = 0; j < 3; j++) CC[i * 3 + j] = A.c[i * 3 + j] + (B.c[i * 3 + j] - A.c[i * 3 + j]) * t;
+    }
+
+    // Blueprint grid: minor and major lines, like drafting film.
+    if (vis[4] > 0) {
+      const { sx, sy } = geo.grid;
+      ctx.lineWidth = 1;
+      [[1, 0.05], [5, 0.12]].forEach(([every, al]) => {
+        ctx.strokeStyle = rgba(PRINT, al * vis[4]); ctx.beginPath();
+        for (let x = 0, c = 0; x <= W; x += sx, c++) if (c % every === 0) { ctx.moveTo(Math.round(x) + 0.5, 0); ctx.lineTo(Math.round(x) + 0.5, H); }
+        for (let y = 0, c = 0; y <= H; y += sy, c++) if (c % every === 0) { ctx.moveTo(0, Math.round(y) + 0.5); ctx.lineTo(W, Math.round(y) + 0.5); }
+        ctx.stroke();
+      });
+    }
+
+    // Shelf and glass jars (the labels hide what is inside, the glass does not).
+    if (vis[0] > 0) {
+      const v = vis[0], s = geo.shelf;
+      ctx.fillStyle = rgba(INK, 0.07 * v); ctx.fillRect(s.x0, s.y, s.x1 - s.x0, 10);
+      ctx.fillStyle = rgba(INK, 0.35 * v); ctx.fillRect(s.x0, s.y, s.x1 - s.x0, 1.5);
+      geo.jars.forEach(j => {
+        const x = j.cx - j.w / 2, top = j.yb - j.h, rad = Math.min(14, j.w * 0.18);
+        ctx.fillStyle = rgba([255, 255, 255], 0.35 * v); rr(x, top, j.w, j.h, rad); ctx.fill();
+        ctx.strokeStyle = rgba(INK, 0.5 * v); ctx.lineWidth = 1.4; rr(x, top, j.w, j.h, rad); ctx.stroke();
+        // neck and lid with ridges
+        const lw = j.w * 0.78, lh = Math.max(8, j.h * 0.09);
+        ctx.fillStyle = rgba(INK, 0.88 * v); rr(j.cx - lw / 2, top - lh, lw, lh, 3); ctx.fill();
+        ctx.strokeStyle = rgba(WHITE, 0.22 * v); ctx.lineWidth = 1; ctx.beginPath();
+        for (let rx = j.cx - lw / 2 + 4; rx < j.cx + lw / 2 - 2; rx += 3.5) { ctx.moveTo(rx, top - lh + 2); ctx.lineTo(rx, top - 2); }
+        ctx.stroke();
+      });
+    }
+    // Tablets: body, outline and the score line down the middle.
+    if (vis[2] > 0) {
+      geo.tabs.forEach(t => {
+        ctx.fillStyle = rgba(COBALT, 0.06 * vis[2]); rr(t.cx - t.w / 2, t.cy - t.h / 2, t.w, t.h, t.h / 2); ctx.fill();
+        ctx.strokeStyle = rgba(COBALT, 0.55 * vis[2]); ctx.lineWidth = 1.5; rr(t.cx - t.w / 2, t.cy - t.h / 2, t.w, t.h, t.h / 2); ctx.stroke();
+        ctx.beginPath(); ctx.moveTo(t.cx, t.cy - t.h / 2 + 5); ctx.lineTo(t.cx, t.cy + t.h / 2 - 5); ctx.stroke();
+      });
+      const last = geo.tabs[1];
+      text("2 tablets = 1 serving", last.cx, last.cy + last.h / 2 + 22, { size: 12, weight: 500, font: '"IBM Plex Mono"', color: COBALT, alpha: vis[2] });
+      text("× 120 servings", last.cx, last.cy + last.h / 2 + 38, { size: 12, weight: 500, font: '"IBM Plex Mono"', color: COBALT, alpha: 0.7 * vis[2] });
+    }
+    // Molecule bonds, drawn between the atoms' live positions.
+    if (vis[3] > 0) {
+      ctx.lineWidth = 1.4;
+      MOL.bonds.forEach(([a, b, ionic]) => {
+        ctx.strokeStyle = ionic ? rgba([159, 180, 255], 0.5 * vis[3]) : rgba([150, 165, 215], 0.55 * vis[3]);
+        ctx.setLineDash(ionic ? [3, 4] : []);
+        ctx.beginPath(); ctx.moveTo(X[FOCUS + a], Y[FOCUS + a]); ctx.lineTo(X[FOCUS + b], Y[FOCUS + b]); ctx.stroke();
+      });
+      ctx.setLineDash([]);
+    }
+    // Bar tracks and the unknown row.
+    if (vis[5] > 0) {
+      ctx.lineWidth = 1;
+      geo.bars.forEach(b => { ctx.strokeStyle = rgba(INK, 0.1 * vis[5]); ctx.beginPath(); ctx.moveTo(b.x0, b.y + 0.5); ctx.lineTo(b.x0 + b.Lmax, b.y + 0.5); ctx.stroke(); });
+      const gh = geo.ghost;
+      ctx.strokeStyle = rgba(INK, 0.35 * vis[5]); ctx.setLineDash([4, 4]); ctx.lineWidth = 1.2;
+      rr(gh.x0, gh.y - 9, gh.Lmax, 18, 3); ctx.stroke(); ctx.setLineDash([]);
+    }
+
+    // Servings.
+    for (let i = 0; i < M; i++) {
+      const isAtom = vis[3] > 0.02 && i >= FOCUS && i < FOCUS + NA;
+      ctx.fillStyle = rgba([CC[i * 3], CC[i * 3 + 1], CC[i * 3 + 2]], AL[i].toFixed(3));
+      ctx.beginPath(); ctx.arc(X[i], Y[i], Math.max(0.5, RR[i]), 0, 6.2832); ctx.fill();
+      if (isAtom) {
+        // Shade the atom as a sphere lit from the upper left.
+        const r = RR[i], gr = ctx.createRadialGradient(X[i] - r * 0.35, Y[i] - r * 0.4, r * 0.1, X[i], Y[i], r);
+        gr.addColorStop(0, rgba(WHITE, 0.55 * vis[3])); gr.addColorStop(1, rgba([0, 0, 0], 0.25 * vis[3]));
+        ctx.fillStyle = gr; ctx.beginPath(); ctx.arc(X[i], Y[i], r, 0, 6.2832); ctx.fill();
+      }
+    }
+
+    // Magnesium burns white: the three Mg atoms glow, everything else dims.
+    if (vis[3] > 0) {
+      ctx.globalCompositeOperation = "lighter";
+      for (let m = 0; m < 3; m++) {
+        const x = X[FOCUS + m], y = Y[FOCUS + m], pulse = 1 + 0.12 * Math.sin(now * 0.002 + m * 2.1);
+        const r = 36 * Math.sqrt(geo.mol.sc) * pulse, gr = ctx.createRadialGradient(x, y, 0, x, y, r);
+        gr.addColorStop(0, rgba([205, 218, 255], 0.55 * vis[3])); gr.addColorStop(1, rgba([80, 110, 255], 0));
+        ctx.fillStyle = gr; ctx.beginPath(); ctx.arc(x, y, r, 0, 6.2832); ctx.fill();
+      }
+      ctx.globalCompositeOperation = "source-over";
+      for (let m = 0; m < 3; m++) text("Mg", X[FOCUS + m] + 12 * Math.sqrt(geo.mol.sc), Y[FOCUS + m] - 10 * Math.sqrt(geo.mol.sc), { size: 11, weight: 500, font: '"IBM Plex Mono"', color: WHITE, alpha: 0.9 * vis[3], align: "left" });
+    }
+
+    // Jar labels over the contents, and shelf-edge price tags.
+    if (vis[0] > 0) {
+      const v = vis[0];
+      geo.jars.forEach((j, i) => {
+        const bandY = j.yb - j.h * 0.78, bandH = j.h * 0.2;
+        ctx.fillStyle = rgba([250, 250, 248], 0.94 * v); ctx.fillRect(j.cx - j.w / 2 + 1, bandY, j.w - 2, bandH);
+        ctx.fillStyle = rgba(P[i].focus ? COBALT : INK, 0.9 * v); ctx.fillRect(j.cx - j.w / 2 + 1, bandY, j.w - 2, 2);
+        text("MAGNESIUM", j.cx, bandY + bandH * 0.45, { size: Math.max(6, Math.min(9, j.w * 0.085)), weight: 800, color: INK, alpha: 0.75 * v, stretch: "expanded" });
+        text(P[i].name, j.cx, bandY + bandH * 0.82, { size: Math.max(7, Math.min(11, j.w * 0.11)), weight: 600, color: P[i].focus ? COBALT : INK, alpha: 0.85 * v });
+        // highlight on the glass
+        ctx.fillStyle = rgba(WHITE, 0.65 * v); rr(j.cx - j.w / 2 + 5, j.yb - j.h + 10, 3, j.h * 0.5, 1.5); ctx.fill();
+        tag(j.cx, j.yb + 14, P[i].jar, "PER JAR", v, P[i].focus ? COBALT : INK);
+      });
+    }
+    // Serving counts.
+    if (vis[1] > 0) {
+      const { s1, yb1, sw } = geo.blocks;
+      P.forEach((pr, i) => {
+        const x = R.x + sw * (i + 0.5), top = yb1 - Math.ceil(pr.n / 10) * s1;
+        text(String(pr.n), x, top - 10, { size: Math.max(13, Math.min(22, sw * 0.18)), weight: 500, font: '"IBM Plex Mono"', color: pr.focus ? COBALT : INK, alpha: vis[1] });
+        text(pr.name, x, yb1 + 20, { size: Math.max(10, Math.min(13, sw * 0.12)), alpha: 0.75 * vis[1], color: pr.focus ? COBALT : INK });
+      });
+    }
+    // The decision: new shelf tags that show what the dollars buy.
+    if (vis[5] > 0) {
+      const v = vis[5];
+      geo.bars.forEach(b => {
+        const pr = P[b.pi], col = pr.focus ? COBALT : INK;
+        text(pr.name, b.nx, b.y + 4, { size: W >= 900 ? 13 : 12, weight: 600, align: "left", color: col, alpha: v });
+        tag(b.x0 + b.L + 12, b.y - 17, pr.u, "PER 100 MG MG", v, col, "left");
+      });
+      const gh = geo.ghost;
+      text("Glycinate", gh.nx, gh.y + 4, { size: W >= 900 ? 13 : 12, weight: 600, align: "left", color: INK, alpha: 0.55 * v });
+      text("unknown", gh.x0 + 10, gh.y + 4, { size: 11, weight: 500, font: '"IBM Plex Mono"', align: "left", color: INK, alpha: 0.65 * v });
+      text("label unreadable · not ranked", gh.x0, gh.y + 26, { size: 10.5, weight: 500, font: '"IBM Plex Mono"', align: "left", color: INK, alpha: 0.5 * v });
+    }
+  }
+
+  let running = false, visible = true;
+  const loop = now => { draw(now); if (visible) requestAnimationFrame(loop); else running = false; };
+  const start = () => { if (!running) { running = true; requestAnimationFrame(loop); } };
+  new IntersectionObserver(es => { visible = es.some(e => e.isIntersecting); if (visible) start(); }).observe(story);
+  let rt;
+  addEventListener("resize", () => { clearTimeout(rt); rt = setTimeout(() => { layout(); start(); }, 120); });
+  layout();
+  start();
+})();
+</script>
+
+</body>
+</html>

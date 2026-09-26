@@ -1,0 +1,777 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Направления витрины</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=Golos+Text:wght@400;500;600;700&family=IBM+Plex+Sans+Condensed:wght@400;500;600&family=Manrope:wght@400;500;600;700;800&family=Nunito:wght@500;600;700;800&family=PT+Serif:ital,wght@0,400;0,700;1,400&family=PT+Mono&family=Rubik:wght@400;500;600&display=swap">
+<style>
+/* ───────── Оболочка сравнения ───────── */
+:root{
+  --bg:#EBECEE;
+  --card:#FFFFFF;
+  --ink:#15161A;
+  --muted:#5C606A;
+  --line:#D6D8DD;
+  --soft:#F3F4F6;
+  --gain:#15724A;
+  --gain-bg:#E3F2EA;
+  --cost:#B03A2C;
+  --cost-bg:#F8E6E3;
+  --dot-off:#CDD0D6;
+  --sans:"Onest", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --mono:"IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+  color-scheme:light;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0F1012; --card:#18191D; --ink:#EDEEF0; --muted:#9A9EA8; --line:#2B2D33; --soft:#202227;
+    --gain:#5FCB93; --gain-bg:#16271E; --cost:#F28B7D; --cost-bg:#2C1A18; --dot-off:#3A3D45;
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0F1012; --card:#18191D; --ink:#EDEEF0; --muted:#9A9EA8; --line:#2B2D33; --soft:#202227;
+  --gain:#5FCB93; --gain-bg:#16271E; --cost:#F28B7D; --cost-bg:#2C1A18; --dot-off:#3A3D45;
+  color-scheme:dark;
+}
+
+*,*::before,*::after{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.55 var(--sans);padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+img{max-width:100%}
+[hidden]{display:none!important}
+
+.wrap{max-width:1480px;margin:0 auto;padding-inline:clamp(16px,3vw,36px);padding-block:44px 72px}
+
+.intro{display:grid;gap:28px 56px;grid-template-columns:minmax(0,1fr);margin-bottom:36px}
+@media (min-width:980px){.intro{grid-template-columns:minmax(0,1.4fr) minmax(0,1fr);align-items:end}}
+.eyebrow{font:500 12px/1.3 var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin:0 0 14px}
+h1{font-size:clamp(30px,4.2vw,50px);line-height:1.06;letter-spacing:-.022em;font-weight:600;margin:0 0 18px;text-wrap:balance}
+.lede{max-width:64ch;color:var(--muted);margin:0;font-size:16px}
+.lede b{color:var(--ink);font-weight:500}
+.howto{margin:0;border-top:1px solid var(--line);padding-top:14px;display:grid;gap:9px;font-size:14px}
+.howto div{display:grid;grid-template-columns:96px minmax(0,1fr);gap:12px;align-items:baseline}
+.howto dt{font:500 11px/1.4 var(--mono);letter-spacing:.07em;text-transform:uppercase}
+.howto dd{margin:0;color:var(--muted)}
+.howto .g{color:var(--gain)} .howto .c{color:var(--cost)}
+
+.grid{display:grid;gap:20px;grid-template-columns:minmax(0,1fr)}
+@media (min-width:800px){.grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (min-width:1240px){.grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
+
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px;display:flex;flex-direction:column;gap:16px;min-width:0}
+.card-head{display:grid;grid-template-columns:auto minmax(0,1fr);gap:1px 12px;align-items:center}
+.letter{grid-row:span 2;width:30px;height:30px;border-radius:50%;border:1px solid var(--line);display:grid;place-items:center;font:500 12px var(--mono);color:var(--muted)}
+.card h2{margin:0;font-size:21px;line-height:1.2;font-weight:600;letter-spacing:-.01em}
+.tension{margin:0;font-size:14px;color:var(--muted)}
+.tension .g{color:var(--gain);font-weight:600}
+.tension .c{color:var(--cost);font-weight:600}
+
+.frame{position:relative;height:640px;border-radius:12px;overflow:hidden;isolation:isolate;box-shadow:0 0 0 1px var(--line)}
+.mock{position:absolute;inset:0;overflow:hidden;container-type:inline-size;-webkit-font-smoothing:antialiased;text-align:left}
+.mock *{box-sizing:border-box}
+.mock p,.mock ul,.mock ol,.mock dl,.mock dd,.mock blockquote{margin:0;padding:0}
+.mock ul,.mock ol{list-style:none}
+.mock button{font:inherit;color:inherit;cursor:pointer}
+
+.trade{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;margin:0}
+@media (max-width:440px){.trade{grid-template-columns:minmax(0,1fr)}}
+.trade dt{font:500 11px/1 var(--mono);letter-spacing:.08em;text-transform:uppercase;margin-bottom:7px}
+.trade .gain dt{color:var(--gain)}
+.trade .cost dt{color:var(--cost)}
+.trade dd{margin:0;font-size:14px;line-height:1.5}
+
+.spec{display:grid;gap:6px;font-size:12.5px}
+.spec p{margin:0;display:flex;flex-wrap:wrap;gap:5px;align-items:center}
+.spec .k{color:var(--muted);min-width:112px}
+.spec code{font:500 11px/1 var(--mono);padding:4px 6px;border-radius:5px;background:var(--gain-bg);color:var(--gain)}
+.spec .strain code{background:var(--cost-bg);color:var(--cost)}
+
+.axes{margin:auto 0 0;padding-top:12px;border-top:1px solid var(--line);display:flex;flex-wrap:wrap;gap:6px 20px;font-size:13px}
+.axes div{display:flex;gap:7px;align-items:center}
+.axes dt{color:var(--muted)}
+.axes dd{margin:0;font-weight:500}
+.dots{display:inline-flex;gap:3px;vertical-align:middle}
+.dots i{width:8px;height:8px;border-radius:50%;background:var(--dot-off)}
+.dots i.on{background:var(--ink)}
+
+.sec-h{font-size:clamp(22px,2.4vw,28px);letter-spacing:-.015em;font-weight:600;margin:0 0 8px}
+.sec-sub{margin:0 0 18px;color:var(--muted);max-width:70ch}
+.summary{margin-top:64px}
+.table-wrap{overflow-x:auto;border:1px solid var(--line);border-radius:14px;background:var(--card)}
+table.cmp{border-collapse:collapse;width:100%;min-width:940px;font-size:14px}
+.cmp th,.cmp td{text-align:left;padding:12px 14px;border-bottom:1px solid var(--line);vertical-align:top}
+.cmp thead th{font:500 11px/1.3 var(--mono);letter-spacing:.07em;text-transform:uppercase;color:var(--muted);background:var(--soft);white-space:nowrap}
+.cmp tbody tr:last-child>*{border-bottom:0}
+.cmp tbody th{font-weight:600;white-space:nowrap}
+.cmp tbody th span{font:500 11px var(--mono);color:var(--muted);margin-right:8px}
+.cmp td.num{font-variant-numeric:tabular-nums;white-space:nowrap}
+
+.pick{margin-top:56px;display:grid;gap:12px 56px;grid-template-columns:minmax(0,1fr)}
+@media (min-width:980px){.pick{grid-template-columns:minmax(0,1fr) minmax(0,2fr)}}
+.pick-body{display:grid;gap:14px;max-width:68ch}
+.pick-body p{margin:0}
+.pick-body b{font-weight:600}
+.note{margin-top:48px;padding-top:16px;border-top:1px solid var(--line);color:var(--muted);font-size:13px;max-width:90ch}
+
+:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
+
+/* ───────── A · Вердикт ───────── */
+.m-a{background:#EDF2EE;color:#13241B;font:13px/1.4 "Golos Text",system-ui,sans-serif;display:flex;flex-direction:column}
+.ma-bar{display:flex;align-items:center;gap:10px;padding:12px 16px;background:#FFFFFF;border-bottom:1px solid #D5DFD8}
+.ma-back{width:28px;height:28px;border-radius:50%;background:#EDF2EE;display:grid;place-items:center;flex:none}
+.ma-bar b{display:block;font-size:14px;font-weight:600}
+.ma-bar small{display:block;color:#5E6E65;font-size:11px}
+.ma-body{flex:1;min-height:0;padding:14px 16px 12px;display:flex;flex-direction:column;gap:11px;overflow-y:auto;scrollbar-width:thin}
+.ma-reqs{display:flex;flex-wrap:wrap;gap:5px}
+.ma-reqs span{background:#FFFFFF;border:1px solid #D5DFD8;border-radius:999px;padding:3px 9px;font-size:11px;color:#34463C}
+.ma-reqs .must{border-color:#13241B;color:#13241B;font-weight:500}
+.ma-eyebrow{font-size:10.5px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:#16704B}
+.ma-h{font-size:clamp(22px,6.8cqi,28px);line-height:1.08;font-weight:700;letter-spacing:-.022em;margin:5px 0 7px;text-wrap:balance}
+.ma-p{color:#34463C;font-size:13px;line-height:1.42}
+.ma-cur{background:#FFFFFF;border-radius:14px;padding:12px;display:grid;gap:10px;box-shadow:0 0 0 1.5px #16704B}
+.ma-cur-top{display:flex;justify-content:space-between;align-items:baseline;gap:8px}
+.ma-cur-top b{font-size:14px;font-weight:600}
+.ma-ok{color:#16704B;font-size:11.5px;font-weight:600;white-space:nowrap}
+.ma-nums{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.ma-nums div{display:grid;gap:1px}
+.ma-nums b{font-size:17px;font-weight:600;font-variant-numeric:tabular-nums;letter-spacing:-.01em}
+.ma-nums small{font-size:10.5px;color:#5E6E65}
+.ma-btns{display:flex;gap:6px}
+.ma-btn{flex:1;text-align:center;padding:9px 6px;border-radius:10px;font-weight:600;font-size:12.5px}
+.ma-btn.p{background:#16704B;color:#FFFFFF}
+.ma-btn.s{background:#EDF2EE;color:#13241B}
+.ma-disc{font-size:10.5px;color:#5E6E65}
+.ma-alts-h{font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:#5E6E65;font-weight:600;margin-bottom:2px}
+.ma-alt{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:2px 10px;padding:8px 0;border-top:1px solid #D5DFD8}
+.ma-alt b{font-size:13px;font-weight:600}
+.ma-alt p{grid-column:1/-1;font-size:12px;color:#34463C;line-height:1.4}
+.ma-tag{font-size:10.5px;font-weight:600;padding:2px 7px;border-radius:6px;align-self:center;white-space:nowrap}
+.ma-tag.w{background:#F9E7C4;color:#734800}
+.ma-tag.u{background:#E1E5EF;color:#343D57}
+.ma-tag.x{background:#F5DAD7;color:#86271F}
+.ma-foot{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:10px 16px;background:#FFFFFF;border-top:1px solid #D5DFD8;font-size:11px;color:#5E6E65}
+.ma-foot span{color:#16704B;font-weight:600;white-space:nowrap}
+
+/* ───────── B · Таблица различий ───────── */
+.m-b{background:#FFFFFF;color:#16181D;font:11px/1.35 "IBM Plex Sans Condensed","Arial Narrow",sans-serif;display:flex;flex-direction:column}
+.mb-head{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:12px 12px 10px}
+.mb-title b{display:block;font-size:15px;font-weight:600}
+.mb-title span{color:#656B76;font-size:11px}
+.mb-seg{display:flex;background:#F0F1F3;border-radius:7px;padding:2px;flex:none}
+.mb-seg button{border:0;background:transparent;padding:5px 9px;border-radius:5px;font:500 11px "IBM Plex Mono",monospace;color:#656B76}
+.mb-seg button.on{background:#FFFFFF;color:#16181D;box-shadow:0 1px 2px rgba(0,0,0,.12)}
+.mb-seg button:focus-visible{outline:2px solid #16181D;outline-offset:1px}
+.mb-req{display:flex;flex-wrap:wrap;gap:4px 12px;padding:7px 12px;background:#F5F6F8;border-block:1px solid #E3E5E9;color:#4A505B;font-size:10.5px}
+.mb-req b{color:#16181D;font-weight:600}
+.mb-scroll{overflow-x:auto;flex:none}
+.mb-t{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums;min-width:318px}
+.mb-t th,.mb-t td{padding:5px 6px;border-bottom:1px solid #EBEDF0;text-align:right;white-space:nowrap}
+.mb-t tbody th{text-align:left;font-weight:400;color:#4A505B;padding-left:12px}
+.mb-t thead th{font-weight:600;font-size:12px;color:#16181D;vertical-align:bottom;padding-top:8px}
+.mb-t thead th small{display:block;font-weight:400;font-size:9.5px;color:#7A808B}
+.mb-t td{font-family:"IBM Plex Mono",monospace;font-size:10.5px}
+.mb-t td:last-child,.mb-t th:last-child{padding-right:12px}
+.mb-t .base{background:#F5F6F8}
+.mb-t td.d{background:#FFF1BF}
+.mb-t .xc{color:#A2A7B0}
+.mb-t td small{display:block;font-size:9px;color:#7A808B}
+.mb-t em{font-style:normal;font-size:9.5px;margin-left:2px}
+.mb-t em.up{color:#C1352C}
+.mb-t em.dn{color:#1A7F43}
+.mb-t tr.st td{font-family:"IBM Plex Sans Condensed",sans-serif;font-size:10.5px;font-weight:500}
+.mb-t i{font-style:normal;font-weight:700}
+.m-b .ok{color:#1A7F43}
+.m-b .no{color:#C1352C}
+.m-b .un{color:#8A6400}
+.mb-fold{margin:8px 12px 0;padding:8px 10px;border:1px dashed #C9CDD3;border-radius:7px;color:#4A505B;font-size:10.5px}
+.mb-fold b{color:#16181D}
+.mb-legend{margin-top:auto;display:flex;flex-wrap:wrap;gap:4px 12px;padding:10px 12px;border-top:1px solid #E3E5E9;color:#656B76;font-size:10px}
+.mb-legend i{font-style:normal;font-weight:700}
+@container (max-width:380px){.mb-t th,.mb-t td{padding:5px 3px}.mb-t td{font-size:9.5px}.mb-t tbody th{padding-left:10px;font-size:10px}.mb-t td:last-child,.mb-t th:last-child{padding-right:8px}}
+.mb-legend .sw{display:inline-block;width:10px;height:10px;background:#FFF1BF;border:1px solid #E8D48A;vertical-align:-1px;margin-right:3px}
+
+/* ───────── C · Горизонт ───────── */
+.m-c{background:#0F151D;color:#E4EAF0;font:12px/1.4 "Manrope",system-ui,sans-serif;display:flex;flex-direction:column;gap:12px;padding:16px 16px 14px}
+.mc-top{display:flex;justify-content:space-between;align-items:baseline;gap:10px;color:#8594A5;font-size:11px}
+.mc-top b{color:#E4EAF0;font-weight:600;font-size:12px}
+.mc-h{font-size:clamp(26px,8.4cqi,36px);font-weight:800;letter-spacing:-.03em;line-height:1}
+.mc-h output{color:#62C9FF;font-variant-numeric:tabular-nums}
+.mc-cards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}
+.mc-k{background:#161F2A;border:1px solid #223041;border-radius:10px;padding:8px 9px;display:grid;gap:2px;min-width:0}
+.mc-k span{font-size:10.5px;line-height:1.25;color:#8594A5;display:flex;align-items:center;gap:5px}
+.mc-k span i{width:12px;height:3px;border-radius:2px;flex:none}
+.mc-k.a span i{background:#E8EEF4}
+.mc-k.b span i{background:#F2B33D}
+.mc-k.d span i{background:repeating-linear-gradient(90deg,#8193A8 0 3px,transparent 3px 5px)}
+.mc-k b{font:600 19px/1.1 "IBM Plex Mono",monospace;letter-spacing:-.03em;color:#FFFFFF}
+.mc-k.d b{color:#9CABBC}
+.mc-k small{font-size:10px;color:#8594A5}
+.mc-chart{height:190px;display:flex;justify-content:center}
+.mc-chart svg{height:100%;width:100%;max-width:100%;display:block}
+.mc-chart text{font:9px "IBM Plex Mono",monospace;fill:#6F7F91}
+.mc-slider{display:grid;gap:4px}
+.mc-slider label{display:flex;justify-content:space-between;font-size:11px;color:#8594A5}
+.mc-range{-webkit-appearance:none;appearance:none;width:100%;height:26px;background:transparent;margin:0}
+.mc-range::-webkit-slider-runnable-track{height:4px;background:linear-gradient(90deg,#62C9FF var(--p,20%),#27333F var(--p,20%));border-radius:2px}
+.mc-range::-webkit-slider-thumb{-webkit-appearance:none;width:20px;height:20px;border-radius:50%;background:#62C9FF;margin-top:-8px;border:4px solid #0F151D;box-shadow:0 0 0 1.5px #62C9FF}
+.mc-range::-moz-range-track{height:4px;background:#27333F;border-radius:2px}
+.mc-range::-moz-range-progress{height:4px;background:#62C9FF;border-radius:2px}
+.mc-range::-moz-range-thumb{width:14px;height:14px;border-radius:50%;background:#62C9FF;border:3px solid #0F151D;box-shadow:0 0 0 1.5px #62C9FF}
+.mc-range:focus-visible{outline:2px solid #62C9FF;outline-offset:3px;border-radius:4px}
+.mc-say{font-size:13.5px;line-height:1.45;color:#E4EAF0;min-height:3.9em}
+.mc-say b{color:#FFFFFF}
+.mc-day{margin-top:auto;display:flex;flex-wrap:wrap;gap:4px 14px;padding-top:10px;border-top:1px solid #223041;font-size:11px;color:#8594A5}
+.mc-day b{font:500 11px "IBM Plex Mono",monospace;color:#E4EAF0}
+
+/* ───────── D · Уточнение ───────── */
+.m-d{background:#E9EEFB;color:#1C2346;font:13px/1.4 "Nunito",system-ui,sans-serif;display:flex;flex-direction:column}
+.md-top{display:flex;justify-content:space-between;align-items:center;padding:14px 16px 10px;font-weight:800;font-size:14px}
+.md-steps{display:flex;align-items:center;gap:4px;font-weight:600;font-size:11px;color:#5A6390}
+.md-steps i{width:18px;height:4px;border-radius:2px;background:#C8D0EE}
+.md-steps i.on{background:#2E3A92}
+.md-thread{flex:1;min-height:0;overflow:hidden;padding:4px 14px 10px;display:flex;flex-direction:column;gap:10px}
+.md-you{align-self:flex-end;max-width:82%;background:#2E3A92;color:#FFFFFF;padding:9px 13px;border-radius:16px 16px 5px 16px;font-weight:600}
+.md-card{background:#FFFFFF;border-radius:16px;padding:12px;display:grid;gap:8px}
+.md-lbl{font-size:11px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:#5A6390}
+.md-list{display:grid;gap:6px}
+.md-list li{display:grid;grid-template-columns:20px 66px minmax(0,1fr);gap:6px;align-items:baseline;font-size:13px}
+.md-list i{font-style:normal;width:18px;height:18px;border-radius:50%;display:grid;place-items:center;font-size:11px;font-weight:800;align-self:center}
+.md-list .k i{background:#DDF3E6;color:#1E7A48}
+.md-list .q i{background:#FFD65C;color:#4A3500}
+.md-list span{color:#5A6390}
+.md-list b{font-weight:700}
+.md-list em{grid-column:3;font-style:normal;font-size:11px;color:#5A6390;margin-top:-4px}
+.md-list .q b{background:linear-gradient(transparent 58%,#FFE38F 58%)}
+.md-ask{display:grid;gap:8px}
+.md-ask p{font-size:clamp(16px,4.8cqi,19px);font-weight:800;line-height:1.25;letter-spacing:-.01em;text-wrap:balance}
+.md-chips{display:flex;flex-wrap:wrap;gap:6px}
+.md-chips span{background:#FFFFFF;border:1.5px solid #2E3A92;color:#2E3A92;border-radius:999px;padding:6px 12px;font-weight:700;font-size:12.5px}
+.md-chips span.alt{border-color:#9BA4CF;color:#5A6390}
+.md-help{background:#DCE3F8;border-radius:14px;padding:11px 12px;display:grid;gap:7px;font-size:12px;color:#3A4270}
+.md-help blockquote{background:#FFFFFF;border-radius:10px;padding:8px 10px;font-style:italic;color:#1C2346;font-size:12.5px}
+.md-copy{justify-self:start;font-weight:800;color:#2E3A92;font-size:12px}
+.md-foot{padding:10px 16px 14px;font-size:11.5px;color:#5A6390;border-top:1px solid #D2D9F2;background:#E9EEFB}
+
+/* ───────── E · Паспорт ───────── */
+.m-e{background:#D7DBE1;color:#1D2330;font:12px/1.45 "PT Serif",Georgia,serif;display:flex;flex-direction:column;padding:14px 12px 12px;gap:10px}
+.me-paper{position:relative;flex:1;min-height:0;overflow:hidden;background:#FBFAF6;border-radius:3px;box-shadow:0 1px 0 #C4C9D1,0 10px 24px rgba(29,35,48,.14);padding:18px 18px 16px;display:flex;flex-direction:column;gap:10px}
+.me-hd{display:flex;justify-content:space-between;align-items:baseline;gap:8px;font:13px "PT Mono",monospace;letter-spacing:.12em}
+.me-hd b{font-weight:400}
+.me-sub{display:flex;justify-content:space-between;gap:8px;font:10.5px "PT Mono",monospace;color:#5B6372;border-bottom:1.5px solid #1D2330;padding-bottom:8px}
+.me-out small{display:block;font:10px "PT Mono",monospace;letter-spacing:.1em;text-transform:uppercase;color:#5B6372}
+.me-out b{font-size:clamp(19px,6cqi,24px);line-height:1.1;font-weight:700}
+.me-dl{display:grid;gap:3px;font:10.5px/1.5 "PT Mono",monospace}
+.me-dl div{display:flex;align-items:baseline;gap:5px}
+.me-dl div::before{content:"";order:2;flex:1;min-width:10px;border-bottom:1px dotted #9AA1AD;transform:translateY(-3px)}
+.me-dl dt{order:1;color:#5B6372;white-space:nowrap}
+.me-dl dd{order:3;text-align:right}
+.me-sec{font:10px "PT Mono",monospace;letter-spacing:.1em;text-transform:uppercase;color:#5B6372;margin-top:2px}
+.me-why{display:grid;gap:3px;counter-reset:w}
+.me-why li{display:grid;grid-template-columns:18px minmax(0,1fr);font-size:12px;line-height:1.4}
+.me-why li::before{counter-increment:w;content:counter(w) ".";font:10.5px "PT Mono",monospace;color:#5B6372;padding-top:1px}
+.me-p{font-size:12px;line-height:1.4}
+.me-stamp{position:absolute;right:14px;bottom:18px;transform:rotate(-9deg);border:2.5px solid #2A4DB5;outline:1px solid #2A4DB5;outline-offset:2px;border-radius:6px;padding:5px 10px;text-align:center;color:#2A4DB5;font:700 13px/1.15 "PT Mono",monospace;letter-spacing:.14em;opacity:.82;mix-blend-mode:multiply}
+.me-stamp small{display:block;font:9px "PT Mono",monospace;letter-spacing:.04em;margin-top:2px}
+.me-acts{display:flex;gap:6px;font:600 12px "PT Serif",serif}
+.me-acts span{flex:1;text-align:center;padding:9px 6px;border-radius:8px;background:#1D2330;color:#FBFAF6}
+.me-acts span+span{flex:none;background:transparent;color:#1D2330;box-shadow:inset 0 0 0 1px #1D2330;padding-inline:14px}
+
+/* ───────── F · Сторож ───────── */
+.m-f{background:#17161C;color:#ECE9F1;font:12.5px/1.45 "Rubik",system-ui,sans-serif;display:flex;flex-direction:column;padding:18px 16px 14px;gap:14px}
+.mf-top{display:flex;justify-content:space-between;align-items:center;color:#948EA1;font-size:12px}
+.mf-top b{color:#ECE9F1;font-weight:500;font-size:13px}
+.mf-calm{font-size:clamp(20px,6cqi,24px);line-height:1.15;font-weight:500;letter-spacing:-.015em}
+.mf-calm span{color:#948EA1;font-weight:400}
+.mf-list{flex:1;min-height:0;overflow-y:auto;scrollbar-width:thin;display:grid;gap:8px;align-content:start}
+.mf-list li{background:#211F28;border-radius:14px;padding:11px 12px;display:grid;gap:4px}
+.mf-list li.rev{background:#2A2517;box-shadow:inset 0 0 0 1px #5A4A1C}
+.mf-row{display:flex;align-items:center;gap:7px;font-size:11px;color:#948EA1}
+.mf-row i{width:7px;height:7px;border-radius:50%;flex:none}
+.mf-row time{margin-left:auto}
+.rev .mf-row i{background:#F4C45A}
+.rev .mf-st{color:#F4C45A}
+.ok .mf-row i{background:#7ED6A5}
+.def .mf-row i{background:transparent;box-shadow:inset 0 0 0 1.5px #948EA1}
+.mf-list b{font-weight:500;font-size:13px}
+.mf-list p{color:#BDB7C8;font-size:12px;line-height:1.4}
+.mf-btn{justify-self:start;margin-top:4px;background:#F4C45A;color:#241C05;border-radius:8px;padding:6px 11px;font-weight:500;font-size:12px}
+.mf-foot{flex:none;color:#948EA1;font-size:11.5px;line-height:1.45;padding-top:10px;border-top:1px solid #2C2A33}
+
+@media (prefers-reduced-motion: reduce){
+  *{animation:none!important;transition:none!important}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="intro">
+    <div>
+      <p class="eyebrow">Рациональная витрина для iHerb · направления развития · 26.09.2026</p>
+      <h1>Шесть направлений для витрины</h1>
+      <p class="lede">Все макеты решают одну задачу из примера в разделе 6.5 ТЗ: <b>повторная покупка магния, 200&nbsp;мг в день</b> задано вне сервиса, горизонт 60 дней, обязательное условие «без желатина», товары A–D. Направления различаются раскладкой, тоном и плотностью. Главное различие в том, какой экран и какая работа из ТЗ становятся центром продукта.</p>
+    </div>
+    <dl class="howto">
+      <div><dt class="g">Ставка</dt><dd>что направление даёт пользователю</dd></div>
+      <div><dt class="c">Цена</dt><dd>чем за это платим</dd></div>
+      <div><dt>По ТЗ</dt><dd>какие требования направление закрывает лучше других и какие нагружает</dd></div>
+      <div><dt>Плотность</dt><dd>сколько информации на экране, от 1 до 5</dd></div>
+    </dl>
+  </header>
+
+  <section class="grid" aria-label="Шесть направлений">
+
+    <!-- A · Вердикт -->
+    <article class="card" id="verdikt">
+      <header class="card-head">
+        <span class="letter">A</span>
+        <h2>Вердикт</h2>
+        <p class="tension"><span class="g">Скорость</span> ценой <span class="c">проверяемости</span></p>
+      </header>
+      <div class="frame">
+        <div class="mock m-a">
+          <div class="ma-bar">
+            <span class="ma-back" aria-hidden="true"><svg viewBox="0 0 16 16" width="14" height="14"><path d="M10 3 5 8l5 5" fill="none" stroke="#13241B" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+            <div><b>Магний, глицинат</b><small>Проверка повторной покупки</small></div>
+          </div>
+          <div class="ma-body">
+            <div class="ma-reqs"><span>200 мг в день</span><span>на 60 дней</span><span class="must">без желатина · обязательно</span></div>
+            <div>
+              <div class="ma-eyebrow">Итог проверки</div>
+              <p class="ma-h">Ваш товар можно оставить</p>
+              <p class="ma-p">Дешевле варианты есть, но у одного платёж сейчас выше на $12, а у другого не подтверждено обязательное условие.</p>
+            </div>
+            <div class="ma-cur">
+              <div class="ma-cur-top"><b>A · привычный</b><span class="ma-ok">✓ все условия</span></div>
+              <div class="ma-nums">
+                <div><b>$24</b><small>на 60 дней</small></div>
+                <div><b>$0,40</b><small>в день</small></div>
+                <div><b>2 капс.</b><small>= 200 мг</small></div>
+              </div>
+              <div class="ma-btns"><span class="ma-btn p">Оставить A</span><span class="ma-btn s">В iHerb →</span></div>
+              <p class="ma-disc">Партнёрская ссылка. Комиссия не влияет на выдачу.</p>
+            </div>
+            <div>
+              <div class="ma-alts-h">Почему не другие</div>
+              <div class="ma-alt"><b>B · большая банка</b><span class="ma-tag w">платёж выше</span><p>$0,30 в день, но сразу $36 и запас на 120 дней.</p></div>
+              <div class="ma-alt"><b>D · другая упаковка</b><span class="ma-tag u">не подтверждено</span><p>$21 на 60 дней, но «без желатина» подтвердить не удалось.</p></div>
+              <div class="ma-alt"><b>C · дешёвая банка</b><span class="ma-tag x">исключён</span><p>150 мг в капсуле: 200 мг целыми капсулами не набрать.</p></div>
+            </div>
+          </div>
+          <div class="ma-foot">Цены на 26.09, 10:40 · доставка не учтена <span>Сравнить подробно</span></div>
+        </div>
+      </div>
+      <dl class="trade">
+        <div class="gain"><dt>Ставка</dt><dd>Первый экран сразу отвечает, что делать, одной фразой. До решения несколько секунд, путь с телефона короткий.</dd></div>
+        <div class="cost"><dt>Цена</dt><dd>Детали на шаг глубже. Итоговая фраза звучит как совет, и продукт легко переходит грань между проверкой и рекомендацией.</dd></div>
+      </dl>
+      <div class="spec">
+        <p><span class="k">Сильнее всего</span><code title="Итог проверки">Экран 3</code><code title="Пополняющий: повторить без незаметных изменений">J1</code><code title="Объяснять исключение каждого кандидата">R06</code><code title="Понимание и нагрузка выбора">M04</code></p>
+        <p class="strain"><span class="k">Под нагрузкой</span><code title="Контракт объяснения">§7.5</code><code title="Граница медицинских выводов">A07</code></p>
+      </div>
+      <dl class="axes">
+        <div><dt>Плотность</dt><dd><span class="dots" role="img" aria-label="2 из 5"><i class="on"></i><i class="on"></i><i></i><i></i><i></i></span></dd></div>
+        <div><dt>Тон</dt><dd>спокойный</dd></div>
+        <div><dt>Раскладка</dt><dd>одна колонка</dd></div>
+      </dl>
+    </article>
+
+    <!-- B · Таблица различий -->
+    <article class="card" id="tablitsa">
+      <header class="card-head">
+        <span class="letter">B</span>
+        <h2>Таблица различий</h2>
+        <p class="tension"><span class="g">Прозрачность</span> ценой <span class="c">порога входа</span></p>
+      </header>
+      <div class="frame">
+        <div class="mock m-b">
+          <div class="mb-head">
+            <div class="mb-title"><b>Сравнение</b><span>4 товара · магний, глицинат</span></div>
+            <div class="mb-seg" role="group" aria-label="Горизонт сравнения">
+              <button type="button" id="bH60" class="on" aria-pressed="true" data-h="60">60 дн</button>
+              <button type="button" id="bH120" aria-pressed="false" data-h="120">120 дн</button>
+            </div>
+          </div>
+          <div class="mb-req"><span>Требование <b>200 мг/день</b></span><span>Обязательно <b>без желатина</b></span><span>База <b>A</b></span></div>
+          <div class="mb-scroll">
+            <table class="mb-t">
+              <thead>
+                <tr><th></th><th class="base">A<small>привычный</small></th><th>B<small>большая</small></th><th class="xc">C<small>дешёвая</small></th><th>D<small>60 капс.</small></th></tr>
+              </thead>
+              <tbody>
+                <tr class="st"><th>Допуск</th><td class="base"><i class="ok">✓</i> база</td><td><i class="ok">✓</i> да</td><td><i class="no">✗</i> схема</td><td><i class="un">?</i> условие</td></tr>
+                <tr><th>мг на капсулу</th><td class="base">100</td><td>100</td><td class="d">150</td><td class="d">200</td></tr>
+                <tr><th>Капсул в день</th><td class="base">2</td><td>2</td><td class="xc">—</td><td class="d">1</td></tr>
+                <tr><th>Капсул в банке</th><td class="base">120</td><td class="d">240</td><td>120</td><td class="d">60</td></tr>
+                <tr><th>Цена банки</th><td class="base">$24</td><td class="d">$36</td><td class="d">$18</td><td class="d">$21</td></tr>
+                <tr><th>Платёж на <span id="bHl">60</span> дн</th><td class="base" data-v="A">$24</td><td class="d" data-v="B">$36<em class="up">+12</em></td><td class="xc">—</td><td class="d" data-v="D">$21<em class="dn">−3</em></td></tr>
+                <tr><th>В день</th><td class="base">$0,40</td><td class="d">$0,30</td><td class="xc">—</td><td class="d">$0,35</td></tr>
+                <tr><th>Останется запаса</th><td class="base" data-s="A">0 дн</td><td class="d" data-s="B">60 дн</td><td class="xc">—</td><td data-s="D">0 дн</td></tr>
+                <tr><th>Без желатина</th><td class="base">заявлено</td><td>заявлено</td><td>заявлено</td><td class="d"><span class="un">не подтв.</span></td></tr>
+                <tr><th>Состав подтверждён</th><td class="base">реестр</td><td class="d">бренд</td><td class="d">бренд</td><td class="d">бренд</td></tr>
+                <tr><th>Отзывы*</th><td class="base">4,6<small>2 140</small></td><td class="d">4,5<small>860</small></td><td class="d">4,3<small>310</small></td><td class="d">4,4<small>95</small></td></tr>
+                <tr><th>Данные от</th><td class="base">26.09</td><td>26.09</td><td class="d">25.09</td><td>26.09</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="mb-fold"><b>+ 5 одинаковых строк свёрнуто:</b> форма, страна, валюта, режим покупки, доставка</div>
+          <div class="mb-legend">
+            <span><span class="sw"></span>отличается от A</span>
+            <span><i class="ok">✓</i> совпадает</span>
+            <span><i class="no">✗</i> конфликт</span>
+            <span><i class="un">?</i> не подтверждено</span>
+            <span>* с поправкой на число отзывов</span>
+          </div>
+        </div>
+      </div>
+      <dl class="trade">
+        <div class="gain"><dt>Ставка</dt><dd>Каждое число, статус и источник на виду. Скептик и оптимизатор проверяют всё сами, горизонт меняется одним нажатием.</dd></div>
+        <div class="cost"><dt>Цена</dt><dd>Новичок с одним вопросом тонет в двенадцати строках. На телефоне таблица едва помещается, вывод приходится делать самому.</dd></div>
+      </dl>
+      <div class="spec">
+        <p><span class="k">Сильнее всего</span><code title="Сравнение">Экран 5</code><code title="Обязательные условия до ранжирования">R05</code><code title="Охват подтверждения">R10</code><code title="Большая банка на коротком горизонте">T13</code></p>
+        <p class="strain"><span class="k">Под нагрузкой</span><code title="Новичок с определёнными требованиями">J2</code><code title="Понимание и нагрузка выбора">M04</code></p>
+      </div>
+      <dl class="axes">
+        <div><dt>Плотность</dt><dd><span class="dots" role="img" aria-label="5 из 5"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i></span></dd></div>
+        <div><dt>Тон</dt><dd>инженерный</dd></div>
+        <div><dt>Раскладка</dt><dd>матрица</dd></div>
+      </dl>
+    </article>
+
+    <!-- C · Горизонт -->
+    <article class="card" id="gorizont">
+      <header class="card-head">
+        <span class="letter">C</span>
+        <h2>Горизонт</h2>
+        <p class="tension"><span class="g">Наглядность денег</span> ценой <span class="c">полноты</span></p>
+      </header>
+      <div class="frame">
+        <div class="mock m-c">
+          <div class="mc-top"><b>Сколько вы заплатите</b><span>$ · разовая покупка · 26.09</span></div>
+          <div class="mc-h">На <output id="cH" for="cRange">60</output> дней</div>
+          <div class="mc-cards">
+            <div class="mc-k a"><span><i></i>A · привычный</span><b id="cA">$24</b><small id="cAs">без остатка</small></div>
+            <div class="mc-k b"><span><i></i>B · большая</span><b id="cB">$36</b><small id="cBs">+60 дн запаса</small></div>
+            <div class="mc-k d"><span><i></i>D · 60 капс.</span><b id="cD">$21</b><small>условие не подтв.</small></div>
+          </div>
+          <div class="mc-chart"><svg id="cChart" viewBox="0 0 320 168" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Платёж по горизонту: ступенчатые линии для A, B и D"></svg></div>
+          <div class="mc-slider">
+            <label for="cRange"><span>Горизонт, дней</span><span>30 — 180</span></label>
+            <input class="mc-range" id="cRange" type="range" min="30" max="180" step="10" value="60">
+          </div>
+          <p class="mc-say" id="cSay" aria-live="polite">На 60 дней из подтверждённых меньше всего заплатите за A: <b>$24</b>. B дешевле в день, но требует $36 сразу.</p>
+          <div class="mc-day"><span>В день при 200 мг:</span><span>A <b>$0,40</b></span><span>B <b>$0,30</b></span><span>D <b>$0,35</b></span></div>
+        </div>
+      </div>
+      <dl class="trade">
+        <div class="gain"><dt>Ставка</dt><dd>Главный компромисс ТЗ виден глазами: большая банка дешевле в день, но выигрывает только на длинном горизонте. Попробуйте ползунок.</dd></div>
+        <div class="cost"><dt>Цена</dt><dd>Состав, подтверждения и отзывы уходят на второй план. Продукт рискует снова свестись к цене за единицу, от чего ТЗ уходит.</dd></div>
+      </dl>
+      <div class="spec">
+        <p><span class="k">Сильнее всего</span><code title="Три денежные величины">§6.4</code><code title="Платёж сейчас, потребление, остаток, стоимость периода">R08</code><code title="Большая банка на коротком горизонте">T13</code><code title="Охотник за скидками">J5</code></p>
+        <p class="strain"><span class="k">Под нагрузкой</span><code title="Цена за единицу — один инструмент проверки">§1.2</code><code title="Скептик: что именно подтверждено">J6</code></p>
+      </div>
+      <dl class="axes">
+        <div><dt>Плотность</dt><dd><span class="dots" role="img" aria-label="3 из 5"><i class="on"></i><i class="on"></i><i class="on"></i><i></i><i></i></span></dd></div>
+        <div><dt>Тон</dt><dd>финансовый</dd></div>
+        <div><dt>Раскладка</dt><dd>график и ползунок</dd></div>
+      </dl>
+    </article>
+
+    <!-- D · Уточнение -->
+    <article class="card" id="utochnenie">
+      <header class="card-head">
+        <span class="letter">D</span>
+        <h2>Уточнение</h2>
+        <p class="tension"><span class="g">Точность ввода</span> ценой <span class="c">скорости</span></p>
+      </header>
+      <div class="frame">
+        <div class="mock m-d">
+          <div class="md-top"><span>Новая проверка</span><span class="md-steps">шаг 2 из 3 <i class="on"></i><i class="on"></i><i></i></span></div>
+          <div class="md-thread">
+            <div class="md-you">магний 200 глицинат, посоветовал врач</div>
+            <div class="md-card">
+              <div class="md-lbl">Как мы поняли запись</div>
+              <ul class="md-list">
+                <li class="k"><i>✓</i><span>Вещество</span><b>магний</b></li>
+                <li class="k"><i>✓</i><span>Форма</span><b>глицинат</b></li>
+                <li class="k"><i>✓</i><span>Единицы</span><b>мг</b><em>вы уточнили</em></li>
+                <li class="q"><i>?</i><span>Период</span><b>в день или на приём?</b></li>
+              </ul>
+            </div>
+            <div class="md-ask">
+              <p>200 мг — это на весь день или на один приём?</p>
+              <div class="md-chips"><span>На весь день</span><span>На один приём</span><span class="alt">Не знаю</span></div>
+            </div>
+            <div class="md-help">
+              <p>Если не уверены, спросите у врача. Вопрос уже готов:</p>
+              <blockquote>Уточните, пожалуйста, какое количество магния и на какой период указано: на день или на один приём?</blockquote>
+              <span class="md-copy">Скопировать вопрос</span>
+            </div>
+          </div>
+          <div class="md-foot">Пока нет ответа, можно смотреть факты о товарах. Подбор под вашу схему откроется после уточнения.</div>
+        </div>
+      </div>
+      <dl class="trade">
+        <div class="gain"><dt>Ставка</dt><dd>Ловит ошибку «порция или капсула» до сравнения. Отделяет неизвестное в требовании от неизвестного в товаре и даёт готовый вопрос для врача.</dd></div>
+        <div class="cost"><dt>Цена</dt><dd>Повторному покупателю, который всё знает, это лишние шаги. Диалог легко принять за медицинскую консультацию.</dd></div>
+      </dl>
+      <div class="spec">
+        <p><span class="k">Сильнее всего</span><code title="Не понимаю, что нужно уточнить">J0</code><code title="Новичок с определёнными требованиями">J2</code><code title="Известные и неизвестные требования отдельно">R03</code><code title="Нет единиц или периода">T01</code><code title="Порция из двух единиц">T02</code></p>
+        <p class="strain"><span class="k">Под нагрузкой</span><code title="Пополняющий">J1</code><code title="Время до понятного решения">M04</code></p>
+      </div>
+      <dl class="axes">
+        <div><dt>Плотность</dt><dd><span class="dots" role="img" aria-label="2 из 5"><i class="on"></i><i class="on"></i><i></i><i></i><i></i></span></dd></div>
+        <div><dt>Тон</dt><dd>терпеливый</dd></div>
+        <div><dt>Раскладка</dt><dd>пошаговый диалог</dd></div>
+      </dl>
+    </article>
+
+    <!-- E · Паспорт -->
+    <article class="card" id="pasport">
+      <header class="card-head">
+        <span class="letter">E</span>
+        <h2>Паспорт выбора</h2>
+        <p class="tension"><span class="g">Доверие</span> ценой <span class="c">лёгкости</span></p>
+      </header>
+      <div class="frame">
+        <div class="mock m-e">
+          <div class="me-paper">
+            <div class="me-hd"><b>ПАСПОРТ ВЫБОРА</b><span>№ 0142</span></div>
+            <div class="me-sub"><span>Повторная покупка</span><span>26.09.2026</span></div>
+            <div class="me-out"><small>Исход</small><b>Оставить прежний товар</b></div>
+            <dl class="me-dl">
+              <div><dt>Исходный товар</dt><dd>A · 100 мг × 120</dd></div>
+              <div><dt>Требование</dt><dd>200 мг магния/день</dd></div>
+              <div><dt>Кем задано</dt><dd>вами, вне сервиса</dd></div>
+              <div><dt>Обязательно</dt><dd>без желатина</dd></div>
+              <div><dt>Горизонт</dt><dd>60 дн · остаток 0</dd></div>
+              <div><dt>Цены</dt><dd>$ · разовая · 10:40</dd></div>
+            </dl>
+            <div class="me-sec">Основания</div>
+            <ol class="me-why">
+              <li><span><b>B</b> дешевле в день, но платёж сейчас $36 против $24.</span></li>
+              <li><span><b>D</b>: «без желатина» не подтверждено.</span></li>
+              <li><span><b>C</b>: 200 мг не набрать целыми капсулами.</span></li>
+            </ol>
+            <div class="me-sec">Неизвестно</div>
+            <p class="me-p">Доставка и налоги: одинаковы, в расчёт не входят.</p>
+            <div class="me-sec">Сообщим, если</div>
+            <p class="me-p">изменится состав A · B подешевеет до $30 · пройдёт 50 дней</p>
+            <div class="me-stamp">СОХРАНЕНО<small>правила v2.1</small></div>
+          </div>
+          <div class="me-acts"><span>Поделиться без личной схемы</span><span>Экспорт</span></div>
+        </div>
+      </div>
+      <dl class="trade">
+        <div class="gain"><dt>Ставка</dt><dd>Решение становится документом: основания, неизвестное, версия правил. Через два месяца не нужно разбираться заново, а сравнением можно поделиться без личной схемы.</dd></div>
+        <div class="cost"><dt>Цена</dt><dd>Ощущается как бюрократия. Польза раскрывается только при повторном визите, а первое впечатление тяжеловесное.</dd></div>
+      </dl>
+      <div class="spec">
+        <p><span class="k">Сильнее всего</span><code title="Паспорт выбора">§5</code><code title="Сохранять паспорт и снимки расчёта">R12</code><code title="Сменился состав по тому же product_id">T12</code><code title="Поделиться без личной схемы">T22</code><code title="Получил покупку — проверить">J9</code></p>
+        <p class="strain"><span class="k">Под нагрузкой</span><code title="Первый визит">Экран 3</code><code title="Нагрузка выбора">M04</code></p>
+      </div>
+      <dl class="axes">
+        <div><dt>Плотность</dt><dd><span class="dots" role="img" aria-label="4 из 5"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i></span></dd></div>
+        <div><dt>Тон</dt><dd>формальный</dd></div>
+        <div><dt>Раскладка</dt><dd>документ</dd></div>
+      </dl>
+    </article>
+
+    <!-- F · Сторож -->
+    <article class="card" id="storozh">
+      <header class="card-head">
+        <span class="letter">F</span>
+        <h2>Сторож</h2>
+        <p class="tension"><span class="g">Тишина</span> ценой <span class="c">первого впечатления</span></p>
+      </header>
+      <div class="frame">
+        <div class="mock m-f">
+          <div class="mf-top"><b>Мои решения</b><span>4 сохранено</span></div>
+          <p class="mf-calm">Всё спокойно.<br><span>Одно решение ждёт проверки.</span></p>
+          <ul class="mf-list">
+            <li class="rev">
+              <div class="mf-row"><i></i><span class="mf-st">Требует проверки</span><time>сегодня</time></div>
+              <b>Омега-3, 1 000 мг ЭПК+ДГК</b>
+              <p>Сменился состав: ДГК 500 → 400 мг на порцию. Прежнее соответствие снято, старый расчёт сохранён.</p>
+              <span class="mf-btn">Проверить заново</span>
+            </li>
+            <li class="ok">
+              <div class="mf-row"><i></i><span class="mf-st">В силе</span><time>26.09</time></div>
+              <b>Магний, глицинат · A</b>
+              <p>Цена $24 без изменений. Запаса примерно до 20–27 ноября, подтверждено 26.09.</p>
+            </li>
+            <li class="ok">
+              <div class="mf-row"><i></i><span class="mf-st">В силе · пауза</span><time>14.08</time></div>
+              <b>Витамин D3, 2 000 МЕ</b>
+              <p>Уведомления на паузе до 1 декабря.</p>
+            </li>
+            <li class="def">
+              <div class="mf-row"><i></i><span class="mf-st">Отложено</span><time>02.09</time></div>
+              <b>Цинк, пиколинат</b>
+              <p>Вернёмся 15 октября, как вы просили.</p>
+            </li>
+          </ul>
+          <div class="mf-foot">Пишем только о смене состава, наличия и о цене ниже вашего порога в $5. Последнее сообщение было 12 дней назад.</div>
+        </div>
+      </div>
+      <dl class="trade">
+        <div class="gain"><dt>Ставка</dt><dd>Продукт почти молчит и пишет только о существенном: сменился состав, заканчивается запас, цена ниже вашего порога.</dd></div>
+        <div class="cost"><dt>Цена</dt><dd>На первом визите показать нечего. Нужны история цен и события фида из этапа 2, без них экран пуст.</dd></div>
+      </dl>
+      <div class="spec">
+        <p><span class="k">Сильнее всего</span><code title="Уведомления как продолжение решения">§11.3</code><code title="Уведомления по согласию и существенным событиям">R13</code><code title="Пауза без указания диагноза">T18</code><code title="Возврат к следующему реальному решению">M03</code></p>
+        <p class="strain"><span class="k">Под нагрузкой</span><code title="Данных для событий ещё нет">Этапы 0–1</code></p>
+      </div>
+      <dl class="axes">
+        <div><dt>Плотность</dt><dd><span class="dots" role="img" aria-label="1 из 5"><i class="on"></i><i></i><i></i><i></i><i></i></span></dd></div>
+        <div><dt>Тон</dt><dd>тихий</dd></div>
+        <div><dt>Раскладка</dt><dd>список статусов</dd></div>
+      </dl>
+    </article>
+
+  </section>
+
+  <section class="summary" aria-labelledby="sum-h">
+    <h2 class="sec-h" id="sum-h">Сводка</h2>
+    <p class="sec-sub">Этапы взяты из дорожной карты в разделе 17 ТЗ. Направления не исключают друг друга: у каждого свой главный экран, остальные могут жить на втором уровне.</p>
+    <div class="table-wrap">
+      <table class="cmp">
+        <thead>
+          <tr><th>Направление</th><th>Главный экран</th><th>Ведущая работа</th><th>Когда готово</th><th>Плотность</th><th>Тон</th><th>Главный риск</th></tr>
+        </thead>
+        <tbody>
+          <tr><th scope="row"><span>A</span>Вердикт</th><td>Экран 3, итог проверки</td><td>J1</td><td>Этап 1</td><td class="num">2 / 5</td><td>спокойный</td><td>Вывод читается как совет купить или не купить</td></tr>
+          <tr><th scope="row"><span>B</span>Таблица различий</th><td>Экран 5, сравнение</td><td>J3, J6</td><td>Этап 1, вторым уровнем</td><td class="num">5 / 5</td><td>инженерный</td><td>Перегружает новичка, решение остаётся за ним</td></tr>
+          <tr><th scope="row"><span>C</span>Горизонт</th><td>Карточка варианта, §6.4</td><td>J1, J5</td><td>Этап 1, история цен в этапе 2</td><td class="num">3 / 5</td><td>финансовый</td><td>Всё сводится к деньгам, состав в тени</td></tr>
+          <tr><th scope="row"><span>D</span>Уточнение</th><td>Экраны 1–2, вход и условия</td><td>J0, J2</td><td>Этап 1</td><td class="num">2 / 5</td><td>терпеливый</td><td>Лишние шаги и сходство с консультацией</td></tr>
+          <tr><th scope="row"><span>E</span>Паспорт выбора</th><td>Экран 7, §5</td><td>J9, J8</td><td>Данные в этапе 1, экран в этапе 2</td><td class="num">4 / 5</td><td>формальный</td><td>Тяжеловесно при первом знакомстве</td></tr>
+          <tr><th scope="row"><span>F</span>Сторож</th><td>Уведомления, §11.3</td><td>J1, J5, J9</td><td>Этап 2</td><td class="num">1 / 5</td><td>тихий</td><td>Пусто, пока нет истории и событий фида</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="pick" aria-labelledby="pick-h">
+    <h2 class="sec-h" id="pick-h">Если выбирать сейчас</h2>
+    <div class="pick-body">
+      <p>Этап 1 в ТЗ — это завершённый J1 и ограниченный J2. Под него лучше всего подходит <b>«Вердикт»</b> как первый экран результата. Внутри него раскрывается блок из <b>«Горизонта»</b> про три денежные величины, а кнопка «Сравнить подробно» ведёт в <b>«Таблицу различий»</b>. Так быстрый ответ остаётся проверяемым.</p>
+      <p><b>«Уточнение»</b> стоит включать только при неясном вводе (INPUT_UNCLEAR), а не для всех. <b>«Паспорт»</b> нужен как модель данных с первого релиза, потому что R12 уже в этапе 1. Отдельный экран паспорта и <b>«Сторож»</b> появятся на этапе 2, когда будут повторные визиты и история цен.</p>
+    </div>
+  </section>
+
+  <p class="note">Товары A–D и цифры синтетические, из примера в разделе 6.5 ТЗ. Это не рекомендации по приёму. Омега-3, витамин D3 и цинк в макете «Сторож» придуманы для иллюстрации. Интерактивны переключатель горизонта в таблице и ползунок в «Горизонте».</p>
+
+</div>
+
+<script>
+/* B · переключатель горизонта */
+(function(){
+  var b60 = document.getElementById('bH60'), b120 = document.getElementById('bH120');
+  if(!b60 || !b120) return;
+  var data = {
+    60:  {pay:{A:'$24',B:'$36',D:'$21'}, delta:{B:['+12','up'],D:['−3','dn']}, left:{A:'0 дн',B:'60 дн',D:'0 дн'}},
+    120: {pay:{A:'$48',B:'$36',D:'$42'}, delta:{B:['−12','dn'],D:['−6','dn']}, left:{A:'0 дн',B:'0 дн',D:'0 дн'}}
+  };
+  function render(h){
+    var d = data[h];
+    document.getElementById('bHl').textContent = h;
+    document.querySelectorAll('.m-b [data-v]').forEach(function(td){
+      var k = td.getAttribute('data-v');
+      td.textContent = d.pay[k];
+      if(d.delta[k]){
+        var em = document.createElement('em');
+        em.className = d.delta[k][1];
+        em.textContent = d.delta[k][0];
+        td.appendChild(em);
+      }
+    });
+    document.querySelectorAll('.m-b [data-s]').forEach(function(td){
+      var k = td.getAttribute('data-s');
+      td.textContent = d.left[k];
+      if(k !== 'A') td.classList.toggle('d', d.left[k] !== d.left.A);
+    });
+    [b60,b120].forEach(function(btn){
+      var on = btn.getAttribute('data-h') == h;
+      btn.classList.toggle('on', on);
+      btn.setAttribute('aria-pressed', on ? 'true' : 'false');
+    });
+  }
+  b60.addEventListener('click', function(){ render(60); });
+  b120.addEventListener('click', function(){ render(120); });
+})();
+
+/* C · график платежа по горизонту */
+(function(){
+  var svg = document.getElementById('cChart'), range = document.getElementById('cRange');
+  if(!svg || !range) return;
+  var NS = 'http://www.w3.org/2000/svg';
+  var X0 = 34, X1 = 312, Y0 = 146, Y1 = 10, MAXD = 180, MAXV = 80;
+  var P = {A:{t:60,p:24}, B:{t:120,p:36}, D:{t:60,p:21}};
+  function x(d){ return X0 + (X1 - X0) * d / MAXD; }
+  function y(v){ return Y0 - (Y0 - Y1) * v / MAXV; }
+  function packs(k,H){ return Math.ceil(H / P[k].t); }
+  function cash(k,H){ return packs(k,H) * P[k].p; }
+  function left(k,H){ return packs(k,H) * P[k].t - H; }
+  function el(tag, attrs, text){
+    var n = document.createElementNS(NS, tag);
+    for(var a in attrs) n.setAttribute(a, attrs[a]);
+    if(text != null) n.textContent = text;
+    svg.appendChild(n); return n;
+  }
+  function step(k){
+    var d = 'M' + x(0) + ' ' + y(P[k].p);
+    for(var s = P[k].t, n = 1; s < MAXD; s += P[k].t, n++){
+      d += ' H' + x(s) + ' V' + y((n + 1) * P[k].p);
+    }
+    return d + ' H' + x(MAXD);
+  }
+  [0,20,40,60,80].forEach(function(v){
+    el('line',{x1:X0,x2:X1,y1:y(v),y2:y(v),stroke:'#1F2A36','stroke-width':1});
+    el('text',{x:X0-6,y:y(v)+3,'text-anchor':'end'},'$'+v);
+  });
+  [0,60,120,180].forEach(function(d){
+    el('text',{x:x(d),y:Y0+15,'text-anchor':d===0?'start':(d===180?'end':'middle')}, d===180?'180 дн':String(d));
+  });
+  el('path',{d:step('B'),fill:'none',stroke:'#F2B33D','stroke-width':5,'stroke-linejoin':'round'});
+  el('path',{d:step('A'),fill:'none',stroke:'#E8EEF4','stroke-width':2,'stroke-linejoin':'round'});
+  el('path',{d:step('D'),fill:'none',stroke:'#8193A8','stroke-width':1.5,'stroke-dasharray':'3 3'});
+  var marker = el('line',{y1:Y1,y2:Y0,stroke:'#62C9FF','stroke-width':1.5});
+  var dots = {
+    B: el('circle',{r:4.5,fill:'#F2B33D',stroke:'#0F151D','stroke-width':2}),
+    D: el('circle',{r:3.5,fill:'#8193A8',stroke:'#0F151D','stroke-width':2}),
+    A: el('circle',{r:3.5,fill:'#E8EEF4',stroke:'#0F151D','stroke-width':2})
+  };
+  function stockText(k,H){ var l = left(k,H); return l > 0 ? '+' + l + ' дн запаса' : 'без остатка'; }
+  function update(){
+    var H = +range.value;
+    document.getElementById('cH').textContent = H;
+    var a = cash('A',H), b = cash('B',H), d = cash('D',H);
+    document.getElementById('cA').textContent = '$' + a;
+    document.getElementById('cB').textContent = '$' + b;
+    document.getElementById('cD').textContent = '$' + d;
+    document.getElementById('cAs').textContent = stockText('A',H);
+    document.getElementById('cBs').textContent = stockText('B',H);
+    marker.setAttribute('x1', x(H)); marker.setAttribute('x2', x(H));
+    ['A','B','D'].forEach(function(k){ dots[k].setAttribute('cx', x(H)); dots[k].setAttribute('cy', y(cash(k,H))); });
+    var say = document.getElementById('cSay');
+    if(a < b){
+      say.innerHTML = 'На ' + H + ' дней из подтверждённых меньше всего заплатите за A: <b>$' + a + '</b>. B дешевле в день, но требует $' + b + ' сразу.';
+    } else if(b < a){
+      say.innerHTML = 'На ' + H + ' дней B обходится дешевле: <b>$' + b + '</b> против $' + a + ' за две банки A. Разница $' + (a - b) + '.';
+    } else {
+      say.innerHTML = 'На ' + H + ' дней A и B стоят одинаково, <b>$' + a + '</b>. Но B оставит запас ещё на ' + left('B',H) + ' дн., A — на ' + left('A',H) + '.';
+    }
+    range.style.setProperty('--p', ((H - 30) / 150 * 100) + '%');
+  }
+  range.addEventListener('input', update);
+  update();
+})();
+</script>
+</body>
+</html>

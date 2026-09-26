@@ -1,0 +1,9 @@
+[Unit]
+Description=Vitrina health checks (snapshot age, site, edge-api)
+
+[Service]
+Type=oneshot
+User=vitrina
+WorkingDirectory=/srv/vitrina
+EnvironmentFile=/etc/vitrina/vitrina.env
+ExecStart=/srv/vitrina/deploy/monitor.sh

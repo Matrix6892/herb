@@ -1,0 +1,26 @@
+# Settings of the `vitrina` command. Nothing secret goes here: the feed URL,
+# upload command and similar come from the environment (spec §9;
+# deploy/vitrina.env.example).
+#
+# Paths are relative to the repository root, or to --root.
+
+# Rating branch (spec §5.4, question О2). "B" until the program manager
+# confirms that ratings and review counts may be shown.
+rating_branch = "B"
+
+locale = "en"
+
+# Canonical origin of the site (question О7: the domain is not chosen yet).
+site_url = "https://vitrina.example"
+
+# Where edge-api is reachable from the pages.
+api_base = "/api"
+
+[paths]
+db = "var/vitrina.db"
+snapshots = "var/snapshots"
+out = "out"
+reference = "data/reference"
+labels = "data/labels"
+site = "site"
+control = "data/fixtures/balance_abcdef.toml"

@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block main %}
+<h1>{{ t.get("home.title") }}</h1>
+<p class="lede">{{ t.get("home.lede") }}</p>
+<section class="panel">
+<h2>{{ t.get("home.categories") }}</h2>
+<ul>
+{%- for c in categories %}
+<li><a href="{{ c.href }}">{{ c.name }}</a> <span class="reason">{{ c.counts }}</span></li>
+{%- endfor %}
+</ul>
+</section>
+{% endblock %}

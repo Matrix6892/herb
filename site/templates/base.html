@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="{{ l.lang }}" dir="{{ l.dir }}">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>{{ l.title }}</title>
+<meta name="description" content="{{ l.description }}">
+{% if l.noindex %}<meta name="robots" content="noindex">{% endif %}
+<link rel="canonical" href="{{ l.canonical }}">
+<link rel="icon" href="/static/icon.svg" type="image/svg+xml">
+<style>{{ l.css|safe }}</style>
+<script src="{{ l.js }}" defer></script>
+</head>
+<body data-api="{{ l.api }}">
+<a class="skip" href="#main">{{ t.get("nav.main") }}</a>
+<div class="wrap">
+<header class="top">
+<a class="brand" href="/">{{ t.get("site.name") }}</a>
+<nav>{% for (href, name) in l.nav %}<a href="{{ href }}">{{ name }}</a>{% endfor %}<a href="/how">{{ t.get("nav.how") }}</a></nav>
+</header>
+<main id="main">
+{% block main %}{% endblock %}
+</main>
+<footer>
+<nav><a href="/disclosure">{{ t.get("footer.link_disclosure") }}</a><a href="/privacy">{{ t.get("footer.link_privacy") }}</a><a href="/how">{{ t.get("footer.link_how") }}</a></nav>
+<p>{{ t.get("footer.disclosure") }}</p>
+<p>{{ t.get("footer.no_advice") }}</p>
+{% if let Some(u) = l.updated %}<p>{{ u }}</p>{% endif %}
+</footer>
+</div>
+</body>
+</html>

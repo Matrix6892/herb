@@ -1,0 +1,87 @@
+---
+source: crates/site-gen/tests/snapshots.rs
+expression: "without_css(&common::page(&out,\n\"pr/placeholder-nutrition-magnesium-glycinate-90-capsules/900011.html\"))"
+---
+<!doctype html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Placeholder Nutrition Magnesium Glycinate, 90 Capsules · Vitrina</title>
+<meta name="description" content="Placeholder Nutrition Magnesium Glycinate, 90 Capsules">
+
+<link rel="canonical" href="https://vitrina.example/pr/placeholder-nutrition-magnesium-glycinate-90-capsules/900011">
+<link rel="icon" href="/static/icon.svg" type="image/svg+xml">
+<style>…</style>
+<script src="/static/app.js?v=0e8da6625a" defer></script>
+</head>
+<body data-api="/api">
+<a class="skip" href="#main">Skip to content</a>
+<div class="wrap">
+<header class="top">
+<a class="brand" href="/">Vitrina</a>
+<nav><a href="/c/magnesium">Magnesium</a><a href="/how">How we rank</a></nav>
+</header>
+<main id="main">
+
+<p class="crumbs"><a href="/c/magnesium">Magnesium</a></p>
+<h1>Magnesium Glycinate, 90 Capsules</h1>
+<p class="meta">Placeholder Nutrition</p>
+<div class="panel">
+<p class="warn">Not compared: A line of the label could not be read with certainty.</p>
+<div class="buy">
+<a class="btn" href="https://tracking.example/c/000000/0000/0000?u=https%3A%2F%2Fwww.iherb.com%2Fpr%2Fplaceholder-nutrition-magnesium-glycinate-90-capsules%2F900011" rel="sponsored nofollow" data-buy="900011">Buy on iHerb</a>
+<p class="disc">Affiliate link: we may earn a commission. It never changes the ranking.</p>
+</div>
+</div>
+
+
+
+<section class="panel">
+<h2>Label, line by line</h2>
+<div class="scroll"><table>
+<thead><tr><th>#</th><th>On the label</th><th>Counted as</th><th>Factor</th><th class="num">Magnesium</th></tr></thead>
+<tbody>
+<tr><td>1</td><td>200 mg Magnesium bisglycinate (anhydrous)</td><td>magnesium (unreadable)</td><td>× 1</td><td class="num">—</td></tr>
+</tbody>
+</table></div>
+
+<p class="src">Label checked by fixture (synthetic) on 2026-09-20.</p>
+
+<p class="src">No third-party testing mark on the label.</p>
+
+<p class="src">Sources of the factors: <a href="https://pubchem.ncbi.nlm.nih.gov/compound/Magnesium-glycinate" rel="nofollow">Magnesium bisglycinate (anhydrous)</a>.</p>
+
+</section>
+
+
+<section class="panel">
+<h2>Something wrong in this data?</h2>
+<p class="pnote">Tell us which number is wrong. Please do not include personal details.</p>
+<form class="report" method="post" action="/api/report">
+<input type="hidden" name="product" value="900011">
+<input type="hidden" name="page_url" value="/pr/placeholder-nutrition-magnesium-glycinate-90-capsules/900011">
+<label for="rf">What is wrong</label>
+<select id="rf" name="field">
+<option value="price">Price</option>
+<option value="label">Label or dose</option>
+<option value="other">Something else</option>
+</select>
+<label for="rt">Details</label>
+<textarea id="rt" name="text" maxlength="2000" required></textarea>
+<button type="submit">Send</button>
+<p class="thanks ok" hidden>Thank you. We check every report.</p>
+<p class="thanks fail" hidden>Could not send the report. Please try again later.</p>
+</form>
+</section>
+
+</main>
+<footer>
+<nav><a href="/disclosure">Affiliate disclosure</a><a href="/privacy">Privacy</a><a href="/how">Methodology</a></nav>
+<p>We earn a commission when you buy through our links. Commission never changes the order.</p>
+<p>Information, not medical advice. We show doses and prices; the dose you take is yours to choose with your clinician.</p>
+<p>Prices from the network feed of 2026-09-26 06:02 UTC.</p>
+</footer>
+</div>
+</body>
+</html>

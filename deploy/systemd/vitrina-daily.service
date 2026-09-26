@@ -1,0 +1,19 @@
+# The daily job (spec §6). Any step failing stops the chain; the exit code
+# says which (2 feed, 3 verification, 4 upload) and OnFailure mails the owner.
+[Unit]
+Description=Vitrina daily ingest, build, verify and publish
+Wants=network-online.target
+After=network-online.target
+OnFailure=vitrina-notify@%n.service
+
+[Service]
+Type=oneshot
+User=vitrina
+WorkingDirectory=/srv/vitrina
+EnvironmentFile=/etc/vitrina/vitrina.env
+ExecStart=/bin/sh -c 'vitrina ingest && vitrina build && vitrina verify && vitrina publish'
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=/srv/vitrina/var /srv/vitrina/out

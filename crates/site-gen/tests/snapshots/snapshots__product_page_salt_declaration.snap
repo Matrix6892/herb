@@ -1,0 +1,111 @@
+---
+source: crates/site-gen/tests/snapshots.rs
+expression: "without_css(&common::page(&out,\n\"pr/example-naturals-magnesium-citrate-240-tablets/900002.html\"))"
+---
+<!doctype html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Example Naturals Magnesium Citrate, 240 Tablets · Vitrina</title>
+<meta name="description" content="Example Naturals Magnesium Citrate, 240 Tablets: $0.060 per 100 mg of magnesium">
+
+<link rel="canonical" href="https://vitrina.example/pr/example-naturals-magnesium-citrate-240-tablets/900002">
+<link rel="icon" href="/static/icon.svg" type="image/svg+xml">
+<style>…</style>
+<script src="/static/app.js?v=0e8da6625a" defer></script>
+</head>
+<body data-api="/api">
+<a class="skip" href="#main">Skip to content</a>
+<div class="wrap">
+<header class="top">
+<a class="brand" href="/">Vitrina</a>
+<nav><a href="/c/magnesium">Magnesium</a><a href="/how">How we rank</a></nav>
+</header>
+<main id="main">
+
+<p class="crumbs"><a href="/c/magnesium">Magnesium</a></p>
+<h1>Magnesium Citrate, 240 Tablets</h1>
+<p class="meta">Example Naturals</p>
+<div class="panel">
+<p class="price"><b>$0.060</b> per 100 mg of magnesium</p>
+<p class="sub">$14.50 for 120 servings of 202.041 mg</p>
+<div class="buy">
+<a class="btn" href="https://tracking.example/c/000000/0000/0000?u=https%3A%2F%2Fwww.iherb.com%2Fpr%2Fexample-naturals-magnesium-citrate-240-tablets%2F900002" rel="sponsored nofollow" data-buy="900002">Buy on iHerb</a>
+<p class="disc">Affiliate link: we may earn a commission. It never changes the ranking.</p>
+</div>
+</div>
+
+<section class="panel">
+<h2>Place in the rankings</h2>
+<ul><li>Lowest price per 100 mg: 4 of 8</li><li>Third-party tested: 1 of 2</li></ul>
+</section>
+
+
+<section class="panel">
+<h2>Price per unit</h2>
+<p class="mono">$14.50 ÷ (120 servings × 202.041 mg) × 100 mg = $0.060</p>
+<p class="src">Price from the network feed of 2026-09-26 06:02 UTC.</p>
+</section>
+
+
+<section class="panel">
+<h2>Label, line by line</h2>
+<div class="scroll"><table>
+<thead><tr><th>#</th><th>On the label</th><th>Counted as</th><th>Factor</th><th class="num">Magnesium</th></tr></thead>
+<tbody>
+<tr><td>1</td><td>1,250 mg Magnesium citrate (trimagnesium dicitrate, anhydrous)</td><td>compound mass</td><td>× 16.16% (Mg3(C6H5O7)2)</td><td class="num">≈ 202.041 mg</td></tr>
+</tbody>
+</table></div>
+<p>Per serving: 202.041 mg of magnesium. Serving size 2, 120 servings per container.</p>
+<p class="src">Label checked by fixture (synthetic) on 2026-09-20.</p>
+
+<p class="src">Testing mark on the label: NSF Certified for Sport.</p>
+
+<p class="src">Sources of the factors: <a href="https://pubchem.ncbi.nlm.nih.gov/compound/Trimagnesium-dicitrate" rel="nofollow">Magnesium citrate (trimagnesium dicitrate, anhydrous)</a>; <a href="https://www.ciaaw.org/atomic-weights.htm" rel="nofollow">Standard atomic weights, IUPAC CIAAW</a>.</p>
+
+</section>
+
+
+<section class="panel">
+<h2>Nearby in “Lowest price per 100 mg”</h2>
+<ol>
+<li value="2"><a href="/pr/sample-works-magnesium-carbonate-120-capsules/900012">Sample Works Magnesium Carbonate, 120 Capsules</a> <span class="mono">$0.050</span></li>
+<li value="3"><a href="/pr/placeholder-nutrition-magnesium-complex-120-capsules/900007">Placeholder Nutrition Magnesium Complex, 120 Capsules</a> <span class="mono">$0.054</span></li>
+<li value="4"><b>Example Naturals Magnesium Citrate, 240 Tablets</b> <span class="mono">$0.060</span></li>
+<li value="5"><a href="/pr/fixture-labs-magnesium-bisglycinate-200-mg-180-capsules/900001">Fixture Labs Magnesium Bisglycinate, 200 mg, 180 Capsules</a> <span class="mono">$0.106</span></li>
+<li value="6"><a href="/pr/sample-works-magnesium-malate-120-capsules/900004">Sample Works Magnesium Malate, 120 Capsules</a> <span class="mono">$0.124</span></li>
+<li value="7"><a href="/pr/example-naturals-magnesium-taurate-120-capsules/900006">Example Naturals Magnesium Taurate, 120 Capsules</a> <span class="mono">$0.327</span></li>
+</ol>
+</section>
+
+<section class="panel">
+<h2>Something wrong in this data?</h2>
+<p class="pnote">Tell us which number is wrong. Please do not include personal details.</p>
+<form class="report" method="post" action="/api/report">
+<input type="hidden" name="product" value="900002">
+<input type="hidden" name="page_url" value="/pr/example-naturals-magnesium-citrate-240-tablets/900002">
+<label for="rf">What is wrong</label>
+<select id="rf" name="field">
+<option value="price">Price</option>
+<option value="label">Label or dose</option>
+<option value="other">Something else</option>
+</select>
+<label for="rt">Details</label>
+<textarea id="rt" name="text" maxlength="2000" required></textarea>
+<button type="submit">Send</button>
+<p class="thanks ok" hidden>Thank you. We check every report.</p>
+<p class="thanks fail" hidden>Could not send the report. Please try again later.</p>
+</form>
+</section>
+
+</main>
+<footer>
+<nav><a href="/disclosure">Affiliate disclosure</a><a href="/privacy">Privacy</a><a href="/how">Methodology</a></nav>
+<p>We earn a commission when you buy through our links. Commission never changes the order.</p>
+<p>Information, not medical advice. We show doses and prices; the dose you take is yours to choose with your clinician.</p>
+<p>Prices from the network feed of 2026-09-26 06:02 UTC.</p>
+</footer>
+</div>
+</body>
+</html>

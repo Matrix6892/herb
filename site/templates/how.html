@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+{% block main %}
+<h1>{{ t.get("how.title") }}</h1>
+<p class="lede">{{ t.get("how.lede") }}</p>
+<p class="note">{{ t.get("how.no_advice") }}</p>
+
+<section class="panel">
+<h2>{{ t.get("how.dose_heading") }}</h2>
+<p>{{ t.get("how.dose_text") }}</p>
+{% if let Some(e) = dose_example %}<p class="mono">{{ e }}</p>{% endif %}
+</section>
+
+<section class="panel">
+<h2>{{ t.get("how.unit_heading") }}</h2>
+<p class="mono">{{ t.get("how.unit_formula") }}</p>
+<p>{{ unit_text }}</p>
+{% if let Some(e) = unit_example %}<p class="mono">{{ e }}</p>{% endif %}
+</section>
+
+{% if let Some(c) = control %}
+<section class="panel">
+<h2>{{ t.get("how.rating_heading") }}</h2>
+<p class="mono">{{ t.get("how.rating_formula") }}</p>
+<p>{{ t.get("how.rating_text") }}</p>
+</section>
+
+<section class="panel" id="balance">
+<h2>{{ t.get("how.balance_heading") }}</h2>
+<p class="mono">{{ t.get("how.balance_formula") }}</p>
+<p>{{ t.get("how.balance_text") }}</p>
+<p>{{ t.get("how.balance_control") }}</p>
+<div class="scroll"><table id="control">
+<thead><tr><th>{{ t.get("how.col_product") }}</th><th class="num">{{ t.get("how.col_p_unit") }}</th><th class="num">{{ t.get("how.col_r_b") }}</th><th class="num">{{ t.get("how.col_q_price") }}</th><th class="num">{{ t.get("how.col_q_rating") }}</th><th class="num">{{ t.get("how.col_s") }}</th></tr></thead>
+<tbody>
+{%- for r in c.rows %}
+<tr><td>{{ r.name }}</td><td class="num">{{ r.p_unit }}</td><td class="num">{{ r.r_b }}</td><td class="num">{{ r.q_price }}</td><td class="num">{{ r.q_rating }}</td><td class="num">{{ r.s }}</td></tr>
+{%- endfor %}
+</tbody>
+</table></div>
+<p>{{ c.order }}</p>
+<p>{{ t.get("how.balance_rank_note") }}</p>
+</section>
+{% endif %}
+
+<section class="panel">
+<h2>{{ t.get("how.presets_heading") }}</h2>
+<dl class="kv">
+{%- for (label, note) in presets %}<dt>{{ label }}</dt><dd>{{ note }}</dd>{% endfor -%}
+</dl>
+{% if !ratings_shown %}<p>{{ t.get("how.no_rating_text") }}</p>{% endif %}
+</section>
+
+<section class="panel">
+<h2>{{ t.get("how.sources_heading") }}</h2>
+<p>{{ t.get("how.sources_text") }}</p>
+</section>
+
+<section class="panel">
+<h2>{{ t.get("how.money_heading") }}</h2>
+<p>{{ t.get("how.money_text") }}</p>
+</section>
+{% endblock %}

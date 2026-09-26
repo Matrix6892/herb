@@ -1,0 +1,53 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  rust:
+    name: fmt, clippy, tests, wasm
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          components: rustfmt, clippy
+          targets: wasm32-unknown-unknown
+      - uses: Swatinem/rust-cache@v2
+      - run: cargo fmt --all --check
+      - run: cargo clippy --workspace --all-targets -- -D warnings
+      - run: cargo test --workspace
+      # catalog-core goes into the browser extension in phase 4 (spec §3.1).
+      - run: cargo build -p catalog-core --target wasm32-unknown-unknown
+
+  site:
+    name: fixture pipeline and Lighthouse
+    runs-on: ubuntu-latest
+    needs: rust
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: Swatinem/rust-cache@v2
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: cargo build -p ops-cli --release
+      - name: ingest, build, verify, publish (local) on the fixtures
+        run: |
+          V=target/release/vitrina
+          $V --config config/fixture.toml ingest --feed-file data/fixtures/feed/sample_feed.csv --date 2026-09-26
+          $V --config config/fixture.toml build
+          $V --config config/fixture.toml verify
+          $V --config config/fixture.toml publish --local
+      - name: Lighthouse on an emulated phone (spec §7.2)
+        run: npx --yes @lhci/cli@0.15 autorun
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: lighthouse
+          path: .lighthouseci
+          if-no-files-found: ignore

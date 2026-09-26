@@ -1,0 +1,146 @@
+---
+source: crates/site-gen/tests/snapshots.rs
+expression: "without_css(&common::page(&out, \"c/magnesium.html\"))"
+---
+<!doctype html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Magnesium: price per 100 mg · Vitrina</title>
+<meta name="description" content="Prices per 100 mg of elemental magnesium, from verified labels and today&#39;s network feed. We compare prices; we do not recommend doses.">
+
+<link rel="canonical" href="https://vitrina.example/c/magnesium">
+<link rel="icon" href="/static/icon.svg" type="image/svg+xml">
+<style>…</style>
+<script src="/static/app.js?v=0e8da6625a" defer></script>
+</head>
+<body data-api="/api">
+<a class="skip" href="#main">Skip to content</a>
+<div class="wrap">
+<header class="top">
+<a class="brand" href="/">Vitrina</a>
+<nav><a href="/c/magnesium">Magnesium</a><a href="/how">How we rank</a></nav>
+</header>
+<main id="main">
+
+<h1>Magnesium: price per 100 mg</h1>
+<p class="lede">Prices per 100 mg of elemental magnesium, from verified labels and today&#39;s network feed. We compare prices; we do not recommend doses.</p>
+<p class="meta">12 products, 8 compared.</p>
+
+<nav class="tabs" aria-label="Order by" hidden><a href="?preset=cheapest_per_unit" data-preset="cheapest_per_unit" aria-current="page">Lowest price per 100 mg</a><a href="?preset=cheapest_verified" data-preset="cheapest_verified">Third-party tested</a></nav>
+<p class="pnote" data-for="cheapest_per_unit">Lowest price per 100 mg of magnesium. Every product with a verified label and a price takes part.</p><p class="pnote" data-for="cheapest_verified" hidden>Lowest price per 100 mg among products whose label shows a third-party testing mark.</p>
+<ol class="list" id="list" data-default="cheapest_per_unit" data-o-cheapest_per_unit="900003 900012 900007 900002 900001 900004 900006 900005" data-o-cheapest_verified="900002 900004">
+<li class="card" data-id="900003">
+<span class="rank">1</span>
+<h2><a href="/pr/placeholder-nutrition-magnesium-oxide-400-mg-250-tablets/900003">Magnesium Oxide, 400 mg, 250 Tablets</a></h2>
+<span class="brandline">Placeholder Nutrition</span>
+<p class="price"><b>$0.010</b> per 100 mg of magnesium</p>
+<p class="sub">$9.99 for 250 servings of 400 mg</p><ul class="why"><li>88% cheaper per 100 mg than the category median</li></ul>
+<div class="buy">
+<a class="btn" href="https://tracking.example/c/000000/0000/0000?u=https%3A%2F%2Fwww.iherb.com%2Fpr%2Fplaceholder-nutrition-magnesium-oxide-400-mg-250-tablets%2F900003" rel="sponsored nofollow" data-buy="900003">Buy on iHerb</a>
+<p class="disc">Affiliate link: we may earn a commission. It never changes the ranking.</p>
+</div>
+</li>
+<li class="card" data-id="900012">
+<span class="rank">2</span>
+<h2><a href="/pr/sample-works-magnesium-carbonate-120-capsules/900012">Magnesium Carbonate, 120 Capsules</a></h2>
+<span class="brandline">Sample Works</span>
+<p class="price"><b>$0.050</b> per 100 mg of magnesium</p>
+<p class="sub">$7.49 for 60 servings of 250 mg</p><ul class="why"><li>40% cheaper per 100 mg than the category median</li></ul><p class="oos">Out of stock in today&#39;s feed</p>
+<div class="buy">
+<a class="btn" href="https://tracking.example/c/000000/0000/0000?u=https%3A%2F%2Fwww.iherb.com%2Fpr%2Fsample-works-magnesium-carbonate-120-capsules%2F900012" rel="sponsored nofollow" data-buy="900012">Buy on iHerb</a>
+<p class="disc">Affiliate link: we may earn a commission. It never changes the ranking.</p>
+</div>
+</li>
+<li class="card" data-id="900007">
+<span class="rank">3</span>
+<h2><a href="/pr/placeholder-nutrition-magnesium-complex-120-capsules/900007">Magnesium Complex, 120 Capsules</a></h2>
+<span class="brandline">Placeholder Nutrition</span>
+<p class="price"><b>$0.054</b> per 100 mg of magnesium</p>
+<p class="sub">$12.99 for 120 servings of 200 mg</p><ul class="why"><li>35% cheaper per 100 mg than the category median</li></ul>
+<div class="buy">
+<a class="btn" href="https://tracking.example/c/000000/0000/0000?u=https%3A%2F%2Fwww.iherb.com%2Fpr%2Fplaceholder-nutrition-magnesium-complex-120-capsules%2F900007" rel="sponsored nofollow" data-buy="900007">Buy on iHerb</a>
+<p class="disc">Affiliate link: we may earn a commission. It never changes the ranking.</p>
+</div>
+</li>
+<li class="card" data-id="900002">
+<span class="rank">4</span>
+<h2><a href="/pr/example-naturals-magnesium-citrate-240-tablets/900002">Magnesium Citrate, 240 Tablets</a></h2>
+<span class="brandline">Example Naturals</span>
+<p class="price"><b>$0.060</b> per 100 mg of magnesium</p>
+<p class="sub">$14.50 for 120 servings of 202.041 mg</p><ul class="why"><li>28% cheaper per 100 mg than the category median</li><li>Label shows NSF Certified for Sport</li></ul>
+<div class="buy">
+<a class="btn" href="https://tracking.example/c/000000/0000/0000?u=https%3A%2F%2Fwww.iherb.com%2Fpr%2Fexample-naturals-magnesium-citrate-240-tablets%2F900002" rel="sponsored nofollow" data-buy="900002">Buy on iHerb</a>
+<p class="disc">Affiliate link: we may earn a commission. It never changes the ranking.</p>
+</div>
+</li>
+<li class="card" data-id="900001">
+<span class="rank">5</span>
+<h2><a href="/pr/fixture-labs-magnesium-bisglycinate-200-mg-180-capsules/900001">Magnesium Bisglycinate, 200 mg, 180 Capsules</a></h2>
+<span class="brandline">Fixture Labs</span>
+<p class="price"><b>$0.106</b> per 100 mg of magnesium</p>
+<p class="sub">$18.99 for 90 servings of 200 mg</p><ul class="why"><li>28% pricier per 100 mg than the category median</li></ul>
+<div class="buy">
+<a class="btn" href="https://tracking.example/c/000000/0000/0000?u=https%3A%2F%2Fwww.iherb.com%2Fpr%2Ffixture-labs-magnesium-bisglycinate-200-mg-180-capsules%2F900001" rel="sponsored nofollow" data-buy="900001">Buy on iHerb</a>
+<p class="disc">Affiliate link: we may earn a commission. It never changes the ranking.</p>
+</div>
+</li>
+<li class="card" data-id="900004">
+<span class="rank">6</span>
+<h2><a href="/pr/sample-works-magnesium-malate-120-capsules/900004">Magnesium Malate, 120 Capsules</a></h2>
+<span class="brandline">Sample Works</span>
+<p class="price"><b>$0.124</b> per 100 mg of magnesium</p>
+<p class="sub">$21.00 for 40 servings of 425 mg</p><ul class="why"><li>49% pricier per 100 mg than the category median</li><li>Label shows USP Verified</li></ul>
+<div class="buy">
+<a class="btn" href="https://tracking.example/c/000000/0000/0000?u=https%3A%2F%2Fwww.iherb.com%2Fpr%2Fsample-works-magnesium-malate-120-capsules%2F900004" rel="sponsored nofollow" data-buy="900004">Buy on iHerb</a>
+<p class="disc">Affiliate link: we may earn a commission. It never changes the ranking.</p>
+</div>
+</li>
+<li class="card" data-id="900006">
+<span class="rank">7</span>
+<h2><a href="/pr/example-naturals-magnesium-taurate-120-capsules/900006">Magnesium Taurate, 120 Capsules</a></h2>
+<span class="brandline">Example Naturals</span>
+<p class="price"><b>$0.327</b> per 100 mg of magnesium</p>
+<p class="sub">$24.50 for 60 servings of 125 mg</p><ul class="why"><li>295% pricier per 100 mg than the category median</li><li>Formula changed in 2026</li></ul>
+<div class="buy">
+<a class="btn" href="https://tracking.example/c/000000/0000/0000?u=https%3A%2F%2Fwww.iherb.com%2Fpr%2Fexample-naturals-magnesium-taurate-120-capsules%2F900006" rel="sponsored nofollow" data-buy="900006">Buy on iHerb</a>
+<p class="disc">Affiliate link: we may earn a commission. It never changes the ranking.</p>
+</div>
+</li>
+<li class="card" data-id="900005">
+<span class="rank">8</span>
+<h2><a href="/pr/fixture-labs-magnesium-l-threonate-90-capsules/900005">Magnesium L-Threonate, 90 Capsules</a></h2>
+<span class="brandline">Fixture Labs</span>
+<p class="price"><b>$0.646</b> per 100 mg of magnesium</p>
+<p class="sub">$32.00 for 30 servings of 165.062 mg</p><ul class="why"><li>682% pricier per 100 mg than the category median</li></ul>
+<div class="buy">
+<a class="btn" href="https://tracking.example/c/000000/0000/0000?u=https%3A%2F%2Fwww.iherb.com%2Fpr%2Ffixture-labs-magnesium-l-threonate-90-capsules%2F900005" rel="sponsored nofollow" data-buy="900005">Buy on iHerb</a>
+<p class="disc">Affiliate link: we may earn a commission. It never changes the ranking.</p>
+</div>
+</li>
+</ol>
+
+
+<section class="unranked">
+<h2>Not compared</h2>
+<p class="pnote">These products are in the category but lack something the comparison needs. Each says what.</p>
+<ul>
+<li><a href="/pr/sample-works-magnesium-citrate-powder-8-oz/900008">Sample Works Magnesium Citrate Powder, 8 oz</a> <span class="reason">The store shows this price only in the cart, so we cannot compare it.</span></li>
+<li><a href="/pr/fixture-labs-magnesium-chloride-120-tablets/900009">Fixture Labs Magnesium Chloride, 120 Tablets</a> <span class="reason">No price in today&#39;s network feed.</span></li>
+<li><a href="/pr/example-naturals-magnesium-aspartate-100-capsules/900010">Example Naturals Magnesium Aspartate, 100 Capsules</a> <span class="reason">Label not entered yet. The product is in the queue.</span></li>
+<li><a href="/pr/placeholder-nutrition-magnesium-glycinate-90-capsules/900011">Placeholder Nutrition Magnesium Glycinate, 90 Capsules</a> <span class="reason">A line of the label could not be read with certainty.</span></li>
+</ul>
+</section>
+
+
+</main>
+<footer>
+<nav><a href="/disclosure">Affiliate disclosure</a><a href="/privacy">Privacy</a><a href="/how">Methodology</a></nav>
+<p>We earn a commission when you buy through our links. Commission never changes the order.</p>
+<p>Information, not medical advice. We show doses and prices; the dose you take is yours to choose with your clinician.</p>
+<p>Prices from the network feed of 2026-09-26 06:02 UTC.</p>
+</footer>
+</div>
+</body>
+</html>

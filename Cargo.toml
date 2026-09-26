@@ -1,0 +1,55 @@
+[workspace]
+resolver = "3"
+members = [
+    "crates/catalog-core",
+    "crates/catalog-store",
+    "crates/feed-ingest",
+    "crates/site-gen",
+    "crates/edge-api",
+    "crates/ops-cli",
+]
+
+[workspace.package]
+edition = "2024"
+rust-version = "1.88"
+license = "UNLICENSED"
+publish = false
+
+[workspace.dependencies]
+catalog-core = { path = "crates/catalog-core" }
+catalog-store = { path = "crates/catalog-store" }
+feed-ingest = { path = "crates/feed-ingest" }
+site-gen = { path = "crates/site-gen" }
+
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+toml = "1.1"
+thiserror = "2.0"
+anyhow = "1.0"
+rusqlite = { version = "0.40", features = ["bundled"] }
+askama = "0.16"
+axum = "0.8"
+tokio = { version = "1.53", features = ["rt-multi-thread", "macros", "net", "signal", "sync", "time"] }
+tower-http = { version = "0.7", features = ["limit"] }
+ureq = "3.4"
+csv = "1.4"
+sha2 = "0.11"
+hex = "0.4"
+flate2 = "1.1"
+clap = { version = "4.6", features = ["derive", "env"] }
+url = "2.5"
+proptest = "1.11"
+insta = "1.48"
+tempfile = "3"
+
+[workspace.lints.rust]
+unsafe_code = "forbid"
+
+[workspace.lints.clippy]
+float_cmp = "warn"
+cast_possible_truncation = "warn"
+cast_sign_loss = "warn"
+
+[profile.release]
+lto = "thin"
+codegen-units = 1

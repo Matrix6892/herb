@@ -1,0 +1,23 @@
+[package]
+name = "edge-api"
+version = "0.1.0"
+description = "Two write-only endpoints: buy-click events and data error reports. No HTML, no personal data (spec §8)."
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+publish.workspace = true
+
+[dependencies]
+axum.workspace = true
+catalog-core.workspace = true
+catalog-store.workspace = true
+hex.workspace = true
+serde.workspace = true
+sha2.workspace = true
+tokio.workspace = true
+
+[dev-dependencies]
+tower = { version = "0.5", features = ["util"] }
+
+[lints]
+workspace = true

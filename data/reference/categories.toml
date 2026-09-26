@@ -1,0 +1,18 @@
+# Categories (spec §4.2). Phase 1 has exactly one (question О1, default:
+# magnesium). `slug` matches the iHerb category path, so /c/magnesium here
+# corresponds to the same path there.
+#
+# `feed_match` lists the feed category values that place a product in this
+# category. The values are an assumption until a real feed sample arrives
+# (question О3; docs/adr/0013-feed-format-assumed.md).
+
+schema = 1
+
+[[category]]
+id = "magnesium"
+slug = "magnesium"
+name = "Magnesium"
+substance = "magnesium"
+unit = "100 mg"
+unit_label = "per 100 mg of magnesium"
+feed_match = ["Magnesium"]

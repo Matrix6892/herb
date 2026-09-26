@@ -1,0 +1,20 @@
+[Unit]
+Description=Vitrina edge-api (buy clicks and error reports)
+After=network.target
+OnFailure=vitrina-notify@%n.service
+
+[Service]
+User=vitrina
+WorkingDirectory=/srv/vitrina
+EnvironmentFile=/etc/vitrina/vitrina.env
+ExecStart=/usr/local/bin/edge-api
+Restart=always
+RestartSec=2
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=/srv/vitrina/var
+
+[Install]
+WantedBy=multi-user.target

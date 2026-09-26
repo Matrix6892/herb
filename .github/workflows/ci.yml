@@ -24,6 +24,29 @@ jobs:
       # catalog-core goes into the browser extension in phase 4 (spec §3.1).
       - run: cargo build -p catalog-core --target wasm32-unknown-unknown
 
+  prototype:
+    name: design prototype on every generator case
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      # The cases themselves are checked against the generator by
+      # `cargo test -p site-gen --test evaluation` in the rust job.
+      - name: the committed prototype is built from its source and the cases
+        run: |
+          python3 tools/build-prototype.py --out /tmp/prototype.html
+          cmp /tmp/prototype.html design/prototypes/magnesium-ranking.html
+      - name: install the pinned Playwright and its Chromium
+        working-directory: design/prototypes/tests
+        run: |
+          npm ci
+          npx playwright install --with-deps chromium
+      - name: render every case (AC17, AC19–AC23)
+        working-directory: design/prototypes/tests
+        run: node states.mjs
+
   site:
     name: fixture pipeline and Lighthouse
     runs-on: ubuntu-latest

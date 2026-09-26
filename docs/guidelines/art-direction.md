@@ -135,9 +135,11 @@
    4.49. Под ней: «Average 4.5 from 3,400 reviews · 4th highest of 7». В
    ветке B вместо неё — отметка о тестировании на этикетке.
 5. Почему это место, словами из формулы пресета:
-   - balance: «By balance a product is only as strong as its weaker side.
-     For Citrate that is rating, 49 of 100. No other product's weaker side
-     scores higher.»;
+   - balance: «Balance counts a product only as strong as its weaker side,
+     on 0 to 100 scales set by the products compared here. For Citrate that
+     is rating: 46 of 100. No other product's weaker side scores higher.»
+     Число берётся из файла оценки (`c/<slug>.json`, ADR 0020); первая
+     версия прототипа считала его в JS по округлённым полям и показывала 49;
    - price: «3 cost less per mg; they are in the shaded area.»;
    - rating: «3 have a higher adjusted rating.»
 6. Компромисс: «Cheaper per mg: Oxide $0.010, Carbonate $0.050 (out of
@@ -256,6 +258,8 @@ Identity): одна опция на категорию, без смешения.
 | Проверка | Итог |
 | --- | --- |
 | Лидер назван словами, с мерой и разрывом до №2 | PASS |
+| Все числа, порядок, пороги области и разрыв — из файла оценки генератора, JS не считает (ADR 0020, AC23) | PASS |
+| Один товар — без «лучше» и без №2; ничья с №2 названа ничьёй; пустой пресет объяснён (AC17, AC20–AC22) | PASS |
 | У каждой шкалы и колонки сказано, куда лучше | PASS |
 | «Лучше» везде вверх или вправо, лучший угол карты подписан | PASS |
 | Кнопка покупки одна, рядом индикатор покупки и раскрытие | PASS |

@@ -1,0 +1,18 @@
+# SYNTHETIC FIXTURE: invented label for tests and the sample build. Not a
+# real product; see data/fixtures/feed/README.md.
+schema = 1
+iherb_id = "900003"
+
+[[label]]
+effective_from = "2025-06-01"
+serving_size = 1
+servings_per_container = 250
+verified_by = "fixture (synthetic)"
+verified_at = "2026-09-20"
+label_photo_ref = "fixtures/none"
+
+[[label.line]]
+form = "magnesium_oxide"
+amount = "400 mg"
+declared_as = "elemental"
+confidence = "verified"

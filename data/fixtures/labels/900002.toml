@@ -1,0 +1,19 @@
+# SYNTHETIC FIXTURE: invented label for tests and the sample build. Not a
+# real product; see data/fixtures/feed/README.md.
+schema = 1
+iherb_id = "900002"
+
+[[label]]
+effective_from = "2025-06-01"
+serving_size = 2
+servings_per_container = 120
+verified_by = "fixture (synthetic)"
+verified_at = "2026-09-20"
+label_photo_ref = "fixtures/none"
+third_party_test = "NSF Certified for Sport"
+
+[[label.line]]
+form = "magnesium_citrate_anhydrous"
+amount = "1250 mg"
+declared_as = "salt"
+confidence = "verified"

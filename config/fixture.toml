@@ -1,0 +1,24 @@
+# The synthetic fixture pipeline: sample feed, fixture labels, rating branch A
+# so that every preset renders. Used by CI (Lighthouse) and local previews:
+#
+#   vitrina --config config/fixture.toml ingest --feed-file data/fixtures/feed/sample_feed.csv --date 2026-09-26
+#   vitrina --config config/fixture.toml build
+#   vitrina --config config/fixture.toml verify
+#   vitrina --config config/fixture.toml publish --local
+#   python3 tools/serve-site.py out/current/site
+#
+# Never publish this build: the products are invented.
+
+rating_branch = "A"
+locale = "en"
+site_url = "https://vitrina.example"
+api_base = "/api"
+
+[paths]
+db = "var/fixture/vitrina.db"
+snapshots = "var/fixture/snapshots"
+out = "out"
+reference = "data/reference"
+labels = "data/fixtures/labels"
+site = "site"
+control = "data/fixtures/balance_abcdef.toml"

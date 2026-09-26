@@ -1,0 +1,7 @@
+[Unit]
+Description=Mail the owner about a failure of %i
+
+[Service]
+Type=oneshot
+EnvironmentFile=/etc/vitrina/vitrina.env
+ExecStart=/srv/vitrina/deploy/notify.sh %i

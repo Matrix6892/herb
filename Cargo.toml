@@ -6,6 +6,7 @@ members = [
     "crates/feed-ingest",
     "crates/site-gen",
     "crates/edge-api",
+    "crates/ops-cli",
 ]
 
 [workspace.package]

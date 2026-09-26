@@ -1,0 +1,9 @@
+[Unit]
+Description=Daily Vitrina backup, after the daily job
+
+[Timer]
+OnCalendar=*-*-* 07:15:00 UTC
+Persistent=true
+
+[Install]
+WantedBy=timers.target

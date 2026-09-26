@@ -3,6 +3,7 @@ resolver = "3"
 members = [
     "crates/catalog-core",
     "crates/catalog-store",
+    "crates/feed-ingest",
 ]
 
 [workspace.package]

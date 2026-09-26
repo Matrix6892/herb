@@ -12,226 +12,412 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,300..900&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
 <style>
   :root {
-    --bg: #e9ecf0;
-    --surface: #ffffff;
-    --raise: #f5f6f8;
-    --ink: #0e1116;
-    --muted: #5a6370;
-    --faint: #8a93a0;
-    --line: #d5dae1;
-    --hair: #e6e9ee;
-    --accent: #2f49ff;
-    --accent-soft: #e9edff;
-    --accent-ink: #ffffff;
-    --warn: #7a5200;
-    --warn-soft: #fbf1dc;
-    --dot: #0e1116;
+    --desk: #e8e6e0;
+    --paper: #fcfbf8;
+    --paper-2: #f3f1ec;
+    --ink: #1c1b18;
+    --ink-2: #5c5850;
+    --ink-3: #8d887d;
+    --ink-z: #6e6960;
+    --rule: #dcd8cf;
+    --hair: #ebe8e1;
+    --accent: #2b44d6;
+    --accent-soft: rgba(43, 68, 214, .075);
+    --accent-line: rgba(43, 68, 214, .5);
+    --grid: rgba(43, 68, 214, .085);
+    --grid-2: rgba(43, 68, 214, .2);
+    --on-ink: #fcfbf8;
+    --shadow: 0 1px 0 rgba(28, 27, 24, .04), 0 12px 32px -24px rgba(28, 27, 24, .35);
+    --grain: .035;
     --display: "Archivo", "Arial Narrow", system-ui, sans-serif;
     --body: "Archivo", system-ui, -apple-system, "Segoe UI", sans-serif;
     --mono: "IBM Plex Mono", ui-monospace, Menlo, Consolas, monospace;
+    --ease-out: cubic-bezier(.16, 1, .3, 1);
+    --ease-in-out: cubic-bezier(.65, 0, .35, 1);
+    --ease-snap: cubic-bezier(.22, 1, .36, 1);
+    --t-press: 120ms;
+    --t-reveal: 200ms;
+    --t-state: 240ms;
+    --r-sheet: 12px;
+    --r-pill: 999px;
     color-scheme: light;
   }
   @media (prefers-color-scheme: dark) {
     :root:not([data-theme="light"]) {
-      --bg: #0b0e15; --surface: #131722; --raise: #1a1f2c; --ink: #e8ecf5; --muted: #9aa4b8; --faint: #6d768a;
-      --line: #2a3142; --hair: #1f2533; --accent: #8fa2ff; --accent-soft: #1d2447; --accent-ink: #0b0e15;
-      --warn: #f0c46b; --warn-soft: #2b2312; --dot: #e8ecf5; color-scheme: dark;
+      --desk: #161512; --paper: #201f1b; --paper-2: #2a2823; --ink: #ece8df; --ink-2: #aaa498; --ink-3: #7c776c; --ink-z: #938e83;
+      --rule: #37342e; --hair: #2b2925; --accent: #9aa8ff; --accent-soft: rgba(154, 168, 255, .11); --accent-line: rgba(154, 168, 255, .55);
+      --grid: rgba(154, 168, 255, .08); --grid-2: rgba(154, 168, 255, .2); --on-ink: #161512;
+      --shadow: 0 1px 0 rgba(0, 0, 0, .25), 0 12px 32px -24px rgba(0, 0, 0, .8); --grain: .04; color-scheme: dark;
     }
   }
   :root[data-theme="dark"] {
-    --bg: #0b0e15; --surface: #131722; --raise: #1a1f2c; --ink: #e8ecf5; --muted: #9aa4b8; --faint: #6d768a;
-    --line: #2a3142; --hair: #1f2533; --accent: #8fa2ff; --accent-soft: #1d2447; --accent-ink: #0b0e15;
-    --warn: #f0c46b; --warn-soft: #2b2312; --dot: #e8ecf5; color-scheme: dark;
+    --desk: #161512; --paper: #201f1b; --paper-2: #2a2823; --ink: #ece8df; --ink-2: #aaa498; --ink-3: #7c776c; --ink-z: #938e83;
+    --rule: #37342e; --hair: #2b2925; --accent: #9aa8ff; --accent-soft: rgba(154, 168, 255, .11); --accent-line: rgba(154, 168, 255, .55);
+    --grid: rgba(154, 168, 255, .08); --grid-2: rgba(154, 168, 255, .2); --on-ink: #161512;
+    --shadow: 0 1px 0 rgba(0, 0, 0, .25), 0 12px 32px -24px rgba(0, 0, 0, .8); --grain: .04; color-scheme: dark;
   }
-  body { background: var(--bg); color: var(--ink); font: 15px/1.5 var(--body); overflow-x: clip; }
-  .num, .mono { font-family: var(--mono); font-variant-numeric: tabular-nums; }
-  a { color: var(--accent); }
+
+  html, body { background: var(--desk); }
+  body { color: var(--ink); font: 15px/1.5 var(--body); overflow-x: clip; }
+  /* Grain lives on the desk only: every sheet with data is opaque paper. */
+  body::before { content: ""; position: fixed; inset: 0; z-index: 0; pointer-events: none; opacity: var(--grain);
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"); }
   button { font: inherit; color: inherit; }
-  :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 4px; }
-  .wrap { max-width: 72rem; margin-inline: auto; padding-inline: 16px; padding-block: 18px 64px; display: grid; grid-template-columns: minmax(0, 1fr); gap: 14px; }
-  .wrap > *, .row, .row-main > *, .detail > div, .detail-in > *, .box > * { min-width: 0; }
+  a { color: var(--accent); }
+  :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 6px; }
+  .num, .mono { font-family: var(--mono); font-variant-numeric: tabular-nums; }
+  .p .z { color: var(--ink-z); }
+  .p b { font-weight: inherit; }
 
-  /* Header: what this is, how fresh it is. */
-  .head { display: grid; gap: 6px; }
-  .head-top { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; gap: 6px 16px; }
-  h1 { margin: 0; font: 850 clamp(28px, 4vw, 44px)/1.02 var(--display); font-stretch: 112%; letter-spacing: -.015em; }
-  h1 small { display: block; margin-top: 6px; font: 500 15px/1.35 var(--body); font-stretch: 100%; letter-spacing: 0; color: var(--muted); }
-  .fresh { display: flex; flex-wrap: wrap; gap: 4px 14px; font: 500 12px/1.4 var(--mono); color: var(--muted); }
+  .layout { position: relative; z-index: 1; max-width: 1240px; margin-inline: auto; padding-inline: clamp(16px, 3vw, 32px); padding-block: 18px 72px;
+    display: grid; grid-template-columns: minmax(0, 1fr) 340px; column-gap: 28px; row-gap: 16px; align-items: start;
+    grid-template-areas: "head head" "switch rail" "answer rail" "map rail" "list rail" "rest rail"; }
+  .layout > * { min-width: 0; }
+  .sheet { background: var(--paper); border: 1px solid var(--rule); border-radius: var(--r-sheet); box-shadow: var(--shadow); }
+
+  /* Header: what this is and how fresh. */
+  .head { grid-area: head; display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 6px 20px; }
+  .head h1 { margin: 0; font: 800 22px/1.1 var(--display); font-stretch: 125%; letter-spacing: -.01em; }
+  .fresh { margin: 0; display: flex; flex-wrap: wrap; gap: 4px 16px; font: 500 12px/1.4 var(--mono); color: var(--ink-2); }
   .fresh b { color: var(--ink); font-weight: 500; }
-  .fresh .live::before { content: ""; display: inline-block; width: 7px; height: 7px; border-radius: 50%; background: var(--accent); margin-inline-end: 6px; vertical-align: 1px; }
-  .linkbtn { background: none; border: 0; padding: 0; color: var(--accent); cursor: pointer; text-decoration: underline; text-underline-offset: 3px; font-size: 14px; }
-
-  .method { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 14px 16px; display: grid; gap: 8px; font-size: 14px; }
-  .method[hidden] { display: none; }
-  .method p { margin: 0; max-width: 62ch; color: var(--muted); }
+  .linkbtn { background: none; border: 0; padding: 0; cursor: pointer; color: var(--accent); text-decoration: underline; text-underline-offset: 3px; font-size: 13.5px; }
+  .method { grid-column: 1 / -1; padding: 14px 18px; display: grid; gap: 8px; font-size: 14px; }
+  .method p { margin: 0; max-width: 72ch; color: var(--ink-2); }
   .method code { font-family: var(--mono); font-size: 13px; color: var(--ink); }
 
-  /* Toolbar: preset switch with counts, sticky while scrolling. */
-  .toolbar { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5; background: var(--bg); padding-block: 8px; display: grid; gap: 6px; border-bottom: 1px solid var(--line); }
-  .seg { display: flex; flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; gap: 4px; background: var(--raise); border: 1px solid var(--line); border-radius: 10px; padding: 3px; width: max-content; max-width: 100%; }
-  .seg button { flex: none; white-space: nowrap; border: 0; background: transparent; border-radius: 7px; padding: 7px 12px; cursor: pointer; font-weight: 600; font-size: 14px; color: var(--muted); display: flex; gap: 7px; align-items: baseline; }
-  .seg button .c { font: 500 12px var(--mono); color: var(--faint); }
-  .seg button[aria-pressed="true"] { background: var(--surface); color: var(--ink); box-shadow: 0 1px 2px rgba(0,0,0,.08), 0 0 0 1px var(--line); }
-  .seg button kbd { font: 500 10px var(--mono); color: var(--faint); border: 1px solid var(--line); border-radius: 3px; padding: 0 3px; }
-  .note { margin: 0; font-size: 13.5px; color: var(--muted); max-width: 72ch; }
+  /* The lens switch: sticky, compact, says its state. */
+  .switch { grid-area: switch; position: sticky; top: env(safe-area-inset-top, 0px); z-index: 6; padding-block: 8px; margin-inline: -8px; padding-inline: 8px; border-radius: 0 0 var(--r-sheet) var(--r-sheet);
+    transition: background-color var(--t-state) var(--ease-snap), box-shadow var(--t-state) var(--ease-snap);
+    display: flex; flex-wrap: wrap; align-items: center; gap: 6px 12px; }
+  .switch.stuck { background: color-mix(in srgb, var(--desk) 86%, transparent); -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); box-shadow: 0 1px 0 var(--rule); }
+  .switch .lbl { font: 600 11px/1 var(--mono); letter-spacing: .08em; text-transform: uppercase; color: var(--ink-2); }
+  .seg { display: flex; flex-wrap: nowrap; gap: 3px; padding: 3px; background: var(--paper-2); border: 1px solid var(--rule); border-radius: var(--r-pill); max-width: 100%; overflow-x: auto; scrollbar-width: none; }
+  .seg button { flex: none; display: flex; align-items: baseline; gap: 7px; white-space: nowrap; border: 0; border-radius: var(--r-pill); padding: 7px 14px; background: transparent; cursor: pointer; font-weight: 600; font-size: 14px; color: var(--ink-2);
+    transition: transform var(--t-press) var(--ease-snap); }
+  .seg button .c { font: 500 11.5px var(--mono); color: var(--ink-3); }
+  .seg button[aria-pressed="true"] { background: var(--paper); color: var(--ink); box-shadow: 0 0 0 1px var(--rule), 0 1px 2px rgba(0, 0, 0, .06); }
+  .seg button:active { transform: scale(.97); }
+  .keys { font: 500 11.5px var(--mono); color: var(--ink-2); }
+  .keys kbd { font: inherit; border: 1px solid var(--rule); border-bottom-width: 2px; border-radius: 4px; padding: 0 4px; background: var(--paper); }
 
-  /* The whole shelf on one axis. */
-  .strip { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 10px 14px 6px; }
-  .strip-h { display: flex; justify-content: space-between; gap: 10px; font: 500 11px/1.3 var(--mono); letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
-  .strip svg { display: block; width: 100%; height: 64px; overflow: visible; }
-  .strip .axis { stroke: var(--line); }
-  .strip .tick text { fill: var(--faint); font: 500 10px var(--mono); }
-  .strip .tick line { stroke: var(--line); }
-  .strip .med line { stroke: var(--muted); stroke-dasharray: 2 3; }
-  .strip .med text { fill: var(--muted); font: 500 10px var(--mono); }
-  .strip .pt { cursor: pointer; }
-  .strip .pt circle { fill: var(--dot); stroke: var(--surface); stroke-width: 1.5; transition: r .15s; }
-  .strip .pt.out circle { fill: none; stroke: var(--faint); stroke-dasharray: 2 2; }
-  .strip .pt.hot circle { fill: var(--accent); r: 7; }
-  .strip .pt text { fill: var(--ink); font: 600 10px var(--body); opacity: 0; transition: opacity .15s; }
-  .strip .pt.hot text { opacity: 1; }
+  /* The answer: the page's thesis, written as a sentence. */
+  .answer { grid-area: answer; display: grid; gap: 8px; padding-block: 4px 6px; }
+  .eyebrow { margin: 0; font: 600 11px/1.2 var(--mono); letter-spacing: .08em; text-transform: uppercase; color: var(--accent); }
+  .ans { margin: 0; font: 700 clamp(26px, 3.4vw, 40px)/1.08 var(--display); font-stretch: 112%; letter-spacing: -.02em; text-wrap: balance; max-width: 26ch; }
+  .ans b { font-weight: 850; }
+  .ans-sub { margin: 0; max-width: 68ch; font-size: 16px; line-height: 1.5; color: var(--ink-2); }
+  .ans-sub .num { color: var(--ink); font-size: 15px; }
 
-  /* Ranking rows. */
-  .list { display: grid; gap: 0; margin: 0; padding: 0; list-style: none; background: var(--surface); border: 1px solid var(--line); border-radius: 12px; overflow: hidden; }
-  .row { border-top: 1px solid var(--hair); position: relative; background: var(--surface); }
-  .row:first-child { border-top: 0; }
-  .row.hot { background: var(--raise); }
-  .row-main { display: grid; grid-template-columns: 2.2rem minmax(0, 1fr) 7.2rem 9.5rem 5.2rem 10.5rem; gap: 12px; align-items: start; padding: 12px 14px; }
-  .rank { font: 600 15px/1.6 var(--mono); color: var(--faint); }
-  .prod { display: grid; gap: 3px; min-width: 0; }
-  .prod .name { display: flex; gap: 8px; align-items: baseline; flex-wrap: wrap; }
-  .prod .name button { background: none; border: 0; padding: 0; text-align: start; cursor: pointer; font-weight: 700; font-size: 15px; line-height: 1.3; }
-  .prod .name button:hover { text-decoration: underline; text-underline-offset: 3px; }
-  .prod .brand { font-size: 13px; color: var(--muted); }
-  .chips { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 3px; }
-  .chip { font-size: 12px; padding: 1px 7px; border-radius: 5px; background: var(--raise); color: var(--muted); border: 1px solid var(--hair); }
-  .chip.good { background: var(--accent-soft); color: var(--accent); border-color: transparent; }
-  .chip.warn { background: var(--warn-soft); color: var(--warn); border-color: transparent; }
-  .cell { display: grid; gap: 1px; justify-items: end; text-align: end; }
-  .cell .lbl { font: 500 10.5px/1.2 var(--mono); letter-spacing: .05em; text-transform: uppercase; color: var(--faint); }
-  .big { font: 500 19px/1.3 var(--mono); }
-  .src-btn { background: none; border: 0; padding: 0; cursor: help; text-decoration: underline dotted var(--faint); text-underline-offset: 4px; text-decoration-thickness: 1px; }
-  .src-btn:hover, .src-btn[aria-expanded="true"] { text-decoration-color: var(--accent); color: var(--accent); }
-  .buy { display: grid; gap: 4px; justify-items: stretch; }
-  .btn { display: inline-flex; justify-content: center; align-items: center; gap: 6px; background: var(--ink); color: var(--bg); border: 0; text-decoration: none; font-weight: 700; font-size: 14px; border-radius: 9px; padding: 9px 12px; cursor: pointer; }
-  .btn:hover { background: var(--accent); color: var(--accent-ink); }
-  .disc { font-size: 11px; line-height: 1.3; color: var(--muted); }
-  .oos { font-size: 12px; color: var(--warn); }
-  .more { background: none; border: 0; cursor: pointer; color: var(--muted); font-size: 13px; padding: 2px 0; justify-self: start; display: flex; gap: 6px; align-items: center; }
-  .more::after { content: ""; width: 7px; height: 7px; border-right: 1.5px solid currentColor; border-bottom: 1.5px solid currentColor; transform: rotate(45deg) translateY(-2px); transition: transform .2s; }
+  /* The map. */
+  .map { grid-area: map; padding: 14px 16px 12px; display: grid; gap: 8px; }
+  .sheet-h { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; gap: 4px 16px; }
+  .sheet-h h2, .group h2 { margin: 0; font: 800 18px/1.2 var(--display); font-stretch: 108%; }
+  .sheet-h p { margin: 0; font-size: 13px; color: var(--ink-2); }
+  .zoom { display: inline-flex; align-items: center; gap: 6px; font: 500 12px var(--mono); color: var(--ink-2); }
+  .zoom svg { width: 64px; height: 10px; overflow: visible; }
+  .plot-wrap { position: relative; }
+  #plot { display: block; width: 100%; overflow: visible; font-family: var(--mono); user-select: none; -webkit-user-select: none; }
+  #plot .g1 { stroke: var(--grid); stroke-width: 1; }
+  #plot .g2 { stroke: var(--grid-2); stroke-width: 1; }
+  #plot .frame { fill: none; stroke: var(--rule); }
+  #plot .lane { fill: var(--paper-2); }
+  #plot .tx { fill: var(--ink-2); font: 500 11px var(--mono); }
+  #plot .tt { fill: var(--ink-2); font: 600 11px var(--body); font-stretch: 85%; letter-spacing: .02em; }
+  #plot .best { fill: var(--accent); font: 700 11.5px var(--body); font-stretch: 90%; }
+  #plot .worst { fill: var(--ink-2); font: 600 11px var(--body); font-stretch: 90%; }
+  #plot .med { stroke: var(--ink-2); stroke-dasharray: 3 3; }
+  #plot .medt { fill: var(--ink-2); font: 600 10.5px var(--mono); }
+  #plot .region { fill: var(--accent-soft); stroke: var(--accent-line); stroke-width: 1.25; vector-effect: non-scaling-stroke;
+    transform-box: view-box; transform-origin: 0 0; transition: transform var(--t-state) var(--ease-in-out), opacity var(--t-state) var(--ease-in-out); }
+  #plot.instant .region { transition: none; }
+  #plot .xh { stroke: var(--accent); stroke-width: 1; stroke-dasharray: 2 3; }
+  #plot .tag rect { fill: var(--accent); }
+  #plot .tag text { fill: var(--on-ink); font: 600 11px var(--mono); }
+  #plot .htag rect { fill: var(--ink); }
+  #plot .htag text { fill: var(--on-ink); font: 600 11px var(--mono); }
+  #plot .pt { cursor: pointer; }
+  #plot .pt .hit { fill: transparent; }
+  #plot .pt .d { fill: var(--ink); stroke: var(--paper); stroke-width: 2; }
+  #plot .pt.out .d { fill: var(--paper); stroke: var(--ink-2); stroke-width: 1.5; }
+  #plot .pt.oos .d { fill: url(#hatch); stroke: var(--ink); stroke-width: 1.5; }
+  #plot .pt.sel .d { fill: var(--accent); stroke: var(--paper); }
+  #plot .pt.sel.oos .d { fill: url(#hatchA); stroke: var(--accent); }
+  #plot .pt .ring { fill: none; stroke: var(--accent); stroke-width: 1.5; opacity: 0; }
+  #plot .pt.sel .ring { opacity: 1; }
+  #plot .pt.hov .ring { opacity: .6; stroke: var(--ink); }
+  #plot .lab { font: 600 11.5px var(--body); fill: var(--ink); paint-order: stroke; stroke: var(--paper); stroke-width: 3px; stroke-linejoin: round; }
+  #plot .lab .rk { font: 600 11px var(--mono); }
+  #plot .lab .sm { font: 500 10.5px var(--body); fill: var(--ink-2); }
+  #plot .pt.out .lab { fill: var(--ink-2); }
+  #plot .pt.sel .lab { fill: var(--accent); }
+  #plot .xh-v, #plot .xh-h { transform-box: fill-box; }
+  #plot.calibrate .xh-v { animation: grow-v 320ms var(--ease-out) both; transform-origin: 50% 100%; }
+  #plot.calibrate .xh-h { animation: grow-h 320ms var(--ease-out) both; transform-origin: 0 50%; }
+  @keyframes grow-v { from { transform: scaleY(0); } }
+  @keyframes grow-h { from { transform: scaleX(0); } }
+  .map-cap { margin: 0; font-size: 13px; color: var(--ink-2); max-width: 90ch; }
+  .map-cap b { color: var(--ink); font-weight: 600; }
+  .map-cap a { color: var(--accent); }
+
+  /* Selected product: the one place to buy, always with the verdict. */
+  .rail { grid-area: rail; position: sticky; top: calc(env(safe-area-inset-top, 0px) + 12px); padding: 16px 18px; display: grid; gap: 12px;
+    max-height: calc(100vh - 24px); overflow: auto; scrollbar-width: thin; }
+  .r-eye { margin: 0; font: 600 11px/1.3 var(--mono); letter-spacing: .08em; text-transform: uppercase; color: var(--accent); }
+  .r-name { margin: 0; display: grid; gap: 2px; }
+  .r-name .brand { font-size: 13px; color: var(--ink-2); }
+  .r-name .t { font: 800 20px/1.15 var(--display); font-stretch: 104%; letter-spacing: -.01em; }
+  .r-name .pack { font-size: 13px; color: var(--ink-2); }
+  .chips { display: flex; flex-wrap: wrap; gap: 5px; }
+  .chip { font-size: 12px; line-height: 1.5; padding: 0 8px; border: 1px solid var(--rule); border-radius: var(--r-pill); color: var(--ink-2); background: var(--paper); white-space: nowrap; }
+  .chip.dash { border-style: dashed; }
+  .reading { display: flex; align-items: baseline; flex-wrap: wrap; gap: 4px 10px; }
+  .reading .p { font: 500 34px/1 var(--mono); letter-spacing: -.02em; }
+  .reading small { font-size: 13px; color: var(--ink-2); }
+  .gauge { display: grid; gap: 2px; }
+  .gauge .gh { display: flex; justify-content: space-between; gap: 8px; font: 600 11px/1.3 var(--mono); letter-spacing: .06em; text-transform: uppercase; color: var(--ink-2); }
+  .gauge svg { display: block; width: 100%; height: 46px; overflow: visible; font-family: var(--mono); }
+  .gauge .base { stroke: var(--ink-3); }
+  .gauge .tk { stroke: var(--ink-3); }
+  .gauge .medn { stroke: var(--ink); stroke-width: 1.5; }
+  .gauge .pin { stroke: var(--accent); stroke-width: 2; }
+  .gauge .pinb { fill: var(--accent); }
+  .gauge .val { fill: var(--accent); font: 600 12px var(--mono); }
+  .gauge .end { fill: var(--ink-2); font: 500 10.5px var(--body); }
+  .gauge .medt { fill: var(--ink); font: 600 10.5px var(--mono); }
+  .gauge .gs { margin: 0; font-size: 13.5px; }
+  .gauge .gs .num { font-size: 13px; }
+  .why { margin: 0; font-size: 13.5px; line-height: 1.5; padding: 10px 12px; background: var(--paper-2); border-radius: 10px; }
+  .trade { margin: 0; display: grid; gap: 6px; font-size: 13px; }
+  .trade div { display: grid; grid-template-columns: 7.2rem minmax(0, 1fr); gap: 8px; }
+  .trade dt { color: var(--ink-2); }
+  .trade dd { margin: 0; }
+  .jarline { margin: 0; font-size: 13.5px; }
+  .buybox { display: grid; gap: 6px; padding-top: 4px; border-top: 1px solid var(--hair); }
+  .btn { display: inline-flex; justify-content: center; align-items: center; gap: 10px; border: 0; border-radius: var(--r-pill); background: var(--ink); color: var(--on-ink);
+    font-weight: 700; font-size: 15px; padding: 11px 18px; cursor: pointer; text-decoration: none; transition: transform var(--t-press) var(--ease-snap); }
+  .btn .num { font-weight: 500; opacity: .75; }
+  .btn:active { transform: scale(.97); }
+  .disc { margin: 0; font-size: 12px; line-height: 1.4; color: var(--ink-2); }
+  .prov { margin: 0; font: 500 11.5px/1.5 var(--mono); color: var(--ink-2); }
+
+  /* The ranked list. */
+  .list-sheet { grid-area: list; overflow: hidden; }
+  .list-h { padding: 14px 16px 10px; display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; gap: 4px 16px; }
+  .list-h h2 { margin: 0; font: 800 18px/1.2 var(--display); font-stretch: 108%; }
+  .list-h p { margin: 0; font-size: 13px; color: var(--ink-2); }
+  .cols, .row-main { display: grid; grid-template-columns: 3rem minmax(0, 1fr) 8.6rem 7.4rem 7.6rem; column-gap: 14px; }
+  .cols { padding: 8px 16px; border-block: 1px solid var(--hair); font: 600 10.5px/1.3 var(--mono); letter-spacing: .05em; text-transform: uppercase; color: var(--ink-2); }
+  .cols span:nth-child(n+3) { text-align: end; }
+  .cols em { display: block; font-style: normal; text-transform: none; letter-spacing: 0; font: 500 11px var(--body); color: var(--accent); }
+  .rows { list-style: none; margin: 0; padding: 0; }
+  .row { border-top: 1px solid var(--hair); background: var(--paper); position: relative; }
+  .rows .row:first-child { border-top: 0; }
+  .row-main { padding: 12px 16px; align-items: start; cursor: pointer; }
+  .row.sel { background: var(--accent-soft); }
+  .rank { display: grid; gap: 2px; justify-items: start; }
+  .rk { font: 700 26px/1 var(--display); font-stretch: 80%; font-variant-numeric: tabular-nums; }
+  .row.sel .rk { color: var(--accent); }
+  .delta { font: 600 10.5px var(--mono); color: var(--ink-2); min-height: 14px; }
+  .prod { display: grid; gap: 2px; justify-items: start; }
+  .prod .brand { font-size: 12.5px; color: var(--ink-2); }
+  .prod .name { background: none; border: 0; padding: 0; cursor: pointer; text-align: start; font-weight: 700; font-size: 15.5px; line-height: 1.3; }
+  .prod .pack { font-weight: 400; color: var(--ink-2); }
+  .prod .chips { margin-top: 4px; }
+  .more { margin-top: 4px; background: none; border: 0; padding: 2px 0; cursor: pointer; font-size: 13px; color: var(--ink-2); display: inline-flex; gap: 7px; align-items: center; }
+  .more::after { content: ""; width: 6px; height: 6px; border-right: 1.5px solid currentColor; border-bottom: 1.5px solid currentColor; transform: rotate(45deg) translateY(-2px); transition: transform var(--t-reveal) var(--ease-out); }
   .row.open .more::after { transform: rotate(225deg) translateY(-1px); }
+  .cell { display: grid; gap: 1px; justify-items: end; text-align: end; }
+  .cell .lbl { display: none; }
+  .cell .sub { font: 500 12px var(--mono); color: var(--ink-2); }
+  .cell .none { font: 500 13px var(--mono); color: var(--ink-2); border: 1.5px dashed var(--rule); border-radius: var(--r-pill); padding: 0 8px; }
+  .price { font: 500 20px/1.25 var(--mono); }
+  .src { background: none; border: 0; padding: 0; cursor: help; font-family: var(--mono); font-variant-numeric: tabular-nums;
+    text-decoration: underline dotted var(--ink-3); text-decoration-thickness: 1px; text-underline-offset: 4px; }
+  .src[aria-expanded="true"] { color: var(--accent); text-decoration-color: var(--accent); }
+  .rt { font: 500 16px/1.3 var(--mono); }
 
-  /* Expanded detail: the label, the arithmetic, the rankings. */
-  .detail { display: grid; grid-template-rows: 0fr; transition: grid-template-rows .28s cubic-bezier(.2,.7,.2,1); }
+  /* Detail: the label as printed, our arithmetic in ink over it. */
+  .detail { display: grid; grid-template-rows: 0fr; transition: grid-template-rows var(--t-reveal) var(--ease-out); }
   .row.open .detail { grid-template-rows: 1fr; }
   .detail > div { overflow: hidden; }
-  .detail-in { display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr); gap: 14px 22px; padding: 2px 14px 16px calc(14px + 2.2rem + 12px); }
+  .detail-in { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); gap: 16px 24px; padding: 2px 16px 18px calc(16px + 3rem + 14px); cursor: auto; }
+  .detail-in > * { min-width: 0; }
+  .facts { border: 1.5px solid var(--ink); padding: 6px 10px 8px; background: var(--paper); font-size: 13px; line-height: 1.35; }
+  .facts h3 { margin: 0; font: 900 22px/1.05 var(--display); font-stretch: 88%; letter-spacing: -.01em; }
+  .facts .ss { padding-bottom: 4px; border-bottom: 7px solid var(--ink); }
+  .facts .ap { display: flex; justify-content: space-between; font-weight: 700; font-size: 12px; padding-block: 3px; border-bottom: 3px solid var(--ink); }
+  .facts .ln { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 2px 10px; padding-block: 5px; border-bottom: 1px solid var(--ink); }
+  .facts .ln .amt { font-family: var(--mono); font-variant-numeric: tabular-nums; }
+  .facts .ink { grid-column: 1 / -1; font: 500 12px/1.45 var(--mono); color: var(--accent); }
+  .facts .tot { display: flex; justify-content: space-between; gap: 10px; padding-top: 6px; font: 600 12.5px var(--mono); color: var(--accent); }
+  .facts sub { font-size: .75em; }
   .box { display: grid; gap: 8px; align-content: start; }
-  .box h3 { margin: 0; font: 600 11px/1.3 var(--mono); letter-spacing: .07em; text-transform: uppercase; color: var(--muted); }
-  .scroll { overflow-x: auto; }
-  table { border-collapse: collapse; width: 100%; font-size: 13.5px; }
-  th, td { text-align: start; padding: 6px 8px; border-bottom: 1px solid var(--hair); vertical-align: top; }
-  th { font: 500 10.5px/1.3 var(--mono); letter-spacing: .05em; text-transform: uppercase; color: var(--faint); }
-  td.n { text-align: end; font-family: var(--mono); font-variant-numeric: tabular-nums; white-space: nowrap; }
-  .calc { font: 500 14px/1.7 var(--mono); background: var(--raise); border-radius: 8px; padding: 8px 10px; }
-  .calc b { font-weight: 600; color: var(--accent); }
-  .meta { margin: 0; font-size: 12.5px; color: var(--muted); }
-  .pos { display: grid; gap: 4px; margin: 0; padding: 0; list-style: none; font-size: 13.5px; }
-  .pos li { display: flex; justify-content: space-between; gap: 10px; border-bottom: 1px dashed var(--hair); padding-block: 3px; }
-  .pos .num { color: var(--muted); }
+  .box h3 { margin: 0; font: 600 11px/1.3 var(--mono); letter-spacing: .07em; text-transform: uppercase; color: var(--ink-2); }
+  .eq { display: flex; flex-wrap: wrap; align-items: flex-start; gap: 6px 8px; padding: 10px 12px; background: var(--paper-2); border-radius: 10px; font: 500 14px var(--mono); }
+  .eq .term { display: grid; gap: 1px; }
+  .eq .term small { font: 500 10.5px var(--body); color: var(--ink-2); }
+  .eq .res { color: var(--accent); font-weight: 600; flex-basis: 100%; }
+  .pos { list-style: none; margin: 0; padding: 0; display: grid; gap: 3px; font-size: 13.5px; }
+  .pos li { display: flex; justify-content: space-between; gap: 10px; border-bottom: 1px dashed var(--hair); padding-block: 2px; }
+  .meta { margin: 0; font-size: 12.5px; color: var(--ink-2); }
 
-  /* Provenance popover and inline report. */
-  .pop { position: absolute; z-index: 20; width: min(330px, calc(100vw - 32px)); background: var(--surface); border: 1px solid var(--line); border-radius: 12px; box-shadow: 0 18px 50px -20px rgba(0,0,0,.35); padding: 12px 14px; display: grid; gap: 8px; font-size: 13.5px; }
-  .pop[hidden] { display: none; }
+  /* Groups after the ranking: data first, then what is missing. */
+  .rest { grid-area: rest; display: grid; gap: 16px; }
+  .group { overflow: hidden; }
+  .group > header { padding: 14px 16px 10px; display: grid; gap: 4px; border-bottom: 1px solid var(--hair); }
+  .group > header p { margin: 0; font-size: 13.5px; color: var(--ink-2); max-width: 72ch; }
+  .unk { display: grid; grid-template-columns: minmax(0, 1fr) 8.6rem minmax(0, 1.25fr); gap: 14px; align-items: center; padding: 11px 16px; border-top: 1px solid var(--hair); }
+  .unk:first-child { border-top: 0; }
+  .unk .nm { font-weight: 700; }
+  .unk .nm span { display: block; font-weight: 400; font-size: 12.5px; color: var(--ink-2); }
+  .unk .none { justify-self: end; font: 500 13px var(--mono); color: var(--ink-2); border: 1.5px dashed var(--rule); border-radius: var(--r-pill); padding: 1px 10px; }
+  .unk .w { font-size: 13px; color: var(--ink-2); }
+  .unk .w b { color: var(--ink); font-weight: 600; }
+  .foot { display: grid; gap: 10px; font-size: 12.5px; color: var(--ink-2); padding-inline: 4px; }
+  .foot p { margin: 0; max-width: 88ch; }
+  .proto { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; padding: 10px 12px; border: 1px dashed var(--ink-3); border-radius: var(--r-sheet); }
+  .proto .seg button { padding: 5px 12px; font-size: 13px; }
+
+  /* Popover, toast, phone bar. */
+  .pop { position: absolute; z-index: 30; width: min(340px, calc(100vw - 32px)); background: var(--paper); border: 1px solid var(--rule); border-radius: var(--r-sheet);
+    box-shadow: 0 22px 60px -24px rgba(0, 0, 0, .45); padding: 12px 14px; display: grid; gap: 8px; font-size: 13.5px;
+    transform-origin: top right; animation: pop-in var(--t-reveal) var(--ease-out); }
+  @keyframes pop-in { from { opacity: 0; transform: scale(.97); } }
   .pop .k { font: 600 10.5px/1.3 var(--mono); letter-spacing: .07em; text-transform: uppercase; color: var(--accent); }
   .pop .v { font: 500 20px/1.2 var(--mono); }
-  .pop p { margin: 0; color: var(--muted); }
+  .pop p { margin: 0; color: var(--ink-2); }
   .pop form { display: grid; gap: 6px; }
-  .pop textarea { font: inherit; min-height: 64px; border-radius: 8px; border: 1px solid var(--line); background: var(--raise); color: var(--ink); padding: 6px 8px; resize: vertical; }
+  .pop label { font-size: 12.5px; color: var(--ink-2); }
+  .pop textarea { font: inherit; min-height: 66px; border-radius: 10px; border: 1px solid var(--rule); background: var(--paper-2); color: var(--ink); padding: 7px 9px; resize: vertical; }
   .pop .acts { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
-  .pop .ghost { background: none; border: 1px solid var(--line); border-radius: 8px; padding: 6px 10px; cursor: pointer; }
+  .ghost { background: none; border: 1px solid var(--rule); border-radius: var(--r-pill); padding: 6px 12px; cursor: pointer; font-size: 13px; transition: transform var(--t-press) var(--ease-snap); }
+  .ghost:active { transform: scale(.97); }
   .ok { color: var(--accent); font-weight: 600; }
-
-  /* Groups below the ranking. */
-  .group { display: grid; gap: 8px; }
-  .group h2 { margin: 6px 0 0; font: 800 18px/1.2 var(--display); font-stretch: 108%; }
-  .group > p { margin: 0; color: var(--muted); font-size: 13.5px; max-width: 70ch; }
-  .unk { display: grid; grid-template-columns: minmax(0, 1fr) 7.2rem minmax(0, 1.2fr); gap: 12px; align-items: center; padding: 10px 14px; border-top: 1px solid var(--hair); }
-  .unk:first-child { border-top: 0; }
-  .unk .ghostval { justify-self: end; font: 500 13px var(--mono); color: var(--faint); border: 1.5px dashed var(--line); border-radius: 6px; padding: 3px 8px; }
-  .unk .why { font-size: 13px; color: var(--muted); }
-  .unk .why b { color: var(--ink); font-weight: 600; }
-
-  .toast { position: fixed; left: 50%; bottom: calc(18px + env(safe-area-inset-bottom, 0px)); transform: translate(-50%, 20px); opacity: 0; background: var(--ink); color: var(--bg); padding: 10px 14px; border-radius: 10px; font-size: 13.5px; max-width: calc(100vw - 32px); transition: opacity .2s, transform .2s; z-index: 30; pointer-events: none; }
+  .toast { position: fixed; left: 50%; bottom: calc(96px + env(safe-area-inset-bottom, 0px)); z-index: 40; max-width: calc(100vw - 32px); padding: 10px 14px; border-radius: 12px;
+    background: var(--ink); color: var(--on-ink); font-size: 13.5px; pointer-events: none; opacity: 0; transform: translate(-50%, 8px);
+    transition: opacity var(--t-state) var(--ease-snap), transform var(--t-state) var(--ease-snap); }
   .toast.show { opacity: 1; transform: translate(-50%, 0); }
-  .foot { font-size: 12.5px; color: var(--muted); max-width: 80ch; display: grid; gap: 6px; }
-  .foot p { margin: 0; }
+  .bar { display: none; }
 
-  @media (max-width: 860px) {
-    .row-main { grid-template-columns: 1.8rem minmax(0, 1fr) auto; grid-template-areas: "r p u" "r j j" "r b b"; }
-    .rank { grid-area: r; }
-    .prod { grid-area: p; }
-    .c-unit { grid-area: u; }
-    .c-jar { grid-area: j; justify-items: start; text-align: start; grid-auto-flow: column; justify-content: start; gap: 10px; align-items: baseline; }
-    .c-rate { display: none; }
-    .buy { grid-area: b; grid-template-columns: auto minmax(0, 1fr); align-items: center; gap: 10px; }
-    .detail-in { grid-template-columns: minmax(0, 1fr); padding-inline-start: calc(14px + 1.8rem + 12px); }
-    .unk { grid-template-columns: minmax(0, 1fr) auto; }
-    .unk .why { grid-column: 1 / -1; }
-    .seg button kbd { display: none; }
+  @media (hover: hover) and (pointer: fine) {
+    .row-main:hover { background: var(--accent-soft); }
+    .row.hov .row-main { background: var(--accent-soft); }
+    .seg button:hover { color: var(--ink); }
+    .prod .name:hover { text-decoration: underline; text-underline-offset: 3px; }
+    .src:hover { color: var(--accent); text-decoration-color: var(--accent); }
+    .btn:hover { background: var(--accent); }
+    .more:hover { color: var(--ink); }
+    .ghost:hover { border-color: var(--ink-2); }
+    /* Instant on the way in, a short release on the way out. */
+    .row-main, .btn { transition: background-color 200ms var(--ease-snap), transform var(--t-press) var(--ease-snap); }
+    .row-main:hover, .btn:hover { transition-duration: 0ms, var(--t-press); }
   }
-  @media (prefers-reduced-motion: reduce) { *, *::before, *::after { transition: none !important; animation: none !important; } }
+
+  @media (max-width: 1079px) {
+    .layout { grid-template-columns: minmax(0, 1fr); grid-template-areas: "head" "switch" "answer" "map" "rail" "list" "rest"; }
+    .rail { position: static; max-height: none; overflow: visible; }
+    .rail .buybox { display: none; }
+    .bar { display: grid; position: fixed; inset: auto 0 0 0; z-index: 20; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 4px 12px;
+      padding: 10px 16px calc(10px + env(safe-area-inset-bottom, 0px)); background: var(--paper); border-top: 1px solid var(--rule); box-shadow: 0 -12px 30px -24px rgba(0, 0, 0, .5); }
+    .bar .bi { display: grid; min-width: 0; }
+    .bar .b1 { font-weight: 700; font-size: 14px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .bar .b1 span { color: var(--accent); font-family: var(--mono); font-weight: 600; }
+    .bar .b2 { font-size: 12.5px; font-variant-numeric: tabular-nums; color: var(--ink-2); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .bar .disc { grid-column: 1 / -1; font-size: 11px; }
+    .bar .btn { padding: 10px 16px; font-size: 14px; }
+    .layout { padding-block-end: 132px; }
+  }
+  @media (max-width: 719px) {
+    .cols { display: none; }
+    .row-main { grid-template-columns: 2.2rem minmax(0, 1fr) minmax(0, 1fr) auto; grid-template-areas: "r p p u" "r ra ja ja"; row-gap: 8px; column-gap: 10px; padding: 12px 14px; }
+    .rank { grid-area: r; } .prod { grid-area: p; } .c-unit { grid-area: u; } .c-rate { grid-area: ra; } .c-jar { grid-area: ja; }
+    .c-rate, .c-jar { justify-items: start; text-align: start; }
+    .cell .lbl { display: block; font: 600 10px/1.2 var(--mono); letter-spacing: .05em; text-transform: uppercase; color: var(--ink-2); }
+    .rk { font-size: 22px; }
+    .price { font-size: 17px; }
+    .rt { font-size: 14px; }
+    .detail-in { grid-template-columns: minmax(0, 1fr); padding-inline: 14px; }
+    .unk { grid-template-columns: minmax(0, 1fr) auto; }
+    .unk .w { grid-column: 1 / -1; }
+    .keys { display: none; }
+    .map { padding-inline: 10px; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation: none !important; transition-duration: 0ms !important; }
+    .pop { animation: none; }
+  }
 </style>
 
-<div class="wrap">
+<div class="layout" id="app">
   <header class="head">
-    <div class="head-top">
-      <h1>Magnesium<small>Ranked by the price of the magnesium inside, per 100&nbsp;mg</small></h1>
-      <button class="linkbtn" id="howBtn" aria-expanded="false" aria-controls="method">How we calculate</button>
-    </div>
-    <div class="fresh">
-      <span class="live">Prices from the network feed of <b>26&nbsp;Sep&nbsp;2026, 06:02&nbsp;UTC</b></span>
-      <span><b id="nCompared">8</b> of <b>12</b> products compared</span>
-      <span>Example data</span>
-    </div>
-    <section class="method" id="method" hidden>
-      <p><code>P_unit = price ÷ (servings × magnesium per serving) × 100&nbsp;mg</code></p>
-      <p>Magnesium per serving comes from the label. When the label gives the weight of a compound, we multiply by the share of magnesium in its chemical formula, add the lines exactly and round down once, to the microgram. Commission is not an input of any formula.</p>
-      <p>Rating adjusted for review count: <code>(n × R + C × m) ÷ (n + C)</code>. Balance scores price and rating from 0 to 100 and ranks by the weaker of the two.</p>
-    </section>
+    <h1>Magnesium</h1>
+    <p class="fresh"><span>Prices from the network feed of <b>26&nbsp;Sep&nbsp;2026, 06:02&nbsp;UTC</b></span><span><b id="nComp">8</b> of <b>12</b> products compared</span><span>Example data</span></p>
+    <button type="button" class="linkbtn" id="howBtn" aria-expanded="false" aria-controls="method">How we rank</button>
   </header>
+  <section class="sheet method" id="method" hidden>
+    <p><code>price per 100 mg = jar price ÷ (servings × magnesium per serving) × 100 mg</code></p>
+    <p>Magnesium per serving comes from the label. When the label gives the weight of a compound, we multiply by the share of magnesium in its chemical formula, add the lines exactly and round down once, to the microgram.</p>
+    <p id="methodRating">Rating is adjusted for the number of reviews: <code>(n × R + C × m) ÷ (n + C)</code>. Balance puts each product on a 0 to 100 scale for price per mg (log) and for rating, and ranks by the weaker of the two.</p>
+    <p>Commission is not an input of any formula. On the map, the shaded area is the formula of the chosen ranking, drawn: whatever is inside it ranks above the selected product.</p>
+  </section>
 
-  <div class="toolbar">
-    <div class="seg" role="group" aria-label="Order by" id="seg"></div>
-    <p class="note" id="note"></p>
+  <div id="switchMark" aria-hidden="true" style="grid-area: switch; height: 1px; align-self: start"></div>
+  <div class="switch" id="switch">
+    <span class="lbl" id="swLbl">Rank by</span>
+    <div class="seg" role="group" aria-labelledby="swLbl" id="seg"></div>
+    <span class="keys" id="keys"></span>
   </div>
 
-  <section class="strip" aria-label="All compared products on one price axis">
-    <div class="strip-h"><span>Price per 100 mg of magnesium, log scale</span><span id="spread"></span></div>
-    <svg id="plot" role="img" aria-label=""></svg>
+  <section class="answer" aria-live="polite">
+    <p class="eyebrow" id="ansEye"></p>
+    <p class="ans" id="ans"></p>
+    <p class="ans-sub" id="ansSub"></p>
   </section>
 
-  <ol class="list" id="list"></ol>
-
-  <section class="group" id="outRank" hidden>
-    <h2 id="outH">Not in this ranking</h2>
-    <p id="outP"></p>
-    <div class="list" id="outList"></div>
+  <section class="sheet map" aria-labelledby="mapH">
+    <div class="sheet-h">
+      <h2 id="mapH">Where each product stands</h2>
+      <span class="zoom" id="zoom"></span>
+    </div>
+    <div class="plot-wrap"><svg id="plot" role="img"></svg></div>
+    <p class="map-cap" id="mapCap"></p>
   </section>
 
-  <section class="group">
-    <h2>Not compared</h2>
-    <p>These are in the category, but something the comparison needs is missing. We show what, instead of guessing a number.</p>
-    <div class="list" id="unkList"></div>
+  <aside class="sheet rail" id="rail" aria-label="Selected product"></aside>
+
+  <section class="sheet list-sheet" aria-labelledby="listH">
+    <div class="list-h"><h2 id="listH"></h2><p id="listSub"></p></div>
+    <div class="cols" id="cols" aria-hidden="true"></div>
+    <ol class="rows" id="rows"></ol>
   </section>
 
-  <footer class="foot">
-    <p>When you buy through a “Buy on iHerb” button we may earn a commission. It never changes the order. We show prices and doses; which form and dose suit you is a question for your clinician.</p>
-    <p>Prototype on example data from our test build: the products are invented, the numbers are computed by our code. Buy buttons and reports do not leave this page.</p>
-  </footer>
+  <div class="rest">
+    <section class="sheet group" id="outGroup" hidden>
+      <header><h2 id="outH"></h2><p id="outP"></p></header>
+      <ol class="rows" id="outRows"></ol>
+    </section>
+    <section class="sheet group" id="unkGroup">
+      <header><h2 id="unkH"></h2><p>They are in the category, but something the comparison needs is missing. We show what, instead of guessing a number.</p></header>
+      <div id="unk"></div>
+    </section>
+    <footer class="foot">
+      <p>When you buy through “Buy on iHerb” we may earn a commission from the affiliate network. Commission is not part of any formula, so it cannot change the order. We compare prices and doses; which form and dose suit you is a question for your clinician.</p>
+      <div class="proto">
+        <span>Prototype on invented example products. Ratings in the live site:</span>
+        <div class="seg" role="group" aria-label="Rating branch" id="branchSeg">
+          <button type="button" data-b="A" aria-pressed="true">Allowed</button>
+          <button type="button" data-b="B" aria-pressed="false">Not allowed</button>
+        </div>
+        <span>The live config stays “not allowed” until the owner settles question O2. Buttons and reports do not leave this page.</span>
+      </div>
+      <p>Why the page looks and behaves this way: <a href="../../docs/guidelines/art-direction.md">art direction requirements</a> (in Russian).</p>
+      <p class="keys-foot">Keys: <kbd>1</kbd>–<kbd>3</kbd> change the ranking, <kbd>↑</kbd> <kbd>↓</kbd> move the selection, <kbd>Enter</kbd> opens the label, <kbd>Esc</kbd> closes a card.</p>
+    </footer>
+  </div>
 </div>
 
-<div class="pop" id="pop" role="dialog" aria-modal="false" hidden></div>
+<div class="bar" id="bar"></div>
+<div class="pop" id="pop" role="dialog" aria-modal="false" aria-label="Where this number comes from" hidden></div>
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
 <script>
@@ -239,221 +425,646 @@ const DATA = {"orders":{"balance":["900002","900001","900004","900012","900006",
 (() => {
   "use strict";
   const $ = s => document.querySelector(s);
-  const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
-  const PRESETS = [
-    { key: "balance", label: "Balance", note: "Good on both price and rating. Each product is scored 0–100 on each and ranked by its weaker side." },
-    { key: "cheapest_per_unit", label: "Lowest price per 100 mg", note: "Every product with a verified label and today's price, cheapest magnesium first." },
-    { key: "fair_rating", label: "Best rated", note: "Rating adjusted for the number of reviews, so a 5.0 from 8 reviews does not outrank a 4.8 from 40,000." },
-  ];
-  const byId = Object.fromEntries(DATA.products.map(p => [p.id, p]));
-  const ranked = DATA.products.filter(p => p.unit != null);
-  const unknown = DATA.products.filter(p => p.unit == null);
-  const units = ranked.map(p => p.unit).sort((a, b) => a - b);
-  const median = (units[3] + units[4]) / 2;
-  const nb = s => s.replace(/ (mg|servings|UTC|reviews)/g, " $1");
-  const money = v => "$" + v.toFixed(2);
-  const form = p => (p.title.match(/Magnesium ([A-Za-z-]+(?: Powder)?)/) || [, ""])[1];
-  let preset = (location.hash || "").slice(1);
-  if (!PRESETS.some(p => p.key === preset)) preset = "balance";
+  const reduced = () => matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const NS = "http://www.w3.org/2000/svg";
+  const FEED = "26 Sep 2026, 06:02 UTC";
 
-  // Toolbar.
+  // ---------- Data, as the build hands it over ----------
+  const all = DATA.products;
+  const byId = Object.fromEntries(all.map(p => [p.id, p]));
+  const compared = all.filter(p => p.unit != null);
+  const unknown = all.filter(p => p.unit == null);
+  compared.forEach(p => {
+    const m = p.title.match(/^(Magnesium [A-Za-z-]+)(?:,\s*(.*))?$/);
+    p.name = m ? m[1] : p.title;
+    p.pack = m && m[2] ? m[2] : "";
+    p.form = p.name.replace(/^Magnesium /, "");
+    p.tested = /^Testing mark on the label/.test(p.third || "");
+    p.mark = p.tested ? p.third.replace(/^Testing mark on the label:\s*/, "").replace(/\.$/, "") : "";
+  });
+  const byUnit = compared.slice().sort((a, b) => a.unit - b.unit);
+  const nC = byUnit.length;
+  const median = nC % 2 ? byUnit[(nC - 1) / 2].unit : (byUnit[nC / 2 - 1].unit + byUnit[nC / 2].unit) / 2;
+  const pMin = byUnit[0].unit, pMax = byUnit[nC - 1].unit;
+  byUnit.forEach((p, i) => { p.priceRank = i + 1; p.rel = p.unit / median; });
+  const rated = compared.filter(p => p.rb != null);
+  const byRb = rated.slice().sort((a, b) => b.rb - a.rb);
+  byRb.forEach((p, i) => { p.rateRank = i + 1; });
+  // Balance, drawn exactly as catalog-core scores it (spec §5.5), for the shaded area only.
+  const lnMin = Math.log(Math.min(...rated.map(p => p.unit))), lnMax = Math.log(Math.max(...rated.map(p => p.unit)));
+  const rMin = Math.min(...rated.map(p => p.rb)), rMax = Math.max(...rated.map(p => p.rb));
+  rated.forEach(p => {
+    p.qp = 100 * (lnMax - Math.log(p.unit)) / (lnMax - lnMin);
+    p.qr = 100 * (p.rb - rMin) / (rMax - rMin);
+    p.s = Math.min(p.qp, p.qr);
+  });
+  const next = {
+    "Label not entered yet. The product is in the queue.": "It appears once its label is entered and checked.",
+    "No price in today's network feed.": "It appears on a day the feed carries a price.",
+    "A line of the label could not be read with certainty.": "It appears once the label is re-read from a new photo.",
+    "The store shows this price only in the cart, so we cannot compare it.": "We do not guess prices the store hides.",
+  };
+
+  const BRANCHES = {
+    A: [
+      { key: "balance", label: "Balance", lens: "balance of price and rating", by: "by balance", region: "rect", order: DATA.orders.balance },
+      { key: "cheapest_per_unit", label: "Price per mg", lens: "price per mg of magnesium", by: "by price per mg", region: "x", order: DATA.orders.cheapest_per_unit },
+      { key: "fair_rating", label: "Rating", lens: "adjusted rating", by: "by rating", region: "y", order: DATA.orders.fair_rating },
+    ],
+    B: [
+      { key: "cheapest_per_unit", label: "Price per mg", lens: "price per mg of magnesium", by: "by price per mg", region: "x", order: DATA.orders.cheapest_per_unit },
+      { key: "cheapest_verified", label: "Price per mg, tested", lens: "price per mg, products with a testing mark", by: "by price per mg among tested", region: "xt",
+        order: DATA.orders.cheapest_per_unit.filter(id => byId[id].tested) },
+    ],
+  };
+
+  // ---------- State ----------
+  let branch = "A";
+  let key = (location.hash || "").slice(1);
+  if (key === "cheapest_verified") branch = "B";
+  if (!BRANCHES[branch].some(p => p.key === key)) key = BRANCHES[branch][0].key;
+  let sel = null, picked = false, hovered = null;
+  let prevRanks = null, calibrated = false;
+  try { calibrated = sessionStorage.getItem("mg-calibrated") === "1"; } catch (e) { /* storage may be blocked */ }
+  const lens = () => BRANCHES[branch].find(p => p.key === key);
+  const rankOf = (id, pr = lens()) => pr.order.indexOf(id) + 1;
+
+  // ---------- Formatting ----------
+  const esc = s => String(s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+  // Leading zeros are dimmed, so the order of magnitude shows before the digits are read.
+  const price = p => { const s = p.unitText.replace(/^\$/, ""), m = s.match(/^(0\.0*)(\d+)$/); return m ? `<span class="p"><span class="z">$${m[1]}</span><b>${m[2]}</b></span>` : `<span class="p">$${s}</span>`; };
+  const usd = v => "$" + v.toFixed(3);
+  const money = v => "$" + v.toFixed(2);
+  const rel = p => p.rel.toFixed(2) + "×";
+  const ratio = x => (x < 10 ? x.toFixed(1) : String(Math.round(x))) + "×";
+  const ord = n => n + (n % 100 >= 11 && n % 100 <= 13 ? "th" : ["th", "st", "nd", "rd"][n % 10] || "th");
+  const nth = (n, word, total) => n === 1 ? `the ${word} of ${total}` : `${ord(n)} ${word} of ${total}`;
+  const dose = p => p.dose % 1 ? p.dose.toFixed(3) : String(p.dose);
+  const grams = p => (Math.floor(p.servings * p.dose / 100) / 10).toFixed(1);
+  const nb = s => String(s).replace(/ (mg|g|servings|UTC|reviews)\b/g, " $1");
+  const formula = s => s.replace(/([A-Za-z)])(\d+)/g, "$1<sub>$2</sub>");
+  const plural = (n, one, many) => n === 1 ? one : many;
+  const flags = p => [p.oos ? "out of stock" : "", branch === "A" && p.rb == null ? "no rating" : ""].filter(Boolean).join(", ");
+  const withFlags = p => flags(p) ? `${p.form} (${flags(p)})` : p.form;
+
+  // ---------- Switches ----------
   const seg = $("#seg");
-  PRESETS.forEach((p, i) => {
-    const b = document.createElement("button");
-    b.type = "button"; b.dataset.key = p.key;
-    b.innerHTML = `<span>${p.label}</span><span class="c">${DATA.orders[p.key].length}</span><kbd>${i + 1}</kbd>`;
-    b.addEventListener("click", () => setPreset(p.key));
-    seg.appendChild(b);
+  function renderSwitch() {
+    const ps = BRANCHES[branch];
+    seg.innerHTML = ps.map((p, i) => `<button type="button" data-key="${p.key}" aria-pressed="${p.key === key}">${p.label}<span class="c">${p.order.length}</span></button>`).join("");
+    $("#keys").innerHTML = ps.map((_, i) => `<kbd>${i + 1}</kbd>`).join(" ");
+    $("#branchSeg").querySelectorAll("button").forEach(b => b.setAttribute("aria-pressed", String(b.dataset.b === branch)));
+    $("#methodRating").hidden = branch === "B";
+  }
+  seg.addEventListener("click", e => { const b = e.target.closest("button"); if (b) setLens(b.dataset.key, "pointer"); });
+  $("#branchSeg").addEventListener("click", e => {
+    const b = e.target.closest("button"); if (!b || b.dataset.b === branch) return;
+    branch = b.dataset.b; prevRanks = null;
+    key = BRANCHES[branch][0].key;
+    if (!picked) sel = null;
+    buildRows(); setLens(key, "none");
   });
 
-  // Rows.
-  const list = $("#list");
-  const rows = {};
-  ranked.forEach(p => {
-    const li = document.createElement("li");
-    li.className = "row"; li.dataset.id = p.id;
-    const good = w => /cheaper|Label shows/.test(w);
-    const chips = [...(p.why || []).map(w => `<span class="chip ${good(w) ? "good" : /Formula/.test(w) ? "warn" : ""}">${w.replace(/per 100 mg /, "")}</span>`)];
-    const dose = p.dose % 1 ? p.dose.toFixed(3) : String(p.dose);
-    li.innerHTML = `
+  // ---------- The answer, as sentences ----------
+  function renderAnswer() {
+    const pr = lens(), o = pr.order.map(id => byId[id]), a = o[0], b = o[1];
+    let eye, lead, sub;
+    const oosA = a.oos ? " It is out of stock in today's feed." : "";
+    if (pr.key === "balance") {
+      eye = "#1 by balance of price and rating";
+      lead = `<b>${esc(a.name)}</b> by ${esc(a.brand)} has the best balance of price and rating.`;
+      sub = `<span class="num">${a.unitText}</span> per 100&nbsp;mg of magnesium, <span class="num">${rel(a)}</span> the median, and an adjusted rating of <span class="num">${a.rb.toFixed(2)}</span>. It leads #2, ${esc(withFlags(b))}, by <span class="num">${(a.s - b.s).toFixed(1)}</span> points on the 0 to 100 balance scale.${oosA}`;
+    } else if (pr.key === "cheapest_per_unit") {
+      eye = "#1 by price per mg of magnesium";
+      lead = `<b>${esc(a.name)}</b> by ${esc(a.brand)} costs the least per milligram of magnesium.`;
+      const top = byUnit[nC - 1];
+      sub = `<span class="num">${a.unitText}</span> per 100&nbsp;mg, <span class="num">${rel(a)}</span> the median. #2, ${esc(withFlags(b))}, costs <span class="num">${ratio(b.unit / a.unit)}</span> as much per mg; the most expensive, ${esc(top.form)}, <span class="num">${ratio(top.unit / a.unit)}</span>.${oosA}`;
+    } else if (pr.key === "fair_rating") {
+      eye = "#1 by adjusted rating";
+      lead = `<b>${esc(a.name)}</b> by ${esc(a.brand)} has the highest adjusted rating.`;
+      sub = `<span class="num">${a.rb.toFixed(2)}</span>, from an average of ${a.rating[0]} across <span class="num">${a.rating[1].toLocaleString("en-US")}</span> reviews. #2, ${esc(withFlags(b))}, has <span class="num">${b.rb.toFixed(2)}</span>, <span class="num">${(a.rb - b.rb).toFixed(2)}</span> lower. It costs <span class="num">${a.unitText}</span> per 100&nbsp;mg, <span class="num">${rel(a)}</span> the median.${oosA}`;
+    } else {
+      eye = "#1 by price per mg, with a testing mark";
+      lead = `<b>${esc(a.name)}</b> by ${esc(a.brand)} costs the least per milligram among products with a testing mark on the label.`;
+      sub = `<span class="num">${a.unitText}</span> per 100&nbsp;mg, ${esc(a.mark)}. ${b ? `#2, ${esc(b.form)} (${esc(b.mark)}), costs <span class="num">${ratio(b.unit / a.unit)}</span> as much per mg.` : "It is the only one."}${oosA}`;
+    }
+    $("#ansEye").textContent = eye;
+    $("#ans").innerHTML = lead;
+    $("#ansSub").innerHTML = sub;
+  }
+
+  // ---------- The map ----------
+  const svg = $("#plot");
+  const gEl = (tag, attrs, parent, text) => {
+    const n = document.createElementNS(NS, tag);
+    for (const k in attrs) n.setAttribute(k, attrs[k]);
+    if (text != null) n.textContent = text;
+    (parent || svg).appendChild(n);
+    return n;
+  };
+  const ctx = document.createElement("canvas").getContext("2d");
+  const textW = (s, font) => { ctx.font = font; return ctx.measureText(s).width; };
+  let region = null, G = null;
+
+  function drawMap(mode) {
+    const W = Math.max(280, svg.parentElement.clientWidth), narrow = W < 560, pr = lens(), B = branch === "B";
+    const M = { l: narrow ? 8 : 40, r: narrow ? 8 : 14, t: 44, b: 44 };
+    const plotH = B ? (narrow ? 190 : 220) : (narrow ? 240 : 300);
+    const laneH = B ? 0 : 34;
+    const L = M.l, R = W - M.r, T = M.t, Bt = T + plotH;
+    const laneT = Bt + 8, axisY = laneH ? laneT + laneH : Bt;
+    const H = axisY + M.b;
+    // X: log price, pricier on the left, cheaper on the right. Better is to the right.
+    const dHi = Math.log(pMax * 1.45), dLo = Math.log(pMin / 1.45);
+    const X = v => L + (dHi - Math.log(v)) / (dHi - dLo) * (R - L);
+    // Y: adjusted rating up (A), or two lanes by testing mark (B).
+    const yLo = 4.28, yHi = 4.72;
+    const Y = v => T + (yHi - v) / (yHi - yLo) * plotH;
+    const bandT = [T, T + plotH / 2 + 3], bandH = plotH / 2 - 3;
+    // Inside a lane only X means anything; neighbours closer than a dot apart are set on two rows.
+    const laneOf = p => B ? (p.tested ? "t" : "u") : (p.rb == null ? "n" : null);
+    const shift = {};
+    ["t", "u", "n"].forEach(l => {
+      let up = false;
+      compared.filter(p => laneOf(p) === l).sort((a, b) => X(b.unit) - X(a.unit)).forEach((p, i, m) => {
+        up = i > 0 && X(p.unit) - X(m[i - 1].unit) > -30 ? !up : false;
+        shift[p.id] = up ? (B ? -22 : -10) : 0;
+      });
+    });
+    const yOf = p => (B ? bandT[p.tested ? 0 : 1] + bandH / 2 + 12 : (p.rb != null ? Y(p.rb) : laneT + laneH / 2 + 4)) + (shift[p.id] || 0);
+
+    // Keep the shaded region element alive between draws, so a lens change can move it.
+    if (!region) { region = document.createElementNS(NS, "rect"); region.setAttribute("class", "region"); region.setAttribute("width", "1"); region.setAttribute("height", "1"); }
+    svg.classList.toggle("instant", mode !== "pointer" || reduced());
+    if (!region.isConnected) svg.appendChild(region);
+    [...svg.childNodes].forEach(n => { if (n !== region) n.remove(); });
+    svg.setAttribute("viewBox", `0 0 ${W} ${H}`);
+    svg.setAttribute("height", H);
+    const defs = document.createElementNS(NS, "defs");
+    svg.insertBefore(defs, region);
+    defs.innerHTML = `<pattern id="hatch" width="4" height="4" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="4" height="4" style="fill:var(--paper)"/><line x1="0" y1="0" x2="0" y2="4" style="stroke:var(--ink)" stroke-width="1.6"/></pattern>
+      <pattern id="hatchA" width="4" height="4" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="4" height="4" style="fill:var(--paper)"/><line x1="0" y1="0" x2="0" y2="4" style="stroke:var(--accent)" stroke-width="1.8"/></pattern>`;
+    const grid = document.createElementNS(NS, "g");
+    svg.insertBefore(grid, region);
+    // Log paper: every integer multiple in each decade, decades stronger.
+    for (let e = -3; e <= 0; e++) for (let m = 1; m <= 9; m++) {
+      const v = m * 10 ** e; if (v < Math.exp(dLo) || v > Math.exp(dHi)) continue;
+      gEl("line", { class: m === 1 ? "g2" : "g1", x1: X(v), x2: X(v), y1: T, y2: axisY }, grid);
+    }
+    if (!B) for (let v = 4.3; v <= 4.701; v += 0.05) gEl("line", { class: Math.round(v * 100) % 10 === 0 ? "g2" : "g1", x1: L, x2: R, y1: Y(v), y2: Y(v) }, grid);
+    if (!B) gEl("rect", { class: "lane", x: L, y: laneT, width: R - L, height: laneH }, grid);
+    if (B) gEl("rect", { class: "lane", x: L, y: bandT[1], width: R - L, height: bandH }, grid);
+    gEl("rect", { class: "frame", x: L, y: T, width: R - L, height: axisY - T }, grid);
+    const top = gEl("g", {});
+    const occupied = [];
+    const occupy = (x, y, w, h) => occupied.push({ x, y, w, h });
+
+    // Readings of the selected (and hovered) product replace the tick labels they would cover.
+    const s = byId[sel], rk = rankOf(sel, pr);
+    const marked = [s, hovered && hovered !== sel ? byId[hovered] : null].filter(Boolean);
+    const FT = "600 11px IBM Plex Mono", FX = "500 11px IBM Plex Mono";
+    const clearX = (v, label, read) => marked.every(m => Math.abs(X(m.unit) - X(v)) > (textW(label, FX) + textW(read(m), FT) + 10) / 2 + 4);
+    const clearY = v => marked.every(m => m.rb == null || B || Math.abs(Y(m.rb) - Y(v)) > 14);
+    // Axes, in words: which way is better.
+    [0.01, 0.02, 0.05, 0.1, 0.2, 0.5].forEach(v => {
+      if (narrow && (v === 0.02 || v === 0.2)) return;
+      if (!clearX(v, "$" + v, m => m.unitText)) return;
+      gEl("text", { class: "tx", x: X(v), y: axisY + 15, "text-anchor": "middle" }, top, "$" + v);
+    });
+    gEl("text", { class: "tt", x: L, y: axisY + 34 }, top, "← pricier");
+    gEl("text", { class: "tt", x: R, y: axisY + 34, "text-anchor": "end" }, top, "cheaper →");
+    gEl("text", { class: "tt", x: (L + R) / 2, y: axisY + 34, "text-anchor": "middle" }, top, narrow ? "price per 100 mg, log" : "price per 100 mg of magnesium, log scale");
+    const frac = { "-3": "⅛", "-2": "¼", "-1": "½" };
+    for (let k = -3; k <= 3; k++) {
+      const v = median * 2 ** k; if (v < Math.exp(dLo) || v > Math.exp(dHi)) continue;
+      gEl("line", { class: "g2", x1: X(v), x2: X(v), y1: T - 5, y2: T }, top);
+      const lab = "×" + (k < 0 ? frac[k] : 2 ** k);
+      if (clearX(v, lab, m => "×" + m.rel.toFixed(2))) gEl("text", { class: "tx", x: X(v), y: T - 9, "text-anchor": "middle" }, top, lab);
+    }
+    gEl("text", { class: "tt", x: L, y: T - 28 }, top, B ? "lanes, not a scale: with or without a testing mark" : "↑ adjusted rating, higher is better");
+    gEl("text", { class: "tt", x: R, y: T - 28, "text-anchor": "end" }, top, narrow ? "× median price" : "price as a multiple of the median");
+    if (!B) {
+      for (let v = 4.3; v <= 4.701; v += 0.1) {
+        const t = v.toFixed(1);
+        if (!clearY(v)) continue;
+        if (narrow) { gEl("text", { class: "tx", x: L + 4, y: Y(v) - 3 }, top, t); occupy(L + 2, Y(v) - 14, 24, 13); }
+        else gEl("text", { class: "tx", x: L - 6, y: Y(v) + 4, "text-anchor": "end" }, top, t);
+      }
+      gEl("text", { class: "tt", x: L + 6, y: laneT + 13 }, top, "No rating in the feed");
+      occupy(L + 4, laneT + 2, textW("No rating in the feed", "600 11px Archivo") + 6, 14);
+    } else {
+      gEl("text", { class: "tt", x: L + 6, y: bandT[0] + 14 }, top, "Testing mark on the label");
+      gEl("text", { class: "tt", x: L + 6, y: bandT[1] + 14 }, top, "No testing mark");
+      occupy(L + 4, bandT[0] + 2, 150, 15); occupy(L + 4, bandT[1] + 2, 110, 15);
+      gEl("line", { class: "g2", x1: L, x2: R, y1: bandT[1] - 3, y2: bandT[1] - 3 }, top);
+    }
+    // The best corner is labelled where it is, instead of a legend.
+    const bestTxt = B ? "cheaper, with a testing mark ↗" : "cheaper and better rated ↗";
+    gEl("text", { class: "best", x: R - 8, y: T + 16, "text-anchor": "end" }, top, bestTxt);
+    occupy(R - 8 - textW(bestTxt, "700 11.5px Archivo") - 4, T + 4, textW(bestTxt, "700 11.5px Archivo") + 8, 16);
+    if (!B) {
+      const worst = "↙ pricier and lower rated";
+      gEl("text", { class: "worst", x: L + (narrow ? 30 : 8), y: Bt - 8 }, top, worst);
+      occupy(L + (narrow ? 28 : 6), Bt - 20, textW(worst, "600 11px Archivo") + 6, 15);
+    }
+    // Median: the line every "× median" is measured from.
+    gEl("line", { class: "med", x1: X(median), x2: X(median), y1: T, y2: axisY }, top);
+    const medTxt = "median " + usd(median), medW = textW(medTxt, "600 10.5px IBM Plex Mono");
+    const medX = X(median) + medW + 10 > R - 4 ? X(median) - medW - 5 : X(median) + 5;
+    gEl("text", { class: "medt", x: medX, y: T + 30 }, top, medTxt);
+    occupy(medX - 2, T + 19, medW + 4, 14);
+
+    // The shaded area: whatever is inside ranks above the selected product.
+    let box = null;
+    if (rk) {
+      if (pr.region === "rect") {
+        const Ps = Math.exp(lnMax - s.s / 100 * (lnMax - lnMin)), Rs = rMin + s.s / 100 * (rMax - rMin);
+        box = [X(Ps), T, R - X(Ps), Y(Rs) - T];
+      } else if (pr.region === "x") box = [X(s.unit), T, R - X(s.unit), axisY - T];
+      else if (pr.region === "y") box = [L, T, R - L, Y(s.rb) - T];
+      else if (pr.region === "xt") box = [X(s.unit), bandT[0], R - X(s.unit), bandH];
+    }
+    const lines = [];
+    const hLine = (x1, x2, y) => lines.push({ x: Math.min(x1, x2), y: y - 3, w: Math.abs(x2 - x1), h: 6 });
+    const vLine = (x, y1, y2) => lines.push({ x: x - 3, y: Math.min(y1, y2), w: 6, h: Math.abs(y2 - y1) });
+    if (box) {
+      if (box[0] > L + 1) vLine(box[0], box[1], box[1] + box[3]);
+      if (box[1] + box[3] < axisY - 1) hLine(box[0], box[0] + box[2], box[1] + box[3]);
+      region.style.opacity = "1";
+      region.style.transform = `translate(${box[0]}px, ${box[1]}px) scale(${Math.max(box[2], 0.01)}, ${Math.max(box[3], 0.01)})`;
+    } else region.style.opacity = "0";
+
+    // Crosshair on the selected product: a reading on each scale.
+    const xs = X(s.unit), ys = yOf(s);
+    vLine(xs, ys, axisY);
+    if (!B && s.rb != null) hLine(L, xs, ys);
+    const xh = gEl("g", {}, top);
+    gEl("line", { class: "xh xh-v", x1: xs, x2: xs, y1: ys, y2: axisY }, xh);
+    if (!B && s.rb != null) gEl("line", { class: "xh xh-h", x1: L, x2: xs, y1: ys, y2: ys }, xh);
+    const tag = (x, y, t, cls, anchor) => {
+      const w = textW(t, "600 11px IBM Plex Mono") + 10, g = gEl("g", { class: cls }, top);
+      const x0 = anchor === "end" ? x - w : anchor === "start" ? x : x - w / 2;
+      const xc = Math.min(Math.max(x0, L - (narrow ? 0 : 38)), R - w);
+      gEl("rect", { x: xc, y: y - 12, width: w, height: 17, rx: 8.5 }, g);
+      gEl("text", { x: xc + w / 2, y: y + 1, "text-anchor": "middle" }, g, t);
+    };
+    const readings = (p, cls) => {
+      tag(X(p.unit), axisY + 15, p.unitText, cls);
+      tag(X(p.unit), T - 9, "×" + p.rel.toFixed(2), cls);
+      if (!B && p.rb != null) tag(narrow ? L + 2 : L - 2, yOf(p), p.rb.toFixed(2), cls, narrow ? "start" : "end");
+    };
+    readings(s, "tag");
+    if (hovered && hovered !== sel) readings(byId[hovered], "htag");
+
+    // Points: rank in this lens and the form's short name; hollow when the lens leaves them out.
+    const pts = compared.map(p => ({ p, x: X(p.unit), y: yOf(p), rk: rankOf(p.id, pr) }));
+    pts.forEach(d => occupy(d.x - 8, d.y - 8, 16, 16));
+    const order = pts.slice().sort((a, b) => (b.p.id === sel) - (a.p.id === sel) || (a.rk || 99) - (b.rk || 99));
+    order.forEach(d => {
+      const p = d.p;
+      const g = gEl("g", { class: `pt${d.rk ? "" : " out"}${p.oos ? " oos" : ""}${p.id === sel ? " sel" : ""}${p.id === hovered ? " hov" : ""}`, "data-id": p.id }, top);
+      gEl("circle", { class: "hit", cx: d.x, cy: d.y, r: 14 }, g);
+      gEl("circle", { class: "ring", cx: d.x, cy: d.y, r: 11 }, g);
+      gEl("circle", { class: "d", cx: d.x, cy: d.y, r: p.id === sel ? 7.5 : 6 }, g);
+      const main = `${d.rk || "–"} ${p.form}`, sm = p.oos ? "out of stock" : "";
+      const w = Math.max(textW(main, "600 11.5px Archivo"), sm ? textW(sm, "500 10.5px Archivo") : 0) + 4, h = sm ? 27 : 14;
+      const cands = [[12, -7], [12, 5], [12, -h - 5], [-12 - w, -7], [-w / 2, -14 - h], [-w / 2, 12], [-12 - w, -h - 5], [-12 - w, 5]];
+      const fits = c => {
+        const b = { x: d.x + c[0], y: d.y + c[1], w, h };
+        const inside = b.x >= L + 2 && b.x + b.w <= R - 2 && b.y >= T + 2 && b.y + b.h <= axisY - 2;
+        const hits = occupied.filter(o => o.x < b.x + b.w && b.x < o.x + o.w && o.y < b.y + b.h && b.y < o.y + o.h && !(Math.abs(o.x + 8 - d.x) < 0.5 && Math.abs(o.y + 8 - d.y) < 0.5)).length;
+        const crossed = lines.filter(o => o.x < b.x + b.w && b.x < o.x + o.w && o.y < b.y + b.h && b.y < o.y + o.h).length;
+        return { b, cost: hits * 10 + crossed * 3 + (inside ? 0 : 25) };
+      };
+      const best = cands.map(fits).reduce((a, c) => c.cost < a.cost ? c : a);
+      occupied.push(best.b);
+      const t = gEl("text", { class: "lab", x: best.b.x + 2, y: best.b.y + 11 }, g);
+      const r1 = document.createElementNS(NS, "tspan"); r1.setAttribute("class", "rk"); r1.textContent = (d.rk || "–") + " "; t.appendChild(r1);
+      t.appendChild(document.createTextNode(p.form));
+      if (sm) { const t2 = document.createElementNS(NS, "tspan"); t2.setAttribute("class", "sm"); t2.setAttribute("x", best.b.x + 2); t2.setAttribute("dy", "13"); t2.textContent = sm; t.appendChild(t2); }
+    });
+
+    // Calibration: the first time the page opens, the crosshair is drawn from the axes to the leader.
+    if (!calibrated && !reduced() && mode === "first") {
+      svg.classList.add("calibrate");
+      setTimeout(() => svg.classList.remove("calibrate"), 400);
+    }
+    if (mode === "first") { calibrated = true; try { sessionStorage.setItem("mg-calibrated", "1"); } catch (e) { /* fine without */ } }
+
+    svg.setAttribute("aria-label", `${pr.label} ranking. Price per 100 mg from ${usd(pMin)} to ${usd(pMax)}, median ${usd(median)}.` +
+      (B ? "" : ` Adjusted ratings from ${rMin.toFixed(2)} to ${rMax.toFixed(2)}.`) + ` Selected: ${s.form}, ${rk ? "#" + rk : "not ranked"}.`);
+    G = { narrow };
+
+    // Zoom note for the rating axis, and the caption.
+    $("#zoom").innerHTML = B ? "" : `<svg viewBox="0 0 64 10" aria-hidden="true"><line x1="0" x2="64" y1="5" y2="5" style="stroke:var(--ink-3)"/><line x1="0" x2="0" y1="2" y2="8" style="stroke:var(--ink-3)"/><line x1="64" x2="64" y1="2" y2="8" style="stroke:var(--ink-3)"/><rect x="${(yLo - 1) / 4 * 64}" y="1" width="${Math.max(2, (yHi - yLo) / 4 * 64)}" height="8" style="fill:var(--accent)"/></svg>rating axis: 4.3–4.7 of 1–5`;
+    const offMap = unknown.length;
+    let cap;
+    if (!rk) cap = `<b>${esc(s.form)}</b> is not in this ranking: ${branch === "A" && s.rb == null ? "there is no rating in today's feed" : "there is no testing mark on its label"}. It stays on the map at its price.`;
+    else if (rk === 1) cap = `Shaded: where a product would have to be to rank above <b>${esc(s.form)}</b>. It is empty, so ${esc(s.form)} is #1 ${pr.by}.`;
+    else cap = `Shaded: the <b>${rk - 1}</b> ${plural(rk - 1, "product", "products")} that rank above <b>${esc(s.form)}</b> ${pr.by}. Points never move between rankings; only the shaded area changes.`;
+    $("#mapCap").innerHTML = `${cap} <a href="#unkGroup">${offMap} more ${plural(offMap, "product is", "products are")} not on the map</a>: no comparable price per mg yet.`;
+  }
+  svg.addEventListener("pointerover", e => { const g = e.target.closest(".pt"); if (g) setHover(g.dataset.id); });
+  svg.addEventListener("pointerout", e => { const g = e.target.closest(".pt"); if (g && !g.contains(e.relatedTarget)) setHover(null); });
+  svg.addEventListener("click", e => { const g = e.target.closest(".pt"); if (g) select(g.dataset.id, { reveal: true }); });
+
+  // ---------- Gauges: how good this purchase is, on the map's own scales ----------
+  function gauge(kind, p) {
+    const W = Math.max(240, $("#rail").clientWidth - 38), L = 6, R = W - 6, y = 22;
+    let X, marks, pin, left, right, med = null;
+    if (kind === "price") {
+      const dHi = Math.log(pMax * 1.45), dLo = Math.log(pMin / 1.45);
+      X = v => L + (dHi - Math.log(v)) / (dHi - dLo) * (R - L);
+      marks = compared.map(q => X(q.unit)); pin = X(p.unit); med = X(median); left = "← pricier"; right = "cheaper →";
+    } else {
+      X = v => L + (v - 4.28) / (4.72 - 4.28) * (R - L);
+      marks = rated.map(q => X(q.rb)); pin = X(p.rb); left = "← lower"; right = "higher →";
+    }
+    const val = kind === "price" ? p.unitText : p.rb.toFixed(2);
+    const vx = Math.min(Math.max(pin, L + 22), R - 22);
+    return `<svg viewBox="0 0 ${W} 46" width="${W}" height="46" aria-hidden="true">
+      <line class="base" x1="${L}" x2="${R}" y1="${y}" y2="${y}"/>
+      ${marks.map(x => `<line class="tk" x1="${x}" x2="${x}" y1="${y - 4}" y2="${y + 4}"/>`).join("")}
+      ${med != null ? `<line class="medn" x1="${med}" x2="${med}" y1="${y - 7}" y2="${y + 7}"/><text class="medt" x="${med}" y="${y + 19}" text-anchor="middle">median</text>` : ""}
+      <line class="pin" x1="${pin}" x2="${pin}" y1="${y - 9}" y2="${y + 9}"/><circle class="pinb" cx="${pin}" cy="${y}" r="4"/>
+      <text class="val" x="${vx}" y="${y - 12}" text-anchor="middle">${val}</text>
+      <text class="end" x="${L}" y="${y + 19}">${left}</text><text class="end" x="${R}" y="${y + 19}" text-anchor="end">${right}</text>
+    </svg>`;
+  }
+
+  // ---------- Selected product: verdict, trade-offs, the one Buy button ----------
+  function why(p, pr, rk) {
+    if (!rk) {
+      if (pr.key === "cheapest_verified") return `Not in this ranking: there is no testing mark on its label. It is still compared on price.`;
+      return `Not ranked ${pr.by}: there is no rating in today's feed. It is still compared on price.`;
+    }
+    const above = pr.order.slice(0, rk - 1).map(id => byId[id]);
+    if (pr.key === "balance") {
+      const weak = p.qr <= p.qp ? "rating" : "price";
+      const head = `By balance a product is only as strong as its weaker side. For ${esc(p.form)} that is ${weak}: <span class="num">${Math.round(p.s)}</span> of 100.`;
+      return rk === 1 ? `${head} No other product's weaker side scores higher.` : `${head} Above it: ${above.map(q => `${esc(q.form)} <span class="num">${Math.round(q.s)}</span>`).join(", ")}.`;
+    }
+    if (pr.key === "fair_rating") return rk === 1 ? "No product has a higher adjusted rating." : `${rk - 1} ${plural(rk - 1, "product has", "products have")} a higher adjusted rating; they are in the shaded area of the map.`;
+    return rk === 1 ? `Nothing ${pr.key === "cheapest_verified" ? "with a testing mark " : ""}costs less per mg.` : `${rk - 1} ${plural(rk - 1, "costs", "cost")} less per mg; ${plural(rk - 1, "it is", "they are")} in the shaded area of the map.`;
+  }
+  function renderRail() {
+    const p = byId[sel], pr = lens(), rk = rankOf(p.id, pr), n = pr.order.length;
+    const cheaper = byUnit.filter(q => q.unit < p.unit);
+    const higher = branch === "A" && p.rb != null ? byRb.filter(q => q.rb > p.rb) : [];
+    const list = (arr, f) => arr.length ? arr.slice(0, 3).map(f).join(", ") + (arr.length > 3 ? `, and ${arr.length - 3} more` : "") : "none";
+    const chips = [p.mark ? `<span class="chip">${esc(p.mark)}</span>` : "", p.changed ? `<span class="chip">Formula changed Feb 2026</span>` : "", p.oos ? `<span class="chip dash">Out of stock today</span>` : ""].join("");
+    $("#rail").innerHTML = `
+      <p class="r-eye">${rk ? `Selected · #${rk} of ${n} ${pr.by}` : `Selected · not ranked ${pr.by}`}</p>
+      <p class="r-name"><span class="brand">${esc(p.brand)}</span><span class="t">${esc(p.name)}</span><span class="pack">${esc(p.pack)}</span></p>
+      ${chips ? `<div class="chips">${chips}</div>` : ""}
+      <div class="reading" data-id="${p.id}"><button type="button" class="src" data-src="unit" style="font:inherit">${price(p)}</button><small>per 100&nbsp;mg of magnesium</small></div>
+      <div class="gauge"><div class="gh"><span>Price per mg</span><span>lower is better</span></div>${gauge("price", p)}
+        <p class="gs"><span class="num">${rel(p)}</span> the median price · ${nth(p.priceRank, "cheapest", nC)}</p></div>
+      ${branch === "A" ? (p.rb != null ? `<div class="gauge"><div class="gh"><span>Adjusted rating</span><span>higher is better</span></div>${gauge("rating", p)}
+        <p class="gs">Average ${p.rating[0]} from <span class="num">${p.rating[1].toLocaleString("en-US")}</span> reviews · ${nth(p.rateRank, "highest", rated.length)}</p></div>`
+        : `<p class="gs" style="margin:0;font-size:13.5px">No rating in today's feed.</p>`) : `<p class="gs" style="margin:0;font-size:13.5px">${p.tested ? `Testing mark on the label: ${esc(p.mark)}.` : "No testing mark on the label."}</p>`}
+      <p class="why">${why(p, pr, rk)}</p>
+      <dl class="trade">
+        <div><dt>Cheaper per mg</dt><dd>${list(cheaper, q => `${esc(withFlags(q))} <span class="num">${q.unitText}</span>`)}</dd></div>
+        ${branch === "A" ? `<div><dt>Rated higher</dt><dd>${p.rb == null ? "not comparable" : list(higher, q => `${esc(withFlags(q))} <span class="num">${q.rb.toFixed(2)}</span>`)}</dd></div>` : ""}
+      </dl>
+      <p class="jarline"><span class="num">${money(p.jar)}</span> buys <span class="num">${grams(p)}&nbsp;g</span> of magnesium: <span class="num">${p.servings}</span> servings × <span class="num">${dose(p)}&nbsp;mg</span>.</p>
+      <div class="buybox">
+        <a class="btn" href="#" data-buy="${p.id}" rel="sponsored nofollow">Buy on iHerb <span class="num">${money(p.jar)}</span></a>
+        <p class="disc">Affiliate link: we may earn a commission. Commission is not part of any formula, so it cannot change the order.</p>
+      </div>
+      <p class="prov">Price: network feed, ${FEED}<br>${esc(p.verified.replace(/^Label checked by /, "Label checked by ").replace(/\.$/, ""))}</p>`;
+    $("#bar").innerHTML = `
+      <div class="bi"><span class="b1"><span>${rk ? "#" + rk : "–"}</span> ${esc(p.name)}</span><span class="b2">${p.unitText} per 100 mg · ${rel(p)} median${p.oos ? " · out of stock" : ""}</span></div>
+      <a class="btn" href="#" data-buy="${p.id}" rel="sponsored nofollow">Buy on iHerb</a>
+      <p class="disc">Affiliate link. Commission is not part of any formula and cannot change the order.</p>`;
+  }
+
+  // ---------- Rows ----------
+  const rowsEl = $("#rows"), outRows = $("#outRows");
+  const rowEls = {};
+  function rowHTML(p) {
+    const chips = [p.mark ? `<span class="chip">${esc(p.mark)}</span>` : "", p.changed ? `<span class="chip">Formula changed Feb 2026</span>` : "", p.oos ? `<span class="chip dash">Out of stock today</span>` : ""].join("");
+    const rate = branch === "A" ? `<div class="cell c-rate"><span class="lbl">Adj. rating</span>${p.rb != null
+      ? `<button type="button" class="src rt" data-src="rating">${p.rb.toFixed(2)}</button><span class="sub">${p.rating[0]} · ${p.rating[1].toLocaleString("en-US")}</span>`
+      : `<span class="none">none</span><span class="sub">not in feed</span>`}</div>` : "";
+    return `
       <div class="row-main">
-        <span class="rank" aria-label="Position"></span>
+        <div class="rank"><span class="rk"></span><span class="delta"></span></div>
         <div class="prod">
-          <div class="name"><button type="button" class="open-btn" aria-expanded="false">${p.title}</button></div>
-          <span class="brand">${p.brand}</span>
-          <div class="chips">${chips.join("")}</div>
-          ${p.oos ? `<span class="oos">Out of stock in today's feed</span>` : ""}
+          <span class="brand">${esc(p.brand)}</span>
+          <button type="button" class="name open-btn" aria-expanded="false">${esc(p.name)} <span class="pack">${esc(p.pack)}</span></button>
+          ${chips ? `<div class="chips">${chips}</div>` : ""}
           <button type="button" class="more open-btn" aria-expanded="false">Label and arithmetic</button>
         </div>
-        <div class="cell c-unit"><span class="lbl">per 100&nbsp;mg</span><button type="button" class="src-btn big" data-src="unit">${p.unitText}</button></div>
-        <div class="cell c-jar"><span class="lbl">jar</span><button type="button" class="src-btn num" data-src="jar">${money(p.jar)}</button><span class="num" style="font-size:12.5px;color:var(--muted)"><button type="button" class="src-btn" data-src="servings">${p.servings}</button> × <button type="button" class="src-btn" data-src="dose">${dose}&nbsp;mg</button></span></div>
-        <div class="cell c-rate"><span class="lbl">rating</span>${p.rb != null ? `<button type="button" class="src-btn num" data-src="rating">${p.rb.toFixed(2)}</button><span class="num" style="font-size:12px;color:var(--muted)">${p.rating[0]} · ${p.rating[1].toLocaleString("en-US")}</span>` : `<span class="num" style="color:var(--faint)">none</span>`}</div>
-        <div class="buy"><a class="btn" href="#" data-buy="${p.id}">Buy on iHerb</a><span class="disc">Affiliate link. It never changes the order.</span></div>
+        <div class="cell c-unit"><span class="lbl">Per 100 mg</span><button type="button" class="src price" data-src="unit">${price(p)}</button><span class="sub">${rel(p)} median</span></div>
+        ${rate}
+        <div class="cell c-jar"><span class="lbl">Jar</span><button type="button" class="src num" data-src="jar">${money(p.jar)}</button><span class="sub"><button type="button" class="src" data-src="servings">${p.servings}</button> × <button type="button" class="src" data-src="dose">${dose(p)}&nbsp;mg</button></span></div>
       </div>
-      <div class="detail"><div><div class="detail-in">${detail(p)}</div></div></div>`;
-    rows[p.id] = li;
-  });
-
-  function detail(p) {
-    const lines = p.lines.map((l, i) => `<tr><td class="n">${i + 1}</td><td>${l[0]}</td><td>${l[1]}</td><td>${l[2]}</td><td class="n">${l[3]}</td></tr>`).join("");
-    const pos = PRESETS.map(pr => { const o = DATA.orders[pr.key], i = o.indexOf(p.id); return `<li><span>${pr.label}</span><span class="num">${i < 0 ? "not included" : `${i + 1} of ${o.length}`}</span></li>`; }).join("");
-    const dose = p.dose % 1 ? p.dose.toFixed(3) : String(p.dose);
+      <div class="detail"><div><div class="detail-in">${detailHTML(p)}</div></div></div>`;
+  }
+  function detailHTML(p) {
+    const serving = (p.perServing.match(/Serving size (\d+)/) || [, "1"])[1];
+    const lines = p.lines.map(l => {
+      const m = l[0].match(/^([\d,.]+ mg) (.*)$/) || [, "", l[0]];
+      const direct = l[1] === "magnesium";
+      const share = (l[2].match(/([\d.]+%)/) || [])[1], f = l[2].replace(/^×\s*[\d.]+%\s*\(/, "").replace(/\)$/, "");
+      const inkNote = direct ? `label states magnesium directly: counted as ${l[3]}` : `× ${share} magnesium by formula ${formula(f || "")} = ${l[3].replace("≈ ", "")} (rounded down once, to the µg)`;
+      return `<div class="ln"><span>${esc(m[2])}</span><span class="amt">${esc(m[1])}</span><span class="ink">${inkNote}</span></div>`;
+    }).join("");
+    const pos = BRANCHES[branch].map(pr => { const r = rankOf(p.id, pr); return `<li><span>${pr.label}</span><span class="num">${r ? `#${r} of ${pr.order.length}` : "not ranked"}</span></li>`; }).join("");
     return `
       <div class="box">
-        <h3>Label, line by line</h3>
-        <div class="scroll"><table><thead><tr><th>#</th><th>On the label</th><th>Counted as</th><th>Factor</th><th style="text-align:end">Magnesium</th></tr></thead><tbody>${lines}</tbody></table></div>
-        <p class="meta">${nb(p.perServing)} ${p.verified}${p.changed ? " " + p.changed : ""} ${p.third}</p>
+        <h3>The label, as printed, with our arithmetic in blue</h3>
+        <div class="facts">
+          <h3>Supplement Facts</h3>
+          <div class="ss">Serving size ${serving} · ${p.servings} servings per container</div>
+          <div class="ap"><span>Amount per serving</span></div>
+          ${lines}
+          <div class="tot"><span>Magnesium per serving</span><span>${dose(p)}&nbsp;mg</span></div>
+        </div>
+        <p class="meta">${esc(p.verified)} ${p.changed ? esc(p.changed) : ""} ${esc(p.third)}</p>
       </div>
-      <div class="box">
-        <h3>Price per 100 mg</h3>
-        <div class="calc">${money(p.jar)} ÷ (${p.servings} × ${dose}&nbsp;mg) × 100&nbsp;mg<br>= <b>${p.unitText}</b></div>
-        <h3>Position in each ranking</h3>
+      <div class="box" data-id="${p.id}">
+        <h3>Price per 100 mg of magnesium</h3>
+        <div class="eq">
+          <span class="term">${money(p.jar)}<small>jar · network feed</small></span><span>÷</span>
+          <span class="term">(${p.servings}<small>servings · label</small></span><span>×</span>
+          <span class="term">${dose(p)}&nbsp;mg)<small>Mg per serving</small></span><span>×</span>
+          <span class="term">100&nbsp;mg<small>same unit for every jar</small></span>
+          <span class="term res">= ${p.unitText}<small>&nbsp;</small></span>
+        </div>
+        <h3>Place in each ranking</h3>
         <ul class="pos">${pos}</ul>
       </div>`;
   }
-
-  // Unknowns: shown with the reason and what would change it.
-  const next = {
-    "Label not entered yet. The product is in the queue.": "Appears once its label is entered and checked.",
-    "No price in today's network feed.": "Appears on a day the feed carries a price.",
-    "A line of the label could not be read with certainty.": "Appears once the label is re-read from a new photo.",
-    "The store shows this price only in the cart, so we cannot compare it.": "We do not guess prices that the store hides.",
-  };
-  $("#unkList").innerHTML = unknown.map(p => `
-    <div class="unk">
-      <div class="prod"><span style="font-weight:700">${p.title.replace(/^Example Naturals |: added to the queue$/g, "")}</span><span class="brand">${p.brand || "Example Naturals"}</span></div>
-      <span class="ghostval">unknown</span>
-      <span class="why"><b>${p.reason}</b> ${next[p.reason] || ""}</span>
-    </div>`).join("");
-
-  // Price axis.
-  const svg = $("#plot"), NS = "http://www.w3.org/2000/svg";
-  const el = (tag, attrs, parent = svg) => { const n = document.createElementNS(NS, tag); for (const k in attrs) n.setAttribute(k, attrs[k]); parent.appendChild(n); return n; };
-  const lo = Math.log10(0.008), hi = Math.log10(1);
-  function drawPlot() {
-    svg.innerHTML = "";
-    const w = svg.clientWidth || 600, pad = 14, y = 34;
-    const x = v => pad + ((Math.log10(v) - lo) / (hi - lo)) * (w - pad * 2);
-    el("line", { class: "axis", x1: pad, x2: w - pad, y1: y, y2: y });
-    [0.01, 0.03, 0.1, 0.3, 1].forEach(v => {
-      const g = el("g", { class: "tick" });
-      el("line", { x1: x(v), x2: x(v), y1: y - 4, y2: y + 4 }, g);
-      const t = el("text", { x: x(v), y: y + 18, "text-anchor": "middle" }, g); t.textContent = "$" + v;
+  function buildRows() {
+    compared.forEach(p => {
+      let li = rowEls[p.id];
+      const open = li && li.classList.contains("open");
+      if (!li) { li = document.createElement("li"); li.className = "row"; li.dataset.id = p.id; rowEls[p.id] = li; }
+      li.innerHTML = rowHTML(p);
+      li.classList.toggle("open", !!open);
+      li.querySelectorAll(".open-btn").forEach(b => b.setAttribute("aria-expanded", String(!!open)));
     });
-    const mg = el("g", { class: "med" });
-    el("line", { x1: x(median), x2: x(median), y1: y - 22, y2: y + 6 }, mg);
-    const mt = el("text", { x: x(median) + 4, y: y - 16 }, mg); mt.textContent = "median";
-    const order = DATA.orders[preset];
-    ranked.slice().sort((a, b) => a.unit - b.unit).forEach((p, i) => {
-      const g = el("g", { class: "pt" + (order.includes(p.id) ? "" : " out"), "data-id": p.id, tabindex: "-1" });
-      el("circle", { cx: x(p.unit), cy: y, r: 5 }, g);
-      const t = el("text", { x: x(p.unit), y: y - 11 - (i % 2) * 0, "text-anchor": i === 0 ? "start" : "middle" }, g);
-      t.textContent = `${form(p)} ${p.unitText}`;
-      g.addEventListener("mouseenter", () => hot(p.id, true));
-      g.addEventListener("mouseleave", () => hot(p.id, false));
-      g.addEventListener("click", () => { toggle(p.id, true); rows[p.id].scrollIntoView({ block: "center", behavior: reduce ? "auto" : "smooth" }); });
-    });
-    const max = units[units.length - 1], min = units[0];
-    $("#spread").textContent = `spread ${Math.round(max / min)}×`;
-    svg.setAttribute("aria-label", `Prices per 100 mg from ${money(min).replace(/\.(\d)(\d)$/, ".$1$2")} to $${max.toFixed(3)}; median $${median.toFixed(3)}`);
+    $("#cols").innerHTML = `<span>#</span><span>Product</span><span>Price per 100 mg of magnesium<em>lower is better</em></span>${branch === "A" ? `<span>Adjusted rating<em>higher is better</em></span>` : ""}<span>Jar</span>`;
+    const tpl = branch === "A" ? "3rem minmax(0, 1fr) 8.6rem 7.4rem 7.6rem" : "3rem minmax(0, 1fr) 8.6rem 7.6rem";
+    document.querySelectorAll(".cols, .row-main").forEach(e => { e.style.gridTemplateColumns = matchMedia("(max-width: 719px)").matches ? "" : tpl; });
   }
-  function hot(id, on) {
-    rows[id] && rows[id].classList.toggle("hot", on);
-    const g = svg.querySelector(`.pt[data-id="${id}"]`); if (g) g.classList.toggle("hot", on);
-  }
-  ranked.forEach(p => {
-    rows[p.id].addEventListener("mouseenter", () => hot(p.id, true));
-    rows[p.id].addEventListener("mouseleave", () => hot(p.id, false));
-  });
-
-  // Preset switch: rows glide to their new places (FLIP) so the change is visible.
-  function setPreset(key, first) {
-    preset = key;
+  function placeRows(mode) {
+    const pr = lens(), order = pr.order;
     const before = {};
-    if (!first && !reduce) Object.values(rows).forEach(r => { if (r.isConnected) before[r.dataset.id] = r.getBoundingClientRect().top; });
-    const order = DATA.orders[key];
-    order.forEach((id, i) => { rows[id].querySelector(".rank").textContent = i + 1; list.appendChild(rows[id]); });
-    const outside = ranked.filter(p => !order.includes(p.id));
-    const out = $("#outList");
-    outside.forEach(p => { rows[p.id].querySelector(".rank").textContent = "–"; out.appendChild(rows[p.id]); });
-    $("#outRank").hidden = !outside.length;
-    $("#outP").textContent = key === "cheapest_per_unit" ? "" : `No rating in today's feed, so ${outside.length === 1 ? "this product has" : "these products have"} no place in “${PRESETS.find(p => p.key === key).label}”. ${outside.length === 1 ? "It is" : "They are"} still compared on price.`;
-    seg.querySelectorAll("button").forEach(b => b.setAttribute("aria-pressed", String(b.dataset.key === key)));
-    $("#note").textContent = PRESETS.find(p => p.key === key).note;
-    if (!first && !reduce) {
-      Object.values(rows).forEach(r => {
-        const b = before[r.dataset.id]; if (b == null) return;
-        const dy = b - r.getBoundingClientRect().top; if (!dy) return;
-        r.animate([{ transform: `translateY(${dy}px)` }, { transform: "none" }], { duration: 320, easing: "cubic-bezier(.2,.7,.2,1)" });
-      });
-    }
-    drawPlot();
-    try { history.replaceState(null, "", "#" + key); } catch (e) { /* the frame may refuse; the choice still works */ }
+    const animate = mode === "pointer" && !reduced();
+    if (animate) compared.forEach(p => { const r = rowEls[p.id]; if (r.isConnected) before[p.id] = r.getBoundingClientRect().top; });
+    const now = {};
+    order.forEach((id, i) => { now[id] = i + 1; rowsEl.appendChild(rowEls[id]); });
+    const outside = compared.filter(p => !now[p.id]);
+    outside.forEach(p => outRows.appendChild(rowEls[p.id]));
+    compared.forEach(p => {
+      const r = rowEls[p.id];
+      r.querySelector(".rk").textContent = now[p.id] || "–";
+      const d = r.querySelector(".delta");
+      let t = "", label = "";
+      if (prevRanks && now[p.id]) {
+        const was = prevRanks[p.id];
+        if (!was) { t = "new"; label = "entered this ranking"; }
+        else if (was !== now[p.id]) { const k = was - now[p.id]; t = (k > 0 ? "▲" : "▼") + Math.abs(k); label = `${k > 0 ? "up" : "down"} ${Math.abs(k)} from the previous ranking`; }
+      }
+      d.textContent = t; d.setAttribute("aria-label", label);
+      r.classList.toggle("sel", p.id === sel);
+    });
+    $("#listH").textContent = `Ranked ${pr.by} · ${order.length} products`;
+    $("#listSub").textContent = "#1 is best by this measure. Select a row to see it on the map.";
+    $("#outGroup").hidden = !outside.length;
+    $("#outH").textContent = `Not in this ranking · ${outside.length}`;
+    $("#outP").textContent = pr.key === "cheapest_verified"
+      ? "No testing mark on the label, so they are not in this ranking. They are still compared on price."
+      : `No rating in today's feed, so ${plural(outside.length, "it has", "they have")} no place ${pr.by}. Still compared on price.`;
+    if (animate) compared.forEach(p => {
+      const r = rowEls[p.id], b = before[p.id]; if (b == null) return;
+      const dy = b - r.getBoundingClientRect().top; if (!dy) return;
+      r.animate([{ transform: `translateY(${dy}px)` }, { transform: "none" }], { duration: 240, easing: "cubic-bezier(.65, 0, .35, 1)" });
+    });
+    prevRanks = now;
   }
+  $("#unkH").textContent = `Not compared yet · ${unknown.length}`;
+  $("#unk").innerHTML = unknown.map(p => {
+    const t = p.title.replace(/^Example Naturals |: added to the queue$/g, "");
+    return `<div class="unk"><span class="nm">${esc(t)}<span>${esc(p.brand)}</span></span><span class="none">unknown</span><span class="w"><b>${esc(p.reason)}</b> ${esc(next[p.reason] || "")}</span></div>`;
+  }).join("");
 
-  // Expand in place: the detail opens under the row, the list keeps its place.
+  // ---------- Selection and hover ----------
+  function select(id, opts = {}) {
+    if (!byId[id] || byId[id].unit == null) return;
+    sel = id; if (opts.user !== false) picked = true;
+    compared.forEach(p => rowEls[p.id].classList.toggle("sel", p.id === sel));
+    drawMap("none"); renderRail();
+    if (opts.reveal) rowEls[id].scrollIntoView({ block: "nearest" });
+  }
+  function setHover(id) {
+    if (hovered === id) return;
+    if (hovered && rowEls[hovered]) rowEls[hovered].classList.remove("hov");
+    hovered = id;
+    if (id && rowEls[id]) rowEls[id].classList.add("hov");
+    drawMap("none");
+  }
   function toggle(id, force) {
-    const r = rows[id], open = force ?? !r.classList.contains("open");
+    const r = rowEls[id], open = force ?? !r.classList.contains("open");
     r.classList.toggle("open", open);
     r.querySelectorAll(".open-btn").forEach(b => b.setAttribute("aria-expanded", String(open)));
   }
-  list.parentElement.addEventListener("click", e => {
-    const ob = e.target.closest(".open-btn"); if (ob) { toggle(ob.closest(".row").dataset.id); return; }
-    const buy = e.target.closest("[data-buy]");
-    if (buy) { e.preventDefault(); toast("In the live site this opens the affiliate network's link to the product. Nothing leaves this prototype."); return; }
-    const sb = e.target.closest(".src-btn"); if (sb) { e.stopPropagation(); openPop(sb); }
+  function onListClick(e) {
+    const row = e.target.closest(".row"); if (!row) return;
+    const s = e.target.closest(".src"); if (s) { e.stopPropagation(); openPop(s); return; }
+    if (e.target.closest(".detail")) return;
+    const ob = e.target.closest(".open-btn");
+    select(row.dataset.id);
+    if (ob) toggle(row.dataset.id);
+  }
+  rowsEl.addEventListener("click", onListClick);
+  outRows.addEventListener("click", onListClick);
+  [rowsEl, outRows].forEach(el => {
+    el.addEventListener("pointerover", e => { const r = e.target.closest(".row"); if (r && e.pointerType === "mouse") setHover(r.dataset.id); });
+    el.addEventListener("pointerleave", () => setHover(null));
   });
-  $("#outList").addEventListener("click", e => { const ob = e.target.closest(".open-btn"); if (ob) toggle(ob.closest(".row").dataset.id); const sb = e.target.closest(".src-btn"); if (sb) { e.stopPropagation(); openPop(sb); } const buy = e.target.closest("[data-buy]"); if (buy) { e.preventDefault(); toast("In the live site this opens the affiliate network's link. Nothing leaves this prototype."); } });
+  document.addEventListener("click", e => {
+    const buy = e.target.closest("[data-buy]");
+    if (buy) { e.preventDefault(); toast("In the live site this opens the affiliate network's tracking link for this jar. Nothing leaves this prototype."); return; }
+    const s = e.target.closest("#rail .src"); if (s) { e.stopPropagation(); openPop(s); }
+  });
 
-  // Every number answers "where is this from?", and can be reported where it stands.
+  // ---------- Lens change ----------
+  function setLens(k, mode) {
+    key = k;
+    if (!picked || !byId[sel]) sel = lens().order[0];
+    renderSwitch(); renderAnswer(); placeRows(mode); drawMap(mode); renderRail();
+    try { history.replaceState(null, "", "#" + k); } catch (e) { /* the frame may refuse; the choice still works */ }
+  }
+
+  // ---------- Every number answers "where is this from?" ----------
   const pop = $("#pop");
   let popFor = null;
   function source(p, kind) {
-    const dose = p.dose % 1 ? p.dose.toFixed(3) : String(p.dose);
     switch (kind) {
-      case "unit": return ["Computed", p.unitText + " per 100 mg", `${money(p.jar)} ÷ (${p.servings} × ${dose} mg) × 100 mg. ${Math.round(Math.abs(p.unit / median - 1) * 100)}% ${p.unit < median ? "below" : "above"} the category median of $${median.toFixed(3)}.`];
-      case "jar": return ["Network feed", money(p.jar), "Today's price from the affiliate network's product feed, 26 Sep 2026, 06:02 UTC. We never read prices from the store's pages."];
+      case "unit": return ["Computed", `${p.unitText} per 100 mg`, `${money(p.jar)} ÷ (${p.servings} × ${dose(p)} mg) × 100 mg. ${p.rel.toFixed(2)}× the median of ${usd(median)} across the ${nC} compared products.`];
+      case "jar": return ["Network feed", money(p.jar), `Today's price from the affiliate network's product feed, ${FEED}. We never read prices from the store's pages.`];
       case "servings": return ["Label", `${p.servings} servings`, `Printed on the label. ${p.verified}`];
-      case "dose": return ["Label × formula", `${dose} mg of magnesium`, `${p.lines.map(l => `${l[0]} (${l[1]}) ${l[2]} = ${l[3].replace("≈ ", "")}`).join("; ")}. Summed exactly, rounded down once.`];
-      case "rating": return ["Network feed, adjusted", p.rb.toFixed(2), `Average ${p.rating[0]} from ${p.rating[1].toLocaleString("en-US")} reviews, pulled toward the category average by the median review count.`];
+      case "dose": return ["Label × formula", `${dose(p)} mg of magnesium`, `${p.lines.map(l => `${l[0]} (${l[1]}) ${l[2]} = ${l[3].replace("≈ ", "")}`).join("; ")}. Summed exactly, rounded down once, to the microgram.`];
+      case "rating": return ["Network feed, adjusted", p.rb.toFixed(2), `Average ${p.rating[0]} from ${p.rating[1].toLocaleString("en-US")} reviews, pulled toward the category average by the median review count, so few reviews move it less.`];
     }
   }
   function openPop(btn) {
     if (popFor === btn) { closePop(); return; }
-    const p = byId[btn.closest(".row").dataset.id], [k, v, text] = source(p, btn.dataset.src);
-    pop.innerHTML = `<span class="k">${k}</span><span class="v">${nb(v)}</span><p>${nb(text)}</p>
+    const host = btn.closest("[data-id]"), p = byId[host.dataset.id], [k, v, text] = source(p, btn.dataset.src);
+    pop.innerHTML = `<span class="k">${k}</span><span class="v">${esc(nb(v))}</span><p>${esc(nb(text))}</p>
       <div class="acts"><button type="button" class="ghost" id="rep">This number is wrong</button></div>
-      <form id="repForm" hidden><label for="repText" style="font-size:12.5px;color:var(--muted)">What should it be, and where did you see it?</label><textarea id="repText" maxlength="2000" required></textarea><div class="acts"><button type="submit" class="btn">Send report</button><button type="button" class="ghost" id="repCancel">Cancel</button></div></form>`;
+      <form id="repForm" hidden><label for="repText">What should it be, and where did you see it?</label><textarea id="repText" maxlength="2000" required></textarea>
+      <div class="acts"><button type="submit" class="btn" style="padding:8px 14px;font-size:13.5px">Send report</button><button type="button" class="ghost" id="repCancel">Cancel</button></div></form>`;
     pop.hidden = false;
     popFor?.setAttribute("aria-expanded", "false");
     popFor = btn; btn.setAttribute("aria-expanded", "true");
     const r = btn.getBoundingClientRect(), pw = pop.offsetWidth;
-    pop.style.left = Math.max(16, Math.min(window.scrollX + r.right - pw, window.scrollX + document.documentElement.clientWidth - pw - 16)) + "px";
-    pop.style.top = window.scrollY + r.bottom + 8 + "px";
+    pop.style.left = Math.max(16, Math.min(scrollX + r.right - pw, scrollX + document.documentElement.clientWidth - pw - 16)) + "px";
+    pop.style.top = scrollY + r.bottom + 8 + "px";
     $("#rep").addEventListener("click", () => { $("#repForm").hidden = false; $("#rep").hidden = true; $("#repText").focus(); });
     $("#repCancel").addEventListener("click", closePop);
     $("#repForm").addEventListener("submit", e => {
       e.preventDefault();
-      pop.innerHTML = `<span class="ok">Report recorded with the product, the field and this page.</span><p>We check every report against the label or the feed. In this prototype nothing is sent.</p>`;
-      setTimeout(closePop, 2600);
+      pop.innerHTML = `<span class="ok">Report saved with the product, the field and this page.</span><p>We check every report against the label or the feed. In this prototype nothing is sent.</p>`;
+      setTimeout(closePop, 2800);
     });
   }
-  function closePop() { pop.hidden = true; popFor?.setAttribute("aria-expanded", "false"); popFor?.focus({ preventScroll: true }); popFor = null; }
-  document.addEventListener("click", e => { if (!pop.hidden && !pop.contains(e.target) && !e.target.closest(".src-btn")) closePop(); });
+  function closePop() { if (pop.hidden) return; pop.hidden = true; popFor?.setAttribute("aria-expanded", "false"); popFor?.focus({ preventScroll: true }); popFor = null; }
+  document.addEventListener("click", e => { if (!pop.hidden && !pop.contains(e.target) && !e.target.closest(".src")) closePop(); });
 
-  // Keyboard: 1–3 switch the order, Esc closes what is open.
+  // ---------- Keyboard: never animated ----------
   document.addEventListener("keydown", e => {
     if (e.target.closest("textarea, input")) { if (e.key === "Escape") closePop(); return; }
+    if (e.metaKey || e.ctrlKey || e.altKey) return;
     if (e.key === "Escape") { closePop(); return; }
-    const i = ["1", "2", "3"].indexOf(e.key); if (i >= 0) setPreset(PRESETS[i].key);
+    const ps = BRANCHES[branch], i = ["1", "2", "3"].indexOf(e.key);
+    if (i >= 0 && ps[i]) { setLens(ps[i].key, "key"); return; }
+    if (e.key === "ArrowDown" || e.key === "ArrowUp" || e.key === "j" || e.key === "k") {
+      const o = lens().order, at = o.indexOf(sel);
+      const nx = e.key === "ArrowDown" || e.key === "j" ? Math.min(o.length - 1, at + 1) : Math.max(0, at < 0 ? 0 : at - 1);
+      e.preventDefault(); select(o[nx], { reveal: true });
+      return;
+    }
+    if (e.key === "Enter" && !e.target.closest("button, a")) { toggle(sel); }
   });
   $("#howBtn").addEventListener("click", e => { const m = $("#method"); m.hidden = !m.hidden; e.currentTarget.setAttribute("aria-expanded", String(!m.hidden)); });
-
   let tt;
-  function toast(msg) { const t = $("#toast"); t.textContent = msg; t.classList.add("show"); clearTimeout(tt); tt = setTimeout(() => t.classList.remove("show"), 3200); }
+  function toast(msg) { const t = $("#toast"); t.textContent = msg; t.classList.add("show"); clearTimeout(tt); tt = setTimeout(() => t.classList.remove("show"), 3400); }
 
-  let rz; addEventListener("resize", () => { clearTimeout(rz); rz = setTimeout(drawPlot, 100); });
-  setPreset(preset, true);
+  let rz, lastW = innerWidth;
+  addEventListener("resize", () => { clearTimeout(rz); rz = setTimeout(() => { if (innerWidth !== lastW) { lastW = innerWidth; buildRows(); placeRows("none"); } drawMap("none"); }, 120); });
+
+  // The switch gets a background only once it sticks, so at rest it sits on the desk like everything else.
+  if ("IntersectionObserver" in window) new IntersectionObserver(([e]) => $("#switch").classList.toggle("stuck", !e.isIntersecting && e.boundingClientRect.top < 0)).observe($("#switchMark"));
+  buildRows();
+  sel = lens().order[0];
+  renderSwitch(); renderAnswer(); placeRows("none"); drawMap("first"); renderRail();
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => drawMap("none"));
 })();
 </script>
 

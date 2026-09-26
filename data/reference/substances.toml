@@ -1,0 +1,16 @@
+# Substances. Hand-maintained reference (spec §4.2).
+#
+# Every entry needs `source_url`. Any change to this directory needs a second
+# reviewer (spec §10.3.3); record them in the pull request.
+#
+# review: pending second reviewer (docs/open-questions.md, Q-REF-1)
+
+schema = 1
+
+[[substance]]
+id = "magnesium"
+name = "Magnesium"
+synonyms = ["Mg", "elemental magnesium"]
+default_unit = "mg"
+element = "Mg"
+source_url = "https://ods.od.nih.gov/factsheets/Magnesium-HealthProfessional/"

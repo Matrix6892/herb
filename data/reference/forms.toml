@@ -1,0 +1,98 @@
+# Forms of substances as they appear on labels (spec §4.2).
+#
+# `elemental_ratio` is the mass of the element per mass of the compound. It is
+# written out as `n × A(Mg) / M(compound)` in mg/mol and must equal the ratio
+# derived from `formula` with IUPAC CIAAW 2021 conventional atomic weights
+# (https://www.ciaaw.org/atomic-weights.htm); `catalog-core` refuses the file
+# otherwise. The formula names the hydration state: a label that declares a
+# salt mass without saying which hydrate cannot be converted and must be
+# entered with `confidence = "unknown"` (docs/open-questions.md, Q-REF-2).
+#
+# `source_url` points to the compound record for the formula. The URLs and
+# formulas were written from standard chemistry and have not been opened from
+# the build environment; the second reviewer checks each against the source.
+#
+# `bioavailability_k` stays unset: phase 1 uses k_form = 1 (spec §5.2), and no
+# coefficient is entered without a source.
+#
+# review: pending second reviewer (docs/open-questions.md, Q-REF-1)
+
+schema = 1
+
+[[form]]
+id = "magnesium_oxide"
+substance = "magnesium"
+name = "Magnesium oxide"
+formula = "MgO"
+elemental_ratio = "24305/40304"            # 60.30 %
+source_url = "https://pubchem.ncbi.nlm.nih.gov/compound/Magnesium-oxide"
+
+[[form]]
+id = "magnesium_citrate_anhydrous"
+substance = "magnesium"
+name = "Magnesium citrate (trimagnesium dicitrate, anhydrous)"
+synonyms = ["magnesium citrate", "trimagnesium dicitrate"]
+formula = "Mg3(C6H5O7)2"
+elemental_ratio = "72915/451113"           # 16.16 %
+source_url = "https://pubchem.ncbi.nlm.nih.gov/compound/Trimagnesium-dicitrate"
+
+[[form]]
+id = "magnesium_bisglycinate_anhydrous"
+substance = "magnesium"
+name = "Magnesium bisglycinate (anhydrous)"
+synonyms = ["magnesium glycinate", "magnesium bisglycinate chelate"]
+formula = "Mg(C2H4NO2)2"
+elemental_ratio = "24305/172423"           # 14.10 %
+source_url = "https://pubchem.ncbi.nlm.nih.gov/compound/Magnesium-glycinate"
+
+[[form]]
+id = "magnesium_malate_anhydrous"
+substance = "magnesium"
+name = "Magnesium malate (anhydrous)"
+synonyms = ["magnesium malate", "dimagnesium malate"]
+formula = "MgC4H4O5"
+elemental_ratio = "24305/156376"           # 15.54 %
+source_url = "https://pubchem.ncbi.nlm.nih.gov/compound/Magnesium-malate"
+
+[[form]]
+id = "magnesium_taurate_anhydrous"
+substance = "magnesium"
+name = "Magnesium taurate (anhydrous)"
+synonyms = ["magnesium taurinate"]
+formula = "Mg(C2H6NO3S)2"
+elemental_ratio = "24305/272573"           # 8.92 %
+source_url = "https://pubchem.ncbi.nlm.nih.gov/compound/Magnesium-taurate"
+
+[[form]]
+id = "magnesium_l_threonate_anhydrous"
+substance = "magnesium"
+name = "Magnesium L-threonate (anhydrous)"
+synonyms = ["magnesium threonate"]
+formula = "Mg(C4H7O5)2"
+elemental_ratio = "24305/294495"           # 8.25 %
+source_url = "https://pubchem.ncbi.nlm.nih.gov/compound/Magnesium-L-threonate"
+
+[[form]]
+id = "magnesium_chloride_hexahydrate"
+substance = "magnesium"
+name = "Magnesium chloride hexahydrate"
+formula = "MgCl2·6H2O"
+elemental_ratio = "24305/203295"           # 11.96 %
+source_url = "https://pubchem.ncbi.nlm.nih.gov/compound/Magnesium-chloride-hexahydrate"
+
+[[form]]
+id = "magnesium_carbonate"
+substance = "magnesium"
+name = "Magnesium carbonate"
+formula = "MgCO3"
+elemental_ratio = "24305/84313"            # 28.83 %
+source_url = "https://pubchem.ncbi.nlm.nih.gov/compound/Magnesium-carbonate"
+
+[[form]]
+id = "magnesium_aspartate_anhydrous"
+substance = "magnesium"
+name = "Magnesium L-aspartate (anhydrous)"
+synonyms = ["magnesium aspartate"]
+formula = "Mg(C4H6NO4)2"
+elemental_ratio = "24305/288495"           # 8.42 %
+source_url = "https://pubchem.ncbi.nlm.nih.gov/compound/Magnesium-aspartate"

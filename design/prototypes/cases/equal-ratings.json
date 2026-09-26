@@ -1,0 +1,202 @@
+{
+  "balance_norm": {
+    "price_max_cents": 10.55,
+    "price_min_cents": 5.980634293699463,
+    "price_spreads": true,
+    "rating_max": 4.699999809265137,
+    "rating_min": 4.699999809265137,
+    "rating_spreads": false
+  },
+  "branch": "A",
+  "category": {
+    "compared": 2,
+    "href": "/c/magnesium",
+    "name": "Magnesium",
+    "per_unit": "per 100 mg of magnesium",
+    "products": 2,
+    "slug": "magnesium",
+    "substance": "magnesium",
+    "unit": "100 mg"
+  },
+  "median_unit_price": {
+    "text": "$0.083",
+    "value": 8.265317146849732
+  },
+  "presets": [
+    {
+      "default": true,
+      "key": "balance",
+      "label": "Balance",
+      "lead": {
+        "kind": "balance_points",
+        "runner_up": "900001",
+        "value": 100.0
+      },
+      "note": "Good on both price and rating: each product is scored by its weaker side.",
+      "order": [
+        "900002",
+        "900001"
+      ]
+    },
+    {
+      "default": false,
+      "key": "cheapest_per_unit",
+      "label": "Lowest price per 100 mg",
+      "lead": {
+        "kind": "price_ratio",
+        "runner_up": "900001",
+        "value": 1.7640269379310347
+      },
+      "note": "Lowest price per 100 mg of magnesium. Every product with a verified label and a price takes part.",
+      "order": [
+        "900002",
+        "900001"
+      ]
+    },
+    {
+      "default": false,
+      "key": "fair_rating",
+      "label": "Best rated",
+      "lead": {
+        "kind": "rating_diff",
+        "runner_up": "900001",
+        "value": 0.0
+      },
+      "note": "Rating adjusted for the number of reviews, so that a 5.0 from 8 reviews does not outrank a 4.8 from 40,000.",
+      "order": [
+        "900002",
+        "900001"
+      ]
+    }
+  ],
+  "price_spread": 1.7640269379310347,
+  "products": [
+    {
+      "balance": {
+        "price_at_cents": 10.55,
+        "q_price": 0.0,
+        "q_rating": 100.0,
+        "rating_at": null,
+        "s": 0.0,
+        "weaker": "price"
+      },
+      "brand": "Fixture Labs",
+      "buy_href": "https://tracking.example/c/000000/0000/0000?u=https%3A%2F%2Fwww.iherb.com%2Fpr%2Ffixture-labs-magnesium-bisglycinate-200-mg-180-capsules%2F900001",
+      "href": "/pr/fixture-labs-magnesium-bisglycinate-200-mg-180-capsules/900001",
+      "id": "900001",
+      "in_stock": true,
+      "jar_price": {
+        "text": "$18.99",
+        "value": 1899.0
+      },
+      "label": {
+        "lines": [
+          {
+            "counted_as": "magnesium",
+            "factor": "× 1",
+            "printed": "200 mg Magnesium bisglycinate (anhydrous)",
+            "result": "200 mg"
+          }
+        ],
+        "per_serving_text": "Per serving: 200 mg of magnesium. Serving size 2, 90 servings per container.",
+        "verified_at": "2026-09-20",
+        "verified_by": "fixture (synthetic)"
+      },
+      "per_container": {
+        "text": "18 g"
+      },
+      "per_serving": {
+        "text": "200 mg"
+      },
+      "positions": {
+        "balance": 2,
+        "cheapest_per_unit": 2,
+        "fair_rating": 2
+      },
+      "rating": {
+        "adjusted": 4.699999809265137,
+        "adjusted_text": "4.70",
+        "avg": 4.7,
+        "avg_text": "4.7",
+        "count": 12000
+      },
+      "serving_size": 2,
+      "servings": 90,
+      "status": "compared",
+      "title": "Magnesium Bisglycinate, 200 mg, 180 Capsules",
+      "unit_price": {
+        "text": "$0.106",
+        "value": 10.55
+      },
+      "vs_median": 1.276418050579107
+    },
+    {
+      "balance": {
+        "price_at_cents": 5.980634293699462,
+        "q_price": 100.0,
+        "q_rating": 100.0,
+        "rating_at": null,
+        "s": 100.0,
+        "weaker": "both"
+      },
+      "brand": "Example Naturals",
+      "buy_href": "https://tracking.example/c/000000/0000/0000?u=https%3A%2F%2Fwww.iherb.com%2Fpr%2Fexample-naturals-magnesium-citrate-240-tablets%2F900002",
+      "href": "/pr/example-naturals-magnesium-citrate-240-tablets/900002",
+      "id": "900002",
+      "in_stock": true,
+      "jar_price": {
+        "text": "$14.50",
+        "value": 1450.0
+      },
+      "label": {
+        "lines": [
+          {
+            "counted_as": "compound mass",
+            "factor": "× 16.16% (Mg3(C6H5O7)2)",
+            "printed": "1,250 mg Magnesium citrate (trimagnesium dicitrate, anhydrous)",
+            "result": "≈ 202.041 mg"
+          }
+        ],
+        "per_serving_text": "Per serving: 202.041 mg of magnesium. Serving size 2, 120 servings per container.",
+        "verified_at": "2026-09-20",
+        "verified_by": "fixture (synthetic)"
+      },
+      "label_mark": "NSF Certified for Sport",
+      "per_container": {
+        "text": "24.245 g"
+      },
+      "per_serving": {
+        "text": "202.041 mg"
+      },
+      "positions": {
+        "balance": 1,
+        "cheapest_per_unit": 1,
+        "fair_rating": 1
+      },
+      "rating": {
+        "adjusted": 4.699999809265137,
+        "adjusted_text": "4.70",
+        "avg": 4.7,
+        "avg_text": "4.7",
+        "count": 12000
+      },
+      "serving_size": 2,
+      "servings": 120,
+      "status": "compared",
+      "title": "Magnesium Citrate, 240 Tablets",
+      "unit_price": {
+        "text": "$0.060",
+        "value": 5.980634293699463
+      },
+      "vs_median": 0.723581949420893
+    }
+  ],
+  "rules": "phase-1.0 (spec-phase-1 §5)",
+  "schema": "vitrina.category-evaluation/1",
+  "snapshot": {
+    "date": "2026-09-26",
+    "feed_fetched_at": "2026-09-26 06:02 UTC",
+    "feed_fetched_at_text": "2026-09-26 06:02 UTC",
+    "feed_sha256": "fa1fb55dbce24d2a9e6378b579d8aae160ac9d3d83fcc9d62a684e7b1b438571"
+  }
+}

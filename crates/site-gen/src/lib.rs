@@ -5,6 +5,7 @@
 //! byte-for-byte the same output. Every number on a page comes from
 //! `catalog-core`; this crate only formats.
 
+pub mod evaluation;
 pub mod i18n;
 pub mod pages;
 pub mod verify;
@@ -173,13 +174,17 @@ impl Ctx<'_> {
             .map_or_else(|| c.substance.to_string(), |s| s.name.to_lowercase())
     }
 
+    /// The network's tracking link; a product missing from today's feed has
+    /// no current link.
+    fn buy_href(&self, p: &Product) -> Option<String> {
+        (p.status != ProductStatus::Delisted).then(|| p.tracking_url.clone()).flatten()
+    }
+
     fn buy(&self, p: &Product) -> Result<String, BuildError> {
-        // A product missing from today's feed has no current link.
-        let href = (p.status != ProductStatus::Delisted).then(|| p.tracking_url.clone()).flatten();
         Ok(BuyButton {
             t: self.t,
             id: p.iherb_id.to_string(),
-            href,
+            href: self.buy_href(p),
         }
         .render()?)
     }
@@ -192,6 +197,14 @@ impl Ctx<'_> {
     fn preset_note(&self, preset: Preset, c: &Category) -> String {
         self.t.f(
             &format!("preset.{}.note", preset.key()),
+            &[("unit", &self.t.mass(c.unit)), ("substance", &self.substance_name(c))],
+        )
+    }
+
+    /// Why `preset` ranks nothing today.
+    fn preset_empty(&self, preset: Preset, c: &Category) -> String {
+        self.t.f(
+            &format!("preset.{}.empty", preset.key()),
             &[("unit", &self.t.mass(c.unit)), ("substance", &self.substance_name(c))],
         )
     }
@@ -346,6 +359,11 @@ pub fn build(store: &impl CatalogRead, opts: &BuildOptions) -> Result<BuildOutpu
         let built = load_category(store, &reference, category, opts.branch, run.date)?;
         let path = category_path(category);
         files.insert(file_for_path(&path), category_page(&ctx, &built)?.into_bytes());
+        let evaluation = evaluation::evaluation_file_for(&ctx, &built);
+        files.insert(
+            evaluation::evaluation_file(&file_for_path(&path)),
+            serde_json::to_vec(&evaluation).map_err(|e| BuildError::Input(e.to_string()))?,
+        );
         for p in &built.products {
             let html = product_page(&ctx, &built, p, queued.get(&p.iherb_id).copied())?;
             files.insert(file_for_path(&product_path(p)), html.into_bytes());
@@ -449,6 +467,8 @@ fn category_page(ctx: &Ctx<'_>, b: &Built) -> Result<String, BuildError> {
             note: ctx.preset_note(*p, c),
             href: format!("?preset={}", p.key()),
             current: *p == default,
+            // An empty ranking says why, instead of showing an empty list (AC22).
+            empty: view.rankings.get(p).is_none_or(Vec::is_empty).then(|| ctx.preset_empty(*p, c)),
         })
         .collect();
     let orders = presets

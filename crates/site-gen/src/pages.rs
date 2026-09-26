@@ -34,6 +34,8 @@ pub struct TabView {
     pub note: String,
     pub href: String,
     pub current: bool,
+    /// Why the preset ranks nothing; `None` when it ranks something.
+    pub empty: Option<String>,
 }
 
 pub struct CardView {

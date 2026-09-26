@@ -1349,6 +1349,7 @@ dependencies = [
  "askama",
  "catalog-core",
  "catalog-store",
+ "csv",
  "feed-ingest",
  "flate2",
  "hex",

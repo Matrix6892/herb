@@ -36,6 +36,10 @@
     document.querySelectorAll(".pnote[data-for]").forEach(function (p) {
       p.hidden = p.getAttribute("data-for") !== key;
     });
+    // An empty ranking shows why it is empty, never a bare list.
+    document.querySelectorAll(".pnote[data-empty-for]").forEach(function (p) {
+      p.hidden = p.getAttribute("data-empty-for") !== key;
+    });
     current = key;
     return true;
   }

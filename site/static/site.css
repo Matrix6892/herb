@@ -69,6 +69,7 @@ footer nav { display: flex; flex-wrap: wrap; gap: .5rem 1rem; margin-block-end: 
 .tabs a { padding: .45em .9em; border: 1px solid var(--line); border-radius: 999px; text-decoration: none; color: var(--ink); background: var(--card); font-size: .93rem; }
 .tabs a[aria-current="page"] { background: var(--ink); border-color: var(--ink); color: var(--bg); }
 .pnote { color: var(--muted); font-size: .92rem; }
+.pnote.empty { color: var(--ink); border: 1px dashed var(--line); border-radius: 8px; padding-block: .5rem; padding-inline: .75rem; }
 
 .list { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
 .card { background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 14px 16px; display: grid; grid-template-columns: 2.2rem minmax(0, 1fr); gap: 2px 10px; }

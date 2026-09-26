@@ -1,0 +1,103 @@
+{
+  "branch": "A",
+  "category": {
+    "compared": 1,
+    "href": "/c/magnesium",
+    "name": "Magnesium",
+    "per_unit": "per 100 mg of magnesium",
+    "products": 1,
+    "slug": "magnesium",
+    "substance": "magnesium",
+    "unit": "100 mg"
+  },
+  "median_unit_price": {
+    "text": "$0.054",
+    "value": 5.4125
+  },
+  "presets": [
+    {
+      "default": true,
+      "empty": "No compared product has a rating in today's feed, so there is nothing to balance. Price per 100 mg still compares every product.",
+      "key": "balance",
+      "label": "Balance",
+      "note": "Good on both price and rating: each product is scored by its weaker side.",
+      "order": []
+    },
+    {
+      "default": false,
+      "key": "cheapest_per_unit",
+      "label": "Lowest price per 100 mg",
+      "note": "Lowest price per 100 mg of magnesium. Every product with a verified label and a price takes part.",
+      "order": [
+        "900007"
+      ]
+    },
+    {
+      "default": false,
+      "empty": "No compared product has a rating in today's feed, so this ranking is empty. Price per 100 mg still compares every product.",
+      "key": "fair_rating",
+      "label": "Best rated",
+      "note": "Rating adjusted for the number of reviews, so that a 5.0 from 8 reviews does not outrank a 4.8 from 40,000.",
+      "order": []
+    }
+  ],
+  "price_spread": 1.0,
+  "products": [
+    {
+      "brand": "Placeholder Nutrition",
+      "buy_href": "https://tracking.example/c/000000/0000/0000?u=https%3A%2F%2Fwww.iherb.com%2Fpr%2Fplaceholder-nutrition-magnesium-complex-120-capsules%2F900007",
+      "href": "/pr/placeholder-nutrition-magnesium-complex-120-capsules/900007",
+      "id": "900007",
+      "in_stock": true,
+      "jar_price": {
+        "text": "$12.99",
+        "value": 1299.0
+      },
+      "label": {
+        "lines": [
+          {
+            "counted_as": "magnesium",
+            "factor": "× 1",
+            "printed": "100 mg Magnesium bisglycinate (anhydrous)",
+            "result": "100 mg"
+          },
+          {
+            "counted_as": "magnesium",
+            "factor": "× 1",
+            "printed": "100 mg Magnesium oxide",
+            "result": "100 mg"
+          }
+        ],
+        "per_serving_text": "Per serving: 200 mg of magnesium. Serving size 1, 120 servings per container.",
+        "verified_at": "2026-09-20",
+        "verified_by": "fixture (synthetic)"
+      },
+      "per_container": {
+        "text": "24 g"
+      },
+      "per_serving": {
+        "text": "200 mg"
+      },
+      "positions": {
+        "cheapest_per_unit": 1
+      },
+      "serving_size": 1,
+      "servings": 120,
+      "status": "compared",
+      "title": "Magnesium Complex, 120 Capsules",
+      "unit_price": {
+        "text": "$0.054",
+        "value": 5.4125
+      },
+      "vs_median": 1.0
+    }
+  ],
+  "rules": "phase-1.0 (spec-phase-1 §5)",
+  "schema": "vitrina.category-evaluation/1",
+  "snapshot": {
+    "date": "2026-09-26",
+    "feed_fetched_at": "2026-09-26 06:02 UTC",
+    "feed_fetched_at_text": "2026-09-26 06:02 UTC",
+    "feed_sha256": "71aa4757a58e303017b0987d5b04be55eea9d6213747fed30c2c958aee6b0ed0"
+  }
+}

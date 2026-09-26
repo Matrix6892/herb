@@ -9,7 +9,8 @@
 <nav class="tabs" aria-label="{{ t.get("category.presets") }}" hidden>
 {%- for tab in tabs %}<a href="{{ tab.href }}" data-preset="{{ tab.key }}"{% if tab.current %} aria-current="page"{% endif %}>{{ tab.label }}</a>{% endfor -%}
 </nav>
-{% for tab in tabs %}<p class="pnote" data-for="{{ tab.key }}"{% if !tab.current %} hidden{% endif %}>{{ tab.note }}</p>{% endfor %}
+{% for tab in tabs %}<p class="pnote" data-for="{{ tab.key }}"{% if !tab.current %} hidden{% endif %}>{{ tab.note }}</p>
+{%- if let Some(why_empty) = tab.empty %}<p class="pnote empty" data-empty-for="{{ tab.key }}"{% if !tab.current %} hidden{% endif %}>{{ why_empty }}</p>{% endif %}{% endfor %}
 <ol class="list" id="list" data-default="{{ default_key }}"{% for (key, ids) in orders %} data-o-{{ key }}="{{ ids }}"{% endfor %}>
 {%- for c in cards %}
 <li class="card" data-id="{{ c.id }}"{% if c.hidden %} hidden{% endif %}>

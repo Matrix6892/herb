@@ -58,18 +58,22 @@ out_of_stock = "Out of stock in today's feed"
 [preset.cheapest_per_unit]
 label = "Lowest price per {unit}"
 note = "Lowest price per {unit} of {substance}. Every product with a verified label and a price takes part."
+empty = "No product has a verified label and a price today, so nothing can be ranked by price per {unit}."
 
 [preset.fair_rating]
 label = "Best rated"
 note = "Rating adjusted for the number of reviews, so that a 5.0 from 8 reviews does not outrank a 4.8 from 40,000."
+empty = "No compared product has a rating in today's feed, so this ranking is empty. Price per {unit} still compares every product."
 
 [preset.balance]
 label = "Balance"
 note = "Good on both price and rating: each product is scored by its weaker side."
+empty = "No compared product has a rating in today's feed, so there is nothing to balance. Price per {unit} still compares every product."
 
 [preset.cheapest_verified]
 label = "Third-party tested"
 note = "Lowest price per {unit} among products whose label shows a third-party testing mark."
+empty = "No compared product shows a testing mark on its label, so this ranking is empty. The other ranking still compares every product."
 
 [exclusion]
 no_label = "Label not entered yet. The product is in the queue."

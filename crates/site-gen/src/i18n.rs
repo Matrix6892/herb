@@ -173,6 +173,12 @@ impl Tr {
         format!("{sign}{}", self.number(whole.parse().unwrap_or(0), frac))
     }
 
+    /// Dollars with three decimals from a float amount of cents, such as a
+    /// median of unit prices. Exact prices use [`Tr::unit_price`].
+    pub fn cents_as_dollars(&self, cents: f64) -> String {
+        self.currency(self.decimal(cents / 100.0, 3))
+    }
+
     fn currency(&self, amount: String) -> String {
         if self.locale.currency_position == "suffix" {
             format!("{amount} {}", self.locale.currency_symbol)

@@ -1,0 +1,156 @@
+{
+  "branch": "A",
+  "category": {
+    "compared": 0,
+    "href": "/c/magnesium",
+    "name": "Magnesium",
+    "per_unit": "per 100 mg of magnesium",
+    "products": 3,
+    "slug": "magnesium",
+    "substance": "magnesium",
+    "unit": "100 mg"
+  },
+  "presets": [
+    {
+      "default": true,
+      "empty": "No compared product has a rating in today's feed, so there is nothing to balance. Price per 100 mg still compares every product.",
+      "key": "balance",
+      "label": "Balance",
+      "note": "Good on both price and rating: each product is scored by its weaker side.",
+      "order": []
+    },
+    {
+      "default": false,
+      "empty": "No product has a verified label and a price today, so nothing can be ranked by price per 100 mg.",
+      "key": "cheapest_per_unit",
+      "label": "Lowest price per 100 mg",
+      "note": "Lowest price per 100 mg of magnesium. Every product with a verified label and a price takes part.",
+      "order": []
+    },
+    {
+      "default": false,
+      "empty": "No compared product has a rating in today's feed, so this ranking is empty. Price per 100 mg still compares every product.",
+      "key": "fair_rating",
+      "label": "Best rated",
+      "note": "Rating adjusted for the number of reviews, so that a 5.0 from 8 reviews does not outrank a 4.8 from 40,000.",
+      "order": []
+    }
+  ],
+  "products": [
+    {
+      "brand": "Sample Works",
+      "buy_href": "https://tracking.example/c/000000/0000/0000?u=https%3A%2F%2Fwww.iherb.com%2Fpr%2Fsample-works-magnesium-citrate-powder-8-oz%2F900008",
+      "href": "/pr/sample-works-magnesium-citrate-powder-8-oz/900008",
+      "id": "900008",
+      "in_stock": true,
+      "jar_price": {
+        "text": "$19.99",
+        "value": 1999.0
+      },
+      "label": {
+        "lines": [
+          {
+            "counted_as": "magnesium",
+            "factor": "× 1",
+            "printed": "300 mg Magnesium citrate (trimagnesium dicitrate, anhydrous)",
+            "result": "300 mg"
+          }
+        ],
+        "per_serving_text": "Per serving: 300 mg of magnesium. Serving size 1, 75 servings per container.",
+        "verified_at": "2026-09-20",
+        "verified_by": "fixture (synthetic)"
+      },
+      "per_container": {
+        "text": "22.5 g"
+      },
+      "per_serving": {
+        "text": "300 mg"
+      },
+      "positions": {},
+      "rating": {
+        "adjusted": 4.354981616560971,
+        "adjusted_text": "4.35",
+        "avg": 4.4,
+        "avg_text": "4.4",
+        "count": 2100
+      },
+      "reason": "The store shows this price only in the cart, so we cannot compare it.",
+      "reason_key": "hidden_until_cart",
+      "serving_size": 1,
+      "servings": 75,
+      "status": "not_compared",
+      "title": "Magnesium Citrate Powder, 8 oz"
+    },
+    {
+      "brand": "Fixture Labs",
+      "buy_href": "https://tracking.example/c/000000/0000/0000?u=https%3A%2F%2Fwww.iherb.com%2Fpr%2Ffixture-labs-magnesium-chloride-120-tablets%2F900009",
+      "href": "/pr/fixture-labs-magnesium-chloride-120-tablets/900009",
+      "id": "900009",
+      "in_stock": true,
+      "label": {
+        "lines": [
+          {
+            "counted_as": "magnesium",
+            "factor": "× 1",
+            "printed": "520 mg Magnesium chloride hexahydrate",
+            "result": "520 mg"
+          }
+        ],
+        "per_serving_text": "Per serving: 520 mg of magnesium. Serving size 1, 120 servings per container.",
+        "verified_at": "2026-09-20",
+        "verified_by": "fixture (synthetic)"
+      },
+      "per_container": {
+        "text": "62.4 g"
+      },
+      "per_serving": {
+        "text": "520 mg"
+      },
+      "positions": {},
+      "rating": {
+        "adjusted": 4.199999888737997,
+        "adjusted_text": "4.20",
+        "avg": 4.2,
+        "avg_text": "4.2",
+        "count": 610
+      },
+      "reason": "No price in today's network feed.",
+      "reason_key": "no_price",
+      "serving_size": 1,
+      "servings": 120,
+      "status": "not_compared",
+      "title": "Magnesium Chloride, 120 Tablets"
+    },
+    {
+      "brand": "Example Naturals",
+      "buy_href": "https://tracking.example/c/000000/0000/0000?u=https%3A%2F%2Fwww.iherb.com%2Fpr%2Fexample-naturals-magnesium-aspartate-100-capsules%2F900010",
+      "href": "/pr/example-naturals-magnesium-aspartate-100-capsules/900010",
+      "id": "900010",
+      "in_stock": true,
+      "jar_price": {
+        "text": "$11.25",
+        "value": 1125.0
+      },
+      "positions": {},
+      "rating": {
+        "adjusted": 4.178102161472442,
+        "adjusted_text": "4.18",
+        "avg": 4.0,
+        "avg_text": "4.0",
+        "count": 75
+      },
+      "reason": "Label not entered yet. The product is in the queue.",
+      "reason_key": "no_label",
+      "status": "pending_label",
+      "title": "Magnesium Aspartate, 100 Capsules"
+    }
+  ],
+  "rules": "phase-1.0 (spec-phase-1 §5)",
+  "schema": "vitrina.category-evaluation/1",
+  "snapshot": {
+    "date": "2026-09-26",
+    "feed_fetched_at": "2026-09-26 06:02 UTC",
+    "feed_fetched_at_text": "2026-09-26 06:02 UTC",
+    "feed_sha256": "0598109a590f9915e66f50fcae696ec27ca3bedf8e579c78b50ae86156a282cd"
+  }
+}

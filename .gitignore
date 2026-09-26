@@ -1,0 +1,11 @@
+/target
+/out
+/var
+*.db
+*.db-wal
+*.db-shm
+*.pending-snap
+__pycache__/
+.venv/
+node_modules/
+.lighthouseci/
